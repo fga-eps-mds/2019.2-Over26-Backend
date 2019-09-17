@@ -15,6 +15,7 @@ services:
        - "3000:3000"
     volumes:
       - .:/app:z
+      - /app/node_modules/
     env_file: .env
     networks:
       - backend
@@ -26,8 +27,10 @@ services:
       - backend
     restart: on-failure
     volumes:
-      - ${PWD}/postgres/data:/var/lib/postgresql/data:z
+      - pgdata:/var/lib/postgresql/data:z
 
 networks:
   backend:
       driver: bridge
+volumes:
+  pgdata:
