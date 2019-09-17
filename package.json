@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./src/bin/www",
-    "dev": "npx sequelize db:migrate && nodemon ./src/bin/www",
+    "dev": "nodemon ./src/bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

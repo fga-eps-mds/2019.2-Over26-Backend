@@ -10,7 +10,7 @@ services:
         NODE_ENV: development
     depends_on:
       - postgresql
-    command: npm run dev
+    entrypoint: ["/bin/bash", "./entrypoint.sh"]
     ports:
        - "3000:3000"
     volumes:
