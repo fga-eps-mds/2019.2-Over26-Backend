@@ -1,0 +1,33 @@
+version: "3.5"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-dev
+      args:
+        APP_DIR: /app
+        NODE_ENV: development
+    depends_on:
+      - postgresql
+    command: npm run dev
+    ports:
+       - "3000:3000"
+    volumes:
+      - .:/app:z
+    env_file: .env
+    networks:
+      - backend
+
+  postgresql:
+    image: postgres:10.1-alpine
+    env_file: .env
+    networks:
+      - backend
+    restart: on-failure
+    volumes:
+      - ${PWD}/postgres/data:/var/lib/postgresql/data:z
+
+networks:
+  backend:
+      driver: bridge
