@@ -1,16 +1,15 @@
 var express = require('express');
 var router = express.Router();
 
-const userController = require('../controllers').user;
-/* GET users listing. */
+const accountController = require('../controllers').account;
+
+/* GET accounts listing. */
 router.get('/', function(req, res, next) {
   res.send('respond witsh a resource');
 });
 
-router.get('/api/users', userController.list);
-router.get('/api/users/:id', userController.getByPk);
-router.post('/api/users', userController.create);
-router.put('/api/users/:id', userController.update);
-router.delete('/api/users/:id', userController.delete);
+router.get('/api/account/:id', accountController.getByPk);
+router.post('/api/account', accountController.create);
+router.put('/api/account/:id', accountController.update);
 
 module.exports = router;
