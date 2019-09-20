@@ -12,4 +12,12 @@ router.get('/api/account/:id', accountController.getByPk);
 router.post('/api/account', accountController.create);
 router.put('/api/account/:id', accountController.update);
 
+const overdraftController = require('../controllers').overdraft;
+
+router.get('/api/account/:id', accountController.getByPk);
+router.put('/api/account/:id', accountController.update);
+router.put('/api/account/:id', accountController.desabilit);
+
+module.exports = router;
+
 module.exports = router;
