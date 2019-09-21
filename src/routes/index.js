@@ -8,8 +8,8 @@ router.get('/', function(req, res, next) {
   res.send('respond witsh a resource');
 });
 
-router.get('/api/account/:id', accountController.getByPk);
-router.post('/api/account', accountController.create);
-router.put('/api/account/:id', accountController.update);
+router.get('/api/accounts/:id', accountController.getByPk);
+router.post('/api/accounts', accountController.create);
+router.put('/api/accounts/:id', accountController.update);
 
 module.exports = router;
