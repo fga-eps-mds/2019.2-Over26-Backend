@@ -20,6 +20,14 @@ module.exports = {
       balance: {
         type: Sequelize.DECIMAL(10, 2)
       },
+      userId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {         // Account belongsTo User 1:1
+          model: 'Users',
+          key: 'id'
+        }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

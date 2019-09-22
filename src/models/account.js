@@ -4,10 +4,14 @@ module.exports = (sequelize, DataTypes) => {
     cpf: DataTypes.BIGINT(11),
     agency: DataTypes.INTEGER(10),
     number: DataTypes.INTEGER(10),
-    balance: DataTypes.DECIMAL(10, 2)
+    balance: DataTypes.DECIMAL(10, 2),
+    userId: DataTypes.INTEGER
   }, {});
   Account.associate = function(models) {
-    // associations can be defined here
+    Account.belongsTo(models.User, {
+      foreignKey: 'userId',
+      as: 'user'
+    });
   };
   return Account;
 };
