@@ -53,7 +53,6 @@ module.exports = {
                         limit: req.body.limit,
                         limitMax: req.body.limitMax,
                         limitUsed: req.body.limitUsed,
-                        limit: req.body.solicitatedAt
                     })
                     .then(() => res.status(200).send(overdraft))
                     .catch(error => res.status(400).send(error));

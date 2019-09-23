@@ -12,7 +12,7 @@ router.get('/api/overdrafts', overdraftController.list);
 router.get('/api/overdrafts/:id', overdraftController.getByPk);
 router.post('/api/overdrafts', overdraftController.create);
 router.put('/api/overdrats/:id', overdraftController.update);
-router.delete('/api/users/:id', overdraftController.delete);
+router.delete('/api/overdrafts/:id', overdraftController.delete);
 
 router.get('/api/users', userController.list);
 router.get('/api/users/:id', userController.getByPk);
