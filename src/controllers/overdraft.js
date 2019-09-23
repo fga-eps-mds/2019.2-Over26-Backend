@@ -73,6 +73,23 @@ module.exports = {
                     .catch(error => res.status(400).send(error));
             })
             .catch(error => res.status(400).send(error));
+    },
+    activateCredit(req, res) {
+        return Overdraft.findByPk(req.params.id)
+            .then(overdraft => {
+                if (!overdraft) {
+                    return res.status(404).send({
+                        message: "Overdraft Not Found"
+                    });
+                }
+                return overdraft
+                    .update({
+                        status: true
+                    })
+                    .then(() => res.status(200).send(overdraft))
+                    .catch(error => res.status(400).send(error));
+            })
+            .catch(error => res.status(400).send(error));
     }
 
 }
