@@ -4,13 +4,14 @@ var router = express.Router();
 const accountController = require('../controllers').account;
 const userController = require('../controllers').user;
 const overdraftController = require('../controllers').overdraft;
-/* GET users listing. */
+const transactionController = require('../controllers').transaction;
 
-/* GET Home */
+/* GET Home 
 router.get('/', function(req, res, next) {
   res.send('respond witsh a resource');
-});
+}); */
 
+/* Overdraft Router */
 router.get('/api/overdrafts', overdraftController.list);
 router.get('/api/overdrafts/:id', overdraftController.getByPk);
 router.post('/api/overdrafts', overdraftController.create);
@@ -28,5 +29,11 @@ router.get('/api/users', userController.list);
 router.get('/api/users/:id', userController.getByPk);
 router.post('/api/users', userController.create);
 router.put('/api/users/:id', userController.update);
+
+/* Transaction Router */
+router.get('/api/transactions', transactionController.list);
+router.post('/api/transactions', transactionController.cashIn);
+router.get('/api/transactions/:id', transactionController.getByPk);
+
 
 module.exports = router;
