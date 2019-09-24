@@ -8,11 +8,20 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      username: {
+      cpf: {
+        type: Sequelize.BIGINT(11)
+      },
+      name: {
         type: Sequelize.STRING
       },
       email: {
         type: Sequelize.STRING
+      },
+      phone: {
+        type: Sequelize.BIGINT
+      },
+      monthly_income: {
+        type: Sequelize.DECIMAL(10, 2)
       },
       createdAt: {
         allowNull: false,
