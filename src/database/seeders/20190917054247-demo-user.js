@@ -16,14 +16,7 @@ module.exports = {
       "Users",
       [
         {
-          username: "João",
-          email: "joao@demo.com",
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          username: "Luiz",
-          email: "luiz@demo.com",
+          name: "João",
           createdAt: new Date(),
           updatedAt: new Date()
         }
@@ -40,6 +33,6 @@ module.exports = {
       Example:
       return queryInterface.bulkDelete('People', null, {});
     */
-    return queryInterface.bulkDelete("Users", null, {});
+    return queryInterface.bulkDelete("Accounts", null, {});
   }
 };
