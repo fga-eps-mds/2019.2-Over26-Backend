@@ -12,10 +12,13 @@ module.exports = {
         type: Sequelize.BIGINT(11)
       },
       agency: {
-        type: Sequelize.INTEGER(10)
+        type: Sequelize.INTEGER(10),
+        allowNull: false,
       },
       number: {
-        type: Sequelize.INTEGER(10)
+        type: Sequelize.INTEGER(10),
+        allowNull: false,
+        primaryKey: true
       },
       balance: {
         type: Sequelize.DECIMAL(10, 2)

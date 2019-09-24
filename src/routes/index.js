@@ -31,7 +31,7 @@ router.put('/api/users/:id', userController.update);
 
 /* Transaction Router */
 router.get('/api/transactions', transactionController.list);
-router.post('/api/transactions', transactionController.cashIn);
+router.post('/api/accounts/:id/transactions/', transactionController.cashIn);
 router.get('/api/transactions/:id', transactionController.getByPk);
 
 

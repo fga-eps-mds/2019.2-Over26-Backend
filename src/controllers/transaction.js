@@ -13,33 +13,32 @@ list(req, res) {
 
   // Create a new transaction
   cashIn(req, res) {
+    console.log(req.body)
     return Transaction.create({
       date: req.body.date,
       type: req.body.type,
       description: req.body.description,
-      value: req.body.value,  
+      value: req.body.value,
+      accountNumber: req.body.accountNumber,
+      agencyNumber: req.body.agencyNumber
 
     })
       .then(transaction => {
-        update(req, res); {
-          return Account.findByPk(req.params.id)
+           Account.findByPk(req.params.id)
             .then(account => {
               if (!account) {
                 return res.status(404).send({
                   message: "Account Not Found"
                 });
               }
-              return account
+              account
                 .update({
-                  balance: (account.balance + value)
+                  balance: (parseFloat(account.balance) + parseFloat(transaction.value))
                 })
-                .then(() => res.status(200).send(account))
                 .catch(error => res.status(400).send(error))
             })
             .catch(error => res.status(400).send(error));
-        }
-      }
-       res.status(201).send(transaction))
+      return res.status(201).send(transaction)})
       .catch(error => res.status(400).send(error));
   },
 

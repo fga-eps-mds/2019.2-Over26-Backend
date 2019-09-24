@@ -21,6 +21,22 @@ module.exports = {
       value: {
         type: Sequelize.DECIMAL(10,2)
       },
+      accountNumber: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {         // Account belongsTo User 1:1
+          model: 'Accounts',
+          key: 'number'
+        }
+      },
+      agencyNumber: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {         // Account belongsTo User 1:1
+          model: 'Accounts',
+          key: 'agency'
+        }
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

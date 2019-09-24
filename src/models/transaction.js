@@ -5,10 +5,15 @@ module.exports = (sequelize, DataTypes) => {
     type: DataTypes.STRING(30),
     description: DataTypes.STRING(256),
     value: DataTypes.DECIMAL(10,2),
+    agencyAccount: DataTypes.INTEGER(10),
+    numberAccount: DataTypes.INTEGER(10)
   }, {});
 
   Transaction.associate = function(models) {
-    // associations can be defined here
+    Transaction.belongsTo(models.Account, {
+      foreignKey: ['agencyAccount', 'numberAccount'],
+      as: 'account'
+    });
   };
   return Transaction;
 };
