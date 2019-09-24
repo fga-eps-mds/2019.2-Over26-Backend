@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
    
   }, {});
   Instalment.associate = function(models) {
-    // associations can be defined here
+    
+    Instalment.belongsTo(models.overdraftDebtId, {foreignKey: 'id'})
     
   };
   return Instalment;
