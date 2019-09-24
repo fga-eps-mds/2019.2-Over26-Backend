@@ -1,30 +1,31 @@
 'use strict';
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Overdraft', {
-      id_overdraft: {
+    return queryInterface.createTable('OverdraftDebts', {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user: {
-        type: Sequelize.BIGINT(11)
-      },
-      solicitation_date: {
+      entryDate: {
         type: Sequelize.DATE
       },
-      status: {
+      amount: {
+        type: Sequelize.FLOAT
+      },
+      rate: {
+         type: Sequelize.FLOAT
+      },
+      wasDivided: {
         type: Sequelize.BOOLEAN
-      },
-      limit: {
-        type: Sequelize.DECIMAL(10, 2)
-      },
-      limit_max: {
-        type: Sequelize.DECIMAL(10, 2)
-      },
-      limit_used: {
-        type: Sequelize.DECIMAL(10, 2)
+      },  
+      userId: {
+        type: Sequelize.INTEGER,
+        references: {model:'Users', key: 'cpf'},
+        onDelete: 'CASCADE',
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -36,7 +37,9 @@ module.exports = {
       }
     });
   },
+
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Overdraft');
+    return queryInterface.dropTable('OverdraftDebts');
+
   }
 };

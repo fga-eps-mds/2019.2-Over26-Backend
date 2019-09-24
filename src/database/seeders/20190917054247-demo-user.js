@@ -38,6 +38,10 @@ module.exports = {
     	  limit: 100.11,
           limit_max: 200.00,
           limit_used: 11.11,
+          name: "João",
+          email: "joao@demo.com",
+          phone: 11111111111,
+          monthly_income: 111.11,
           createdAt: new Date(),
           updatedAt: new Date()
         }
