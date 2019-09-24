@@ -9,7 +9,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       cpf: {
-        type: Sequelize.BIGINT(11)
+        type: Sequelize.BIGINT(11),
+        unique:true,
+        allowNull: false,
+
       },
       name: {
         type: Sequelize.STRING
