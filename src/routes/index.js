@@ -6,10 +6,10 @@ const userController = require('../controllers').user;
 const overdraftController = require('../controllers').overdraft;
 const transactionController = require('../controllers').transaction;
 
-/* GET Home 
+/* GET Home */ 
 router.get('/', function(req, res, next) {
   res.send('respond witsh a resource');
-}); */
+}); 
 
 /* Overdraft Router */
 router.get('/api/overdrafts', overdraftController.list);
@@ -25,7 +25,6 @@ router.post('/api/accounts', accountController.create);
 router.put('/api/accounts/:id', accountController.update);
 
 /* User Router */
-router.get('/api/users', userController.list);
 router.get('/api/users/:id', userController.getByPk);
 router.post('/api/users', userController.create);
 router.put('/api/users/:id', userController.update);

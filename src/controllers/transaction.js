@@ -17,28 +17,29 @@ list(req, res) {
       date: req.body.date,
       type: req.body.type,
       description: req.body.description,
-      value: req.body.value,
-
-    /*  update(req, res) {
-        return Account.findByPk(req.params.id)
-          .then(account => {
-            if (!account) {
-              return res.status(404).send({
-                message: "Account Not Found"
-              });
-            }
-            return account
-              .update({
-                balance: (balance + value)
-              })
-              .then(() => res.status(200).send(account))
-              .catch(error => res.status(400).send(error));
-          })
-          .catch(error => res.status(400).send(error));
-      }  */
+      value: req.body.value,  
 
     })
-      .then(transaction => res.status(201).send(transaction))
+      .then(transaction => {
+        update(req, res); {
+          return Account.findByPk(req.params.id)
+            .then(account => {
+              if (!account) {
+                return res.status(404).send({
+                  message: "Account Not Found"
+                });
+              }
+              return account
+                .update({
+                  balance: (account.balance + value)
+                })
+                .then(() => res.status(200).send(account))
+                .catch(error => res.status(400).send(error))
+            })
+            .catch(error => res.status(400).send(error));
+        }
+      }
+       res.status(201).send(transaction))
       .catch(error => res.status(400).send(error));
   },
 
