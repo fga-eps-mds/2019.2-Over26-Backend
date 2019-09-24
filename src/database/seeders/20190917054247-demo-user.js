@@ -13,13 +13,10 @@ module.exports = {
       }], {});
     */
     return queryInterface.bulkInsert(
-      "Accounts",
+      "Users",
       [
         {
-          cpf: 11111111111,
-          agency: 111,
-          number: 111,
-          balance: 11.11,
+          name: "João",
           createdAt: new Date(),
           updatedAt: new Date()
         }

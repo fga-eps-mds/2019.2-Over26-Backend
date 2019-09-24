@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Instalment.associate = function(models) {
     
-    Instalment.belongsTo(models.overdraftDebtId, {foreignKey: 'id'})
+   // Instalment.belongsTo(models.overdraftDebtId, {foreignKey: 'id'})
     
   };
   return Instalment;

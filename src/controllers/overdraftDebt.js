@@ -155,7 +155,7 @@ module.exports = {
                     res.status(400).send("Escolha um número de parcelas");
                 };
 
-            },
+            });
 
     }
 

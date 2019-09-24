@@ -1,0 +1,19 @@
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  const Transaction = sequelize.define('Transaction', {
+    date: DataTypes.DATE,
+    type: DataTypes.STRING(30),
+    description: DataTypes.STRING(256),
+    value: DataTypes.DECIMAL(10,2),
+    agencyAccount: DataTypes.INTEGER(10),
+    numberAccount: DataTypes.INTEGER(10)
+  }, {});
+
+  Transaction.associate = function(models) {
+    Transaction.belongsTo(models.Account, {
+      foreignKey: ['agencyAccount', 'numberAccount'],
+      as: 'account'
+    });
+  };
+  return Transaction;
+};

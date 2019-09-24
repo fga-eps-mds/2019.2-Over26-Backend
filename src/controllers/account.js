@@ -1,4 +1,6 @@
-const Account = require("../models").account;
+const Account = require("../models").Account;
+const User = require('../models').User;
+
 // Controllers are used for handle any incoming URL request
 module.exports = {
 
@@ -8,7 +10,8 @@ module.exports = {
       cpf: req.body.cpf,
       agency: req.body.agency,
       number: req.body.number,
-      balance: req.body.balance
+      balance: req.body.balance,
+      userId: req.body.userId
     })
       .then(account => res.status(201).send(account))
       .catch(error => res.status(400).send(error));
