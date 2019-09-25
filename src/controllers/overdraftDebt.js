@@ -12,8 +12,10 @@ module.exports = {
             amount = 0
             rate = 0.1
             wasDivided= false
+            userId= user.cpf
 
-            return user.createOverdraftDebt({
+            return OverdraftDebt.create({
+                userId: userId,
                 entryDate: entryDate,
                 amount: amount,
                 rate: rate,
@@ -37,7 +39,7 @@ module.exports = {
             .catch(error => res.status(400).send("error"));
     },
 
-    getInstalmentsOpcions(req, res){
+    getInstalmentsOptions(req, res){
         return overdraftDebt.findByPk(req.params.id)
             .then(overdraftDebt => {
                 if(req.body.quantInstalments == 1)

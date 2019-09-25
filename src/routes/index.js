@@ -4,6 +4,7 @@ var router = express.Router();
 const accountController = require('../controllers').account;
 const userController = require('../controllers').user;
 const overdraftController = require('../controllers').overdraft;
+const overdraftDebtController = require('../controllers').overdraftDebt;
 const transactionController = require('../controllers').transaction;
 
 /* GET Home */ 
@@ -28,6 +29,9 @@ router.put('/api/accounts/:id', accountController.update);
 router.get('/api/users/:id', userController.getByPk);
 router.post('/api/users', userController.create);
 router.put('/api/users/:id', userController.update);
+
+/* OverdraftDebt Router */
+router.post('/api/users/:id/overdraftDebt',overdraftDebtController.create);
 
 /* Transaction Router */
 router.get('/api/transactions', transactionController.list);
