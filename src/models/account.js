@@ -1,21 +1,33 @@
-'use strict';
+"use strict";
 module.exports = (sequelize, DataTypes) => {
-  const Account = sequelize.define('Account', {
-    cpf: DataTypes.BIGINT(11),
-    agency: DataTypes.INTEGER(10),
-    number: DataTypes.INTEGER(10),
-    balance: DataTypes.DECIMAL(10, 2),
-    userId: DataTypes.INTEGER
-  }, {});
+  const Account = sequelize.define(
+    "Account",
+    {
+      cpf: DataTypes.BIGINT(11),
+      agency: {
+        type: DataTypes.INTEGER(10)
+      },
+      number: {
+        primaryKey: true,
+        unique: true,
+        type: DataTypes.INTEGER(10)
+      },
+      balance: DataTypes.DECIMAL(10, 2),
+      userId: DataTypes.INTEGER
+    },
+    {}
+  );
   Account.associate = function(models) {
     Account.belongsTo(models.User, {
-      foreignKey: 'userId',
-      as: 'user'
+      foreignKey: "userId",
+      as: "user"
     });
     Account.hasMany(models.Transaction, {
-      foreignKey: ['agencyNumber', 'accountNumber'],
-      as: 'account'
-    })
+      foreignKey: "accountNumber",
+      as: "transactions"
+    });
   };
+  Account.removeAttribute("id");
+
   return Account;
 };

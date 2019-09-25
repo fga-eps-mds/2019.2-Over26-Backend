@@ -1,23 +1,24 @@
-'use strict';
+"use strict";
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Accounts', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
+    return queryInterface.createTable("Accounts", {
+      // id: {
+      //   allowNull: false,
+      //   autoIncrement: true,
+      //   unique: true,
+      //   primaryKey: true,
+      //   type: Sequelize.INTEGER
+      // },
       cpf: {
         type: Sequelize.BIGINT(11)
       },
       agency: {
         type: Sequelize.INTEGER(10),
-        allowNull: false,
       },
       number: {
         type: Sequelize.INTEGER(10),
         allowNull: false,
+        unique: true,
         primaryKey: true
       },
       balance: {
@@ -26,9 +27,10 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {         // Account belongsTo User 1:1
-          model: 'Users',
-          key: 'id'
+        references: {
+          // Account belongsTo User 1:1
+          model: "Users",
+          key: "id"
         }
       },
       createdAt: {
@@ -42,6 +44,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Accounts');
+    return queryInterface.dropTable("Accounts");
   }
 };

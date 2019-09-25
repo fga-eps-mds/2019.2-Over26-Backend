@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Transactions', {
+    return queryInterface.createTable("Transactions", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -19,22 +19,15 @@ module.exports = {
         type: Sequelize.STRING(256)
       },
       value: {
-        type: Sequelize.DECIMAL(10,2)
+        type: Sequelize.DECIMAL(10, 2)
       },
       accountNumber: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {         // Account belongsTo User 1:1
-          model: 'Accounts',
-          key: 'number'
-        }
-      },
-      agencyNumber: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {         // Account belongsTo User 1:1
-          model: 'Accounts',
-          key: 'agency'
+        onDelete: "CASCADE",
+        references: {
+          model: "Accounts",
+          key: "number",
+          as: "accountNumber"
         }
       },
       createdAt: {
@@ -45,11 +38,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-
-    })
+    });
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Transactions');
+    return queryInterface.dropTable("Transactions");
   }
 };
