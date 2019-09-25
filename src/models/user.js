@@ -21,6 +21,9 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "userCPF",
       as: "OverdraftDebts"
     });
+    User.hasOne(models.Overdraft, {
+      foreignKey: 'userCPF',
+    });
   };
   User.removeAttribute("id");
   return User;

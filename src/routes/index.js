@@ -14,11 +14,11 @@ router.get('/', function(req, res, next) {
 
 /* Overdraft Router */
 router.get('/api/overdrafts', overdraftController.list);
-router.get('/api/overdrafts/:id', overdraftController.getByPk);
-router.post('/api/overdrafts', overdraftController.create);
-router.put('/api/overdrafts/:id', overdraftController.activateCredit);
-router.put('/api/overdrafts/:id', overdraftController.update);
-router.delete('/api/overdrafts/:id', overdraftController.delete);
+router.get('/api//users/:id/overdrafts', overdraftController.getByPk);
+router.post('/api/users/:id/overdrafts', overdraftController.create);
+router.put('/api/users/:id/overdrafts', overdraftController.activateCredit);
+router.put('/api/users/:id/overdrafts', overdraftController.update);
+router.delete('/api/users/:id/overdrafts', overdraftController.delete);
 
 /* Account Router */
 router.get('/api/accounts/:id', accountController.getByPk);
