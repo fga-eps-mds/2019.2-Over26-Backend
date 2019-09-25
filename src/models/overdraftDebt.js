@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
    //OverdraftDebt.hasMany(models.Instalment,{foreignKey: 'id'})
    OverdraftDebt.belongsTo(models.User,{ 
-      foreignKey: 'cpf',
-      as:'userId'})
+      foreignKey: 'userCPF',
+    })
   };
   return OverdraftDebt;
 };

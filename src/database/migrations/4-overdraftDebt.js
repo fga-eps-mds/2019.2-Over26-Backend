@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('OverdraftDebts', {
+    return queryInterface.createTable("OverdraftDebts", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -16,16 +16,20 @@ module.exports = {
         type: Sequelize.FLOAT
       },
       rate: {
-         type: Sequelize.FLOAT
+        type: Sequelize.FLOAT
       },
       wasDivided: {
         type: Sequelize.BOOLEAN
-      },  
-      userId: {
-        type: Sequelize.INTEGER,
-        references: {model:'Users', key: 'cpf'},
-        onDelete: 'CASCADE',
+      },
+      userCPF: {
+        type: Sequelize.BIGINT,
+        onDelete: "CASCADE",
         allowNull: false,
+        references: {
+          model: "Users",
+          key: "cpf",
+          as: "userCPF"
+        }
       },
       createdAt: {
         allowNull: false,
@@ -39,7 +43,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('OverdraftDebts');
-
+    return queryInterface.dropTable("OverdraftDebts");
   }
 };

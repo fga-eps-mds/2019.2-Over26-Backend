@@ -7,11 +7,10 @@ module.exports = {
   // Create a new account
   create(req, res) {
     return Account.create({
-      cpf: req.body.cpf,
+      userCPF: req.body.userCPF,
       agency: req.body.agency,
       number: req.body.number,
       balance: req.body.balance,
-      userId: req.body.userId
     })
       .then(account => res.status(201).send(account))
       .catch(error => res.status(400).send(error));
@@ -40,7 +39,7 @@ module.exports = {
         }
         return account
           .update({
-            cpf: req.body.cpf,
+            userCPF: req.body.userCPF,
             agency: req.body.agency,
             number: req.body.number,
             balance: req.body.balance
