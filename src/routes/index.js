@@ -11,6 +11,10 @@ router.get('/', function(req, res, next) {
   res.send('respond witsh a resource');
 }); 
 
+router.get("/transaction", function(req, res) {
+  res.sendFile(__dirname + "/views/index.html");
+  });
+
 /* Overdraft Router */
 router.get('/api/overdrafts', overdraftController.list);
 router.get('/api/overdrafts/:id', overdraftController.getByPk);

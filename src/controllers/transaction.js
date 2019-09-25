@@ -11,7 +11,7 @@ module.exports = {
   },
 
   // Create a new transaction
-  cashIn(req, res) {
+  makeTransaction(req, res) {
     return Account.findByPk(req.params.id)
       .then(account => {
         if (!account) {
@@ -31,7 +31,11 @@ module.exports = {
             return account
               .update({
                 balance:
-                  parseFloat(account.balance) + parseFloat(transaction.value)
+                  account.type = "in"
+                  ? parseFloat(account.balance) + 
+                    parseFloat(transaction.value)
+                  : parseFloat(account.balance) -
+                    parseFloat(transaction.value)
               })
               .then(() => res.status(201).send(transaction));
           });
