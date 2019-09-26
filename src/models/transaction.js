@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const Transaction = sequelize.define(
     "Transaction",
     {
+      name: DataTypes.STRING(30),
       date: DataTypes.DATE,
       type: DataTypes.STRING(30),
       description: DataTypes.STRING(256),

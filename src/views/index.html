@@ -20,7 +20,7 @@
 
     input[type="submit"] {
       width: 100%;
-      background-color: #4caf50;
+      background-color: #35a18a;
       color: white;
       padding: 14px 20px;
       margin: 8px 0;
@@ -30,7 +30,7 @@
     }
 
     input[type="submit"]:hover {
-      background-color: #45a049;
+      background-color: #35a18a;
     }
 
     div {
@@ -40,15 +40,16 @@
     }
   </style>
   <body>
-    <h1>Hello World!</h1>
+    <h1>Tela de Transações</h1>
     <form onsubmit="createTrasaction(event)">
-      <input id="account" placeholder="account" type="text" /><br />
+      <input id="name" placeholder="Name" type="text" /><br />
+      <input id="account" placeholder="Account" type="text" /><br />
       <select name="type" id="type">
         <option value="in">Entrada</option>
         <option value="out">Saida</option> </select
       ><br />
-      <input id="description" placeholder="description" type="text" /><br />
-      <input id="value" placeholder="value" type="number" step="0.01" /><br />
+      <input id="description" placeholder="Description" type="text" /><br />
+      <input id="value" placeholder="Value" type="number" step="0.01" /><br />
       <input type="submit" value="Criar" /><br />
     </form>
     <script>
@@ -60,6 +61,7 @@
               "#account"
             ).val()}/transactions`,
             {
+              name: $("#name").val(),
               type: $("#type").val(),
               description: $("#description").val(),
               value: $("#value").val()
