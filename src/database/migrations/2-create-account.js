@@ -9,14 +9,14 @@ module.exports = {
 				type: Sequelize.INTEGER
 			},
 			cpf: {
-				type: Sequelize.BIGINT(11)
+				type: Sequelize.BIGINT
 			},
 			agency: {
-				type: Sequelize.INTEGER(10),
+				type: Sequelize.INTEGER,
 				allowNull: false
 			},
 			number: {
-				type: Sequelize.INTEGER(10),
+				type: Sequelize.INTEGER,
 				allowNull: false,
 				unique: true,
 				primaryKey: true

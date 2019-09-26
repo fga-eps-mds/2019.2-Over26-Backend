@@ -20,7 +20,7 @@ router.get("/transaction", function (req, res) {
 router.get('/api/overdrafts', overdraftController.list);
 router.get('/api//users/:id/overdrafts', overdraftController.getByPk);
 router.post('/api/users/:id/overdrafts', overdraftController.create);
-router.put('/api/users/:id/overdrafts', overdraftController.activateCredit);
+//router.put('/api/users/:id/overdrafts', overdraftController.activateCredit);
 router.put('/api/users/:id/overdrafts', overdraftController.update);
 router.delete('/api/users/:id/overdrafts', overdraftController.delete);
 router.get('/api/users/:cpf/overdrafts/usability', overdraftController.checkUsability)

@@ -1,27 +1,52 @@
 const OverdraftDebt = require("../models").OverdraftDebt;
 const User = require("../models").User;
+const Overdraft = require("../models").Overdraft;
 
 module.exports = {
   create(req, res) {
-    return User.findByPk(req.params.id).then(user => {
-      console.log(user.cpf);
-      const entryDate = new Date();
-      const amount = 0;
-      const rate = 0.1;
-      const wasDivided = false;
-      const userCPF = user.cpf;
+    return User
+      .findByPk(req.params.id)
+      .then(user => {
+        console.log(user.cpf);
+        return Overdraft
+          .findOne({
+            where: {
+              userCPF:user.cpf
+            }
+          })
+          .then(overdraft => {
+            console.log(overdraft.firstUsedDate)
+            const rate = 0.1;
 
-      return user
-        .createOverdraftDebt({
-          userCPF: userCPF,
-          entryDate: entryDate,
-          amount: amount,
-          rate: rate,
-          wasDivided: wasDivided
-        })
-        .then(overdraftDebt => res.status(201).send(overdraftDebt))
-        .catch(error => res.status(400).send(error));
-    });
+            const firstUsedDate = overdraft.firstUsedDate;
+            const entryDate = new date();
+            entryDate.setDate(firstUsedDate.getDate() + 26)
+            //sets entryDate of overdraftDebt to firtUsedDate of overdraft+26days
+           
+
+            const auxiliarAmount = overdraft.limitUsed;
+            const amountOfDays= ((currentDate.getDate()-entryDate.getDate())/86400000);
+            //is the amount of days between entering debt and the current date
+          
+
+            const amount = auxiliarAmount*(Math.pow(1+rate,amountOfDays));
+            //is the amount of money due in the moment of the creation of the overdraftDebt
+            
+            const wasDivided = false;
+            const userCPF = user.cpf;
+
+            return user
+              .createOverdraftDebt({
+                userCPF: userCPF,
+                entryDate: entryDate,
+                amount: amount,
+                rate: rate,
+                wasDivided: wasDivided
+              })
+          })
+          .then(overdraftDebt => res.status(201).send(overdraftDebt))
+          .catch(error => res.status(400).send(error));
+      });
   },
   getByPk(req, res) {
     return overdraftDebt
