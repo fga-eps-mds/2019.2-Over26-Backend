@@ -13,14 +13,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER(10)
       },
       balance: DataTypes.DECIMAL(10, 2),
-      userId: DataTypes.INTEGER
     },
     {}
   );
   Account.associate = function(models) {
     Account.belongsTo(models.User, {
-      foreignKey: "userId",
-      as: "user"
+      foreignKey: "userCPF"
     });
     Account.hasMany(models.Transaction, {
       foreignKey: "accountNumber",

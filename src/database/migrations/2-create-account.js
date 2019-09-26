@@ -2,18 +2,18 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable("Accounts", {
-      // id: {
-      //   allowNull: false,
-      //   autoIncrement: true,
-      //   unique: true,
-      //   primaryKey: true,
-      //   type: Sequelize.INTEGER
-      // },
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
       cpf: {
         type: Sequelize.BIGINT(11)
       },
       agency: {
         type: Sequelize.INTEGER(10),
+        allowNull: false
       },
       number: {
         type: Sequelize.INTEGER(10),
@@ -24,13 +24,14 @@ module.exports = {
       balance: {
         type: Sequelize.DECIMAL(10, 2)
       },
-      userId: {
-        type: Sequelize.INTEGER,
+      userCPF: {
+        type: Sequelize.BIGINT,
+        onDelete: "CASCADE",
         allowNull: false,
         references: {
-          // Account belongsTo User 1:1
           model: "Users",
-          key: "id"
+          key: "cpf",
+          as: "userCPF"
         }
       },
       createdAt: {

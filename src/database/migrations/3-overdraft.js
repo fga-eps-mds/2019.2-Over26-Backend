@@ -21,8 +21,19 @@ module.exports = {
       limitUsed: {
         type: Sequelize.DECIMAL(10,2)
       },
-      solicitationDate: {
+      firstUseDate: {
         type: Sequelize.DATE
+      },
+      userCPF: {
+        unique:true,
+        type: Sequelize.BIGINT,
+        onDelete: "CASCADE",
+        allowNull: false,
+        references: {
+          model: "Users",
+          key: "cpf",
+          as: "userCPF"
+        }
       },
       createdAt: {
         allowNull: false,
