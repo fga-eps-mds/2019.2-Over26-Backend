@@ -59,6 +59,7 @@ module.exports = {
 						limit: req.body.limit,
 						limitMax: req.body.limitMax,
 						limitUsed: req.body.limitUsed,
+						firstUseDate: req.body.firstUseDate
 					})
 					.then(() => res.status(200).send(overdraft))
 					.catch(error => res.status(400).send(error));
@@ -113,18 +114,14 @@ module.exports = {
 				if (overdraft.firstUseDate != null) {
 					const currentDate = new Date()
 					const dateDiff = currentDate.getTime() - overdraft.firstUseDate.getTime()
-					const dateDiffDays = dateDiff / 86400000
+					const dateDiffDays = dateDiff * 86400000
 
 					if (dateDiffDays > 26) {
-						return false
-							.then(() => res.status(200).send(false))
-							.catch(error => res.status(400).send(error));
+						return res.status(200).send(false)
 					}
-					else {
-						return true
-							.then(() => res.status(200).send(true))
-							.catch(error => res.status(400).send(error));
-					}
+					
+				}else {
+					return res.status(200).send(true)
 				}
 			})
 
