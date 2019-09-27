@@ -10,11 +10,11 @@ const instalmentController = require('../controllers').instalment;
 
 /* GET Home */
 router.get('/', function (req, res, next) {
-	res.send('respond witsh a resource');
+    res.send('respond witsh a resource');
 });
 
 router.get("/transaction", function (req, res) {
-	res.sendFile("/app/src/views/index.html");
+    res.sendFile("/app/src/views/index.html");
 });
 
 /* Overdraft Router */
