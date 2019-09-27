@@ -6,6 +6,7 @@ const userController = require('../controllers').user;
 const overdraftController = require('../controllers').overdraft;
 const overdraftDebtController = require('../controllers').overdraftDebt;
 const transactionController = require('../controllers').transaction;
+const instalmentController = require('../controllers').instalment;
 
 /* GET Home */
 router.get('/', function (req, res, next) {
@@ -37,11 +38,18 @@ router.put('/api/users/:id', userController.update);
 
 /* OverdraftDebt Router */
 router.post('/api/users/:id/overdraftDebt', overdraftDebtController.create);
+router.get('/api/overdraftDebts/:id', overdraftDebtController.getByPk);
+router.get('/api/overdraftDebts/:id/options', overdraftDebtController.getInstalmentsOptions);
+router.get('/api/overdraftDebts/:id/check', overdraftDebtController.checkAmount);
+router.post('/api/overdraftDebts/:id/instalments', overdraftDebtController.createInstalments);
+
 
 /* Transaction Router */
 router.get('/api/transactions', transactionController.list);
 router.post('/api/accounts/:accountNumber/transactions/', transactionController.makeTransaction);
 router.get('/api/transactions/:id', transactionController.getByPk);
 
+/* Instalments Router */
+router.post('/api/instalments/:id', instalmentController.create);
 
 module.exports = router;
