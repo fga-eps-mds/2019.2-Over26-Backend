@@ -128,7 +128,8 @@ module.exports = {
                         console.log(dateDiff);
 
                         return res.status(418).send(false)
-                    } else {                    console.log(dateDiff);
+                    } else {
+                        console.log(dateDiff);
 
                         return res.status(200).send(true)
                     }
@@ -139,6 +140,37 @@ module.exports = {
             })
 
     },
+    usabilityCheck(req) {
+        return Overdraft.findOne({
+            where: {
+                userCPF: req
+            }
+        })
+            .then(overdraft => {
+                if (!overdraft) {
+                    return true
+                }
+                if (overdraft.firstUseDate != null) {
+                    const currentDate = new Date()
+                    const dateDiff = currentDate.getTime() - overdraft.firstUseDate.getTime()
+                    const dateDiffDays = dateDiff / 86400000
+                    console.log(dateDiffDays);
+
+                    if (dateDiffDays > 26) {
+                        console.log("firstUseDate!=null && daysSynceFistUseDate>26");
+
+                        return false
+                    } else {
+                        console.log("firstUseDate!=null && daysSynceFistUseDate<26");
+                        return true
+                    }
+                } else {
+                    console.log("firstUseDate==null");
+                    return  true
+                }
+
+            })
+        }
 
 
 

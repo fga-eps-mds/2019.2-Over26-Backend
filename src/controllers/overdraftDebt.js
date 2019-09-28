@@ -18,7 +18,7 @@ module.exports = {
             })
                 .then(overdraft => {
                     console.log(overdraft.firstUseDate)
-                    if (!(overdraftController.checkUsability())) {
+                    if (!(overdraftController.usabilityCheck(user.cpf))) {
 
                         const rate = 0.5;
 
