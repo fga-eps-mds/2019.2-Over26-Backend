@@ -2,17 +2,30 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('Users', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
+      // id: {
+      //   allowNull: false,
+      //   autoIncrement: true,
+      //   primaryKey: true,
+      //   type: Sequelize.INTEGER
+      // },
+      cpf: {
+        type: Sequelize.BIGINT,
+        unique:true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        allowNull: false,
+
       },
-      username: {
+      name: {
         type: Sequelize.STRING
       },
       email: {
         type: Sequelize.STRING
+      },
+      phone: {
+        type: Sequelize.BIGINT
+      },
+      monthly_income: {
+        type: Sequelize.DECIMAL(10, 2)
       },
       createdAt: {
         allowNull: false,
