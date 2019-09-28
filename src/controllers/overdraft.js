@@ -82,19 +82,26 @@ module.exports = {
             .catch(error => res.status(400).send(error));
     },
     activateCredit(req, res) {
-        return Overdraft.findByPk(req.params.id)
-            .then(overdraft => {
-                if (!overdraft) {
+        return User.findByPk(req.params.id)
+            .then(user => {
+                if (!user) {
                     return res.status(404).send({
-                        message: "Overdraft Not Found"
+                        message: "User Not Found"
                     });
                 }
-                return overdraft
-                    .update({
+                return user.getOverdraft().then(overdraft => {
+                    if (!overdraft) {
+                        return res.status(404).send({
+                            message: "Overdraft Not Found"
+                        });
+                    }
+                    overdraft.update({
                         status: true
                     })
-                    .then(() => res.status(200).send(overdraft))
-                    .catch(error => res.status(400).send(error));
+                        .then(() => res.status(200).send(overdraft))
+                        .catch(error => res.status(400).send(error));
+
+                })
             })
             .catch(error => res.status(400).send(error));
     },
@@ -114,11 +121,15 @@ module.exports = {
                 if (overdraft.firstUseDate != null) {
                     const currentDate = new Date()
                     const dateDiff = currentDate.getTime() - overdraft.firstUseDate.getTime()
-                    const dateDiffDays = dateDiff * 86400000
+                    const dateDiffDays = dateDiff / 86400000
+                    console.log(dateDiff);
 
                     if (dateDiffDays > 26) {
-                        return res.status(200).send(false)
-                    } else {
+                        console.log(dateDiff);
+
+                        return res.status(418).send(false)
+                    } else {                    console.log(dateDiff);
+
                         return res.status(200).send(true)
                     }
 

@@ -2,6 +2,10 @@ const OverdraftDebt = require("../models").OverdraftDebt;
 const User = require("../models").User;
 const Overdraft = require("../models").Overdraft;
 const Instalment = require("../models").Instalment;
+const overdraftController = require('./overdraft');
+
+
+
 
 module.exports = {
     create(req, res) {
@@ -13,26 +17,23 @@ module.exports = {
                 }
             })
                 .then(overdraft => {
-                    if (!(overdraft.usabilityCheck)) {
+                    console.log(overdraft.firstUseDate)
+                    if (!(overdraftController.checkUsability())) {
 
                         const rate = 0.5;
 
-                        // const firstUseDate = overdraft.firstUseDate;
-                        const firstUseDate = new Date(); // Check if it is null
+                        const firstUseDate = overdraft.firstUseDate;
+                        //const firstUseDate = new Date(); // Check if it is null
 
-                        const currentDate = new Date();
-                        const entryDate = new Date();
-                        entryDate.setDate(firstUseDate.getDate() + 26);
+                        const entryDate = firstUseDate;
+                        entryDate.setDate(entryDate.getDate() + 26);
+                        //new Date();
+                        //entryDate.setDate(firstUseDate.getDate());
                         //sets entryDate of overdraftDebt to firtUsedDate of overdraft+26days
 
-                        console.log(entryDate);
-                        const auxiliarAmount = overdraft.limitUsed;
-                        const amountOfDays =
-                            (currentDate.getDate() - entryDate.getDate()) / 86400000;
-                        //is the amount of days between entering debt and the current date
 
-                        const amount = auxiliarAmount * Math.pow((1 + rate), amountOfDays);
-                        //is the amount of money due in the moment of the creation of the overdraftDebt
+                        const amount = overdraft.limitUsed;
+                        //is the amount of money due in the moment of the debt start
 
                         const wasDivided = false;
                         const userCPF = user.cpf;
@@ -43,10 +44,10 @@ module.exports = {
                             amount: amount,
                             rate: rate,
                             wasDivided: wasDivided
-                        });
+                        }).then(overdraftDebt => res.status(201).send(overdraftDebt));
                     }
                 })
-                .then(overdraftDebt => res.status(201).send(overdraftDebt))
+                
                 .catch(error => res.status(400).send(error));
         });
     },
