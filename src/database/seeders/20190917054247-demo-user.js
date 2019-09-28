@@ -16,14 +16,11 @@ module.exports = {
       "Users",
       [
         {
-          username: "João",
+          cpf: 11111111111,
+          name: "João",
           email: "joao@demo.com",
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          username: "Luiz",
-          email: "luiz@demo.com",
+          phone: 11111111111,
+          monthly_income: 111.11,
           createdAt: new Date(),
           updatedAt: new Date()
         }

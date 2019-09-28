@@ -15,10 +15,8 @@ router.put('/api/overdrafts/:id', overdraftController.activateCredit);
 router.put('/api/overdrafts/:id', overdraftController.update);
 router.delete('/api/overdrafts/:id', overdraftController.delete);
 
-router.get('/api/users', userController.list);
 router.get('/api/users/:id', userController.getByPk);
 router.post('/api/users', userController.create);
 router.put('/api/users/:id', userController.update);
-router.delete('/api/users/:id', userController.delete);
 
 module.exports = router;
