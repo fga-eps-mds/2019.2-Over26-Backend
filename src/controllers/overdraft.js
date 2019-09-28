@@ -148,8 +148,8 @@ module.exports = {
         })
             .then(overdraft => {
                 if (!overdraft) {
-                    return true
-                }
+                return true
+            }
                 if (overdraft.firstUseDate != null) {
                     const currentDate = new Date()
                     const dateDiff = currentDate.getTime() - overdraft.firstUseDate.getTime()
@@ -166,7 +166,7 @@ module.exports = {
                     }
                 } else {
                     console.log("firstUseDate==null");
-                    return  true
+                    return true
                 }
 
             })

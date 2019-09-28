@@ -16,10 +16,11 @@ module.exports = {
                     userCPF: user.cpf
                 }
             })
-                .then(overdraft => {
+                .then(async overdraft => {
                     console.log(overdraft.firstUseDate)
-                    if (!(overdraftController.usabilityCheck(user.cpf))) {
-
+                    console.log(await overdraftController.usabilityCheck(user.cpf))
+                    if (!(await overdraftController.usabilityCheck(user.cpf))) {
+                        console.log(user.cpf)
                         const rate = 0.5;
 
                         const firstUseDate = overdraft.firstUseDate;
@@ -47,7 +48,7 @@ module.exports = {
                         }).then(overdraftDebt => res.status(201).send(overdraftDebt));
                     }
                 })
-                
+
                 .catch(error => res.status(400).send(error));
         });
     },
