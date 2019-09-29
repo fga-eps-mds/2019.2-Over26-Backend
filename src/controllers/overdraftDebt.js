@@ -24,12 +24,9 @@ module.exports = {
                         const rate = 0.5;
 
                         const firstUseDate = overdraft.firstUseDate;
-                        //const firstUseDate = new Date(); // Check if it is null
 
                         const entryDate = firstUseDate;
                         entryDate.setDate(entryDate.getDate() + 26);
-                        //new Date();
-                        //entryDate.setDate(firstUseDate.getDate());
                         //sets entryDate of overdraftDebt to firtUsedDate of overdraft+26days
 
 
@@ -46,19 +43,23 @@ module.exports = {
                             rate: rate,
                             wasDivided: wasDivided
                         }).then(overdraftDebt => res.status(201).send(overdraftDebt));
+                    }else{
+                        return res.status(400).send({
+                            message:"overdraft still haven't reached it's deadline or wasn't used"
+                        });
                     }
                 })
 
-                .catch(error => res.status(400).send(error));
+                .catch(error => res.status(400).send('error'));
         });
     },
-    getByPk(req, res) {
-        return overdraftDebt
-            .findByPk(req.params.id)
+    getByPK(req, res) {
+        console.log("entrou")
+        return OverdraftDebt.findByPK(req.params.id)
             .then(overdraftDebt => {
                 if (!overdraftDebt) {
                     return res.status(404).send({
-                        message: "overdraftDebt Not Found"
+                        message: "Overdraft Not Found"
                     });
                 }
                 return res.status(200).send(overdraftDebt);

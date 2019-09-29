@@ -5,6 +5,9 @@ module.exports = (sequelize, DataTypes) => {
    amount: DataTypes.FLOAT,
    rate: DataTypes.FLOAT,
    wasDivided: DataTypes.BOOLEAN,
+   dueDay: DataTypes.INTEGER,
+   quantityInstalment: DataTypes.INTEGER,
+
    
   }, {});
   OverdraftDebt.associate = function(models) {
