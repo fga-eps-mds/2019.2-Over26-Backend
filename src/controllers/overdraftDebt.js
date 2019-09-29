@@ -67,76 +67,102 @@ module.exports = {
             .catch(error => res.status(400).send("error"));
     },
 
-    /* getInstalmentsOptions(req, res) {
-         return overdraftDebt.findByPk(req.params.id).then(overdraftDebt => {
-            
-             overdraftDebt.quantityInstalment = req.body.quantityInstalment;
-             Instalment = OverdraftDebt.amount/quantityInstalment;
-                 },
-             return res.status(200).send(Instalment);
-     },*/
+    getInstalmentsOptions(req, res) {
+        return overdraftDebt.findOne({
+            where: { userCPF: req.params.cpf },
+            order: [['createdAt', 'DESC']],
+        
+        })
+            .then(overdraftDebt => {
+
+                console.log('teste1')
+                if (!overdraftDebt) {
+                    return res.status(404).send({
+                        message: "OverdraftDebt Not Found"
+                    });
+                }
+                const currentDate = new Date();
+                const dateDiff = currentDate.getTime() - overdraftDebt.entryDate.getTime();
+                const dateDiffDays = dateDiff / 86400000;
+                const dateDiffDaysRound = ((dateDiffDays).toFixed(0));
+                const totalAmount = overdraftDebt.amount * Math.pow(1 + overdraftDebt.rate, dateDiffDaysRound)
+
+                const quantityInstalment = req.body.quantityInstalment;
+                instalmentValue = totalAmount / quantityInstalment;
+
+                const dueDay = req.body.day;
+                if (quantityInstalment != 1) {
+                    firstInstalmentDate = currentDate.setMonth(currentDate.getMonth() + 1);
+                    firstInstalmentDate.setDay(dueDay);
+                    lastInstalmentDate = currentDate.setMonth(currentDate.getMonth() + quantityInstalment - 1);
+                    lastInstalmentDate.setDay(dueDay);
+                } else {
+                    firstInstalmentDate = currentDate.setMonth(currentDate.getMonth() + 1);
+                    firstInstalmentDate.setDay(dueDay);
+                    lastInstalmentDate = firstInstalmentDate
+                }
+                return res.status(200).send({
+                    "valueOfIndividualInstalment": instalmentValue,
+                    "firstInstalmentDate": firstInstalmentDate,
+                    "lastInstalmentDate": lastInstalmentDate
+                })
+
+            })
+            .catch(error => res.status(400).send("error"));
+
+    },
 
     checkAmount(req, res) {
 
         return OverdraftDebt.findOne({
             where: { userCPF: req.params.cpf },
             order: [['createdAt', 'DESC']]
-
-
         })
             .then(overdraftDebt => {
                 if (!overdraftDebt) {
                     return res.status(404).send({
-                        message: "Overdraft Debt Not Found"
+                        message: "OverdraftDebt Not Found"
                     });
                 }
                 const currentDate = new Date();
                 const dateDiff = currentDate.getTime() - overdraftDebt.entryDate.getTime();
                 const dateDiffDays = dateDiff / 86400000;
-                const dateDiffDaysRound=((dateDiffDays).toFixed(0));
-                const totalAmount = overdraftDebt.amount*Math.pow(1 + overdraftDebt.rate, dateDiffDaysRound)
-                return res.status(200).send({"totalAmount":totalAmount});
+                const dateDiffDaysRound = ((dateDiffDays).toFixed(0));
+                const totalAmount = overdraftDebt.amount * Math.pow(1 + overdraftDebt.rate, dateDiffDaysRound)
+                return res.status(200).send({ "totalAmount": totalAmount });
 
             })
             .catch(error => res.status(400).send("error"));
     },
 
     createInstalments(req, res) {
-        return overdraftDebt.findByPk(req.params.id).then(overdraftDebt => {
-            if (req.body.quantInstalments == 1) {
-                Instalment = overdraftDebt.amount;
-            } else if (req.body.quantInstalments == 2) {
-                Instalment = overdraftDebt.amount / 2;
-            } else if (req.body.quantInstalments == 3) {
-                Instalment = overdraftDebt.amount / 3;
-            } else if (req.body.quantInstalments == 4) {
-                Instalment = overdraftDebt.amount / 4;
-            } else if (req.body.quantInstalments == 5) {
-                Instalment = overdraftDebt.amount / 5;
-            } else if (req.body.quantInstalments == 6) {
-                Instalment = overdraftDebt.amount / 6;
-            } else if (req.body.quantInstalments == 7) {
-                Instalment = overdraftDebt.amount / 7;
-            } else if (req.body.quantInstalments == 8) {
-                Instalment = overdraftDebt.amount / 8;
-            } else if (req.body.quantInstalments == 9) {
-                Instalment = overdraftDebt.amount / 9;
-            } else if (req.body.quantInstalments == 10) {
-                Instalment = overdraftDebt.amount / 10;
-            } else if (req.body.quantInstalments == 11) {
-                Instalment = overdraftDebt.amount / 11;
-            } else if (req.body.quantInstalments == 12) {
-                Instalment = overdraftDebt.amount / 12;
-            } else {
-                res.status(400).send("Escolha um número de parcelas");
-            }
+        return overdraftDebt.findOne({
+            where: { userCPF: req.params.cpf },
+            order: [['createdAt', 'DESC']]
+        })
+            .then(overdraftDebt => {
+                if (!overdraftDebt) {
+                    return res.status(404).send({
+                        message: "OverdraftDebt Not Found"
+                    });
+                }
+                const currentDate = new Date();
+                const dateDiff = currentDate.getTime() - overdraftDebt.entryDate.getTime();
+                const dateDiffDays = dateDiff / 86400000;
+                const dateDiffDaysRound = ((dateDiffDays).toFixed(0));
+                const totalAmount = overdraftDebt.amount * Math.pow(1 + overdraftDebt.rate, dateDiffDaysRound)
+
+                const quantityInstalment = req.body.quantityInstalment;
+                instalmentValue = totalAmount / quantityInstalment;
+
+                const dueDay = req.body.day;
 
             if (req.body.dueDate == 5) {
                 var CurrentDate = new Date();
                 var firstMonth = CurrentDate.getMonth() + 1;
-                new instalmentDate[req.body.quantInstalments]();
+                new instalmentDate[req.body.quantityInstalments]();
                 instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 5);
-                for (i = 1; i <= req.body.quantInstalments; i++) {
+                for (i = 1; i <= req.body.quantityInstalment; i++) {
                     instalmentDate[i] = new Date(
                         instalmentDate[0].getFullYear,
                         instalmentDate[0].getMonth + 1,
