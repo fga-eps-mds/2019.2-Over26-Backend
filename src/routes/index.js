@@ -38,15 +38,9 @@ router.put('/api/users/:id', userController.update);
 
 /* OverdraftDebt Router */
 router.post('/api/users/:id/overdraftDebt', overdraftDebtController.create);
-<<<<<<< HEAD
-router.get('/api/overdraftDebts/:id', overdraftDebtController.getByPk);
-router.get('/api/overdraftDebts/:id/options', overdraftDebtController.getInstalmentsOptions);
-router.get('/api/overdraftDebts/:id/check', overdraftDebtController.checkAmount);
-=======
 router.get('/api/overdraftDebts/:id', overdraftDebtController.getByPK);
 //router.get('/api/overdraftDebts/:id/options', overdraftDebtController.getInstalmentsOptions);
 router.get('/api/overdraftDebts/:cpf/check', overdraftDebtController.checkAmount);
->>>>>>> 9222d2f5e2d6bfaaa685da0d3fbfe0620eefc594
 router.post('/api/overdraftDebts/:id/instalments', overdraftDebtController.createInstalments);
 
 
