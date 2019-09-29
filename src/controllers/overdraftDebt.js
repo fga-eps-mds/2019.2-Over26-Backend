@@ -2,37 +2,78 @@ const OverdraftDebt = require("../models").OverdraftDebt;
 const User = require("../models").User;
 const Overdraft = require("../models").Overdraft;
 const Instalment = require("../models").Instalment;
+<<<<<<< HEAD
+=======
+const overdraftController = require('./overdraft');
+
+
+
+>>>>>>> 9222d2f5e2d6bfaaa685da0d3fbfe0620eefc594
 
 module.exports = {
-  create(req, res) {
-    return User
-      .findByPk(req.params.id)
-      .then(user => {
-        console.log(user.cpf);
-        return Overdraft
-          .findOne({
-            where: {
-              userCPF:user.cpf
-            }
-          })
-          .then(overdraft => {
-            console.log(overdraft.firstUsedDate)
-            const rate = 0.1;
+    create(req, res) {
+        return User.findByPk(req.params.id).then(user => {
+            console.log(user.cpf);
+            return Overdraft.findOne({
+                where: {
+                    userCPF: user.cpf
+                }
+            })
+                .then(async overdraft => {
+                    console.log(overdraft.firstUseDate)
+                    console.log(await overdraftController.usabilityCheck(user.cpf))
+                    if (!(await overdraftController.usabilityCheck(user.cpf))) {
+                        console.log(user.cpf)
+                        const rate = 0.15;
 
-            const firstUsedDate = overdraft.firstUsedDate;
-            const entryDate = new date();
-            entryDate.setDate(firstUsedDate.getDate() + 26)
-            //sets entryDate of overdraftDebt to firtUsedDate of overdraft+26days
-           
+                        const firstUseDate = overdraft.firstUseDate;
 
-            const auxiliarAmount = overdraft.limitUsed;
-            const amountOfDays= ((currentDate.getDate()-entryDate.getDate())/86400000);
-            //is the amount of days between entering debt and the current date
-          
+                        const entryDate = firstUseDate;
+                        entryDate.setDate(entryDate.getDate() + 26);
+                        //sets entryDate of overdraftDebt to firtUsedDate of overdraft+26days
 
-            const amount = auxiliarAmount*(Math.pow(1+rate,amountOfDays));
-            //is the amount of money due in the moment of the creation of the overdraftDebt
+
+                        const amount = overdraft.limitUsed;
+                        //is the amount of money due in the moment of the debt start
+
+                        const wasDivided = false;
+                        const userCPF = user.cpf;
+
+                        return user.createOverdraftDebt({
+                            userCPF: userCPF,
+                            entryDate: entryDate,
+                            amount: amount,
+                            rate: rate,
+                            wasDivided: wasDivided
+                        }).then(overdraftDebt => res.status(201).send(overdraftDebt));
+                    } else {
+                        return res.status(400).send({
+                            message: "overdraft still haven't reached it's deadline or wasn't used"
+                        });
+                    }
+                })
+
+                .catch(error => res.status(400).send('error'));
+        });
+    },
+    getByPK(req, res) {
+        console.log("entrou")
+        return OverdraftDebt.findByPK(req.params.id)
+            .then(overdraftDebt => {
+                if (!overdraftDebt) {
+                    return res.status(404).send({
+                        message: "Overdraft Not Found"
+                    });
+                }
+                return res.status(200).send(overdraftDebt);
+            })
+            .catch(error => res.status(400).send("error"));
+    },
+
+    /* getInstalmentsOptions(req, res) {
+         return overdraftDebt.findByPk(req.params.id).then(overdraftDebt => {
             
+<<<<<<< HEAD
             const wasDivided = false;
             const userCPF = user.cpf;
 
@@ -295,3 +336,141 @@ module.exports = {
     }
 
 }
+=======
+             overdraftDebt.quantityInstalment = req.body.quantityInstalment;
+             Instalment = OverdraftDebt.amount/quantityInstalment;
+                 },
+             return res.status(200).send(Instalment);
+     },*/
+
+    checkAmount(req, res) {
+
+        return OverdraftDebt.findOne({
+            where: { userCPF: req.params.cpf },
+            order: [['createdAt', 'DESC']]
+
+
+        })
+            .then(overdraftDebt => {
+                if (!overdraftDebt) {
+                    return res.status(404).send({
+                        message: "Overdraft Debt Not Found"
+                    });
+                }
+                const currentDate = new Date();
+                const dateDiff = currentDate.getTime() - overdraftDebt.entryDate.getTime();
+                const dateDiffDays = dateDiff / 86400000;
+                const dateDiffDaysRound=((dateDiffDays).toFixed(0));
+                const totalAmount = overdraftDebt.amount*Math.pow(1 + overdraftDebt.rate, dateDiffDaysRound)
+                return res.status(200).send({"totalAmount":totalAmount});
+
+            })
+            .catch(error => res.status(400).send("error"));
+    },
+
+    createInstalments(req, res) {
+        return overdraftDebt.findByPk(req.params.id).then(overdraftDebt => {
+            if (req.body.quantInstalments == 1) {
+                Instalment = overdraftDebt.amount;
+            } else if (req.body.quantInstalments == 2) {
+                Instalment = overdraftDebt.amount / 2;
+            } else if (req.body.quantInstalments == 3) {
+                Instalment = overdraftDebt.amount / 3;
+            } else if (req.body.quantInstalments == 4) {
+                Instalment = overdraftDebt.amount / 4;
+            } else if (req.body.quantInstalments == 5) {
+                Instalment = overdraftDebt.amount / 5;
+            } else if (req.body.quantInstalments == 6) {
+                Instalment = overdraftDebt.amount / 6;
+            } else if (req.body.quantInstalments == 7) {
+                Instalment = overdraftDebt.amount / 7;
+            } else if (req.body.quantInstalments == 8) {
+                Instalment = overdraftDebt.amount / 8;
+            } else if (req.body.quantInstalments == 9) {
+                Instalment = overdraftDebt.amount / 9;
+            } else if (req.body.quantInstalments == 10) {
+                Instalment = overdraftDebt.amount / 10;
+            } else if (req.body.quantInstalments == 11) {
+                Instalment = overdraftDebt.amount / 11;
+            } else if (req.body.quantInstalments == 12) {
+                Instalment = overdraftDebt.amount / 12;
+            } else {
+                res.status(400).send("Escolha um número de parcelas");
+            }
+
+            if (req.body.dueDate == 5) {
+                var CurrentDate = new Date();
+                var firstMonth = CurrentDate.getMonth() + 1;
+                new instalmentDate[req.body.quantInstalments]();
+                instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 5);
+                for (i = 1; i <= req.body.quantInstalments; i++) {
+                    instalmentDate[i] = new Date(
+                        instalmentDate[0].getFullYear,
+                        instalmentDate[0].getMonth + 1,
+                        5
+                    );
+                }
+            } else if (req.body.dueDate == 10) {
+                var CurrentDate = new Date();
+                var firstMonth = CurrentDate.getMonth() + 1;
+                new instalmentDate[req.body.quantInstalments]();
+                instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 10);
+                for (i = 1; i <= req.body.quantInstalments; i++) {
+                    instalmentDate[i] = new Date(
+                        instalmentDate[0].getFullYear,
+                        instalmentDate[0].getMonth + 1,
+                        10
+                    );
+                }
+            } else if (req.body.dueDate == 15) {
+                var CurrentDate = new Date();
+                var firstMonth = CurrentDate.getMonth() + 1;
+                new instalmentDate[req.body.quantInstalments]();
+                instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 15);
+                for (i = 1; i <= req.body.quantInstalments; i++) {
+                    instalmentDate[i] = new Date(
+                        instalmentDate[0].getFullYear,
+                        instalmentDate[0].getMonth + 1,
+                        15
+                    );
+                }
+            } else if (req.body.dueDate == 20) {
+                var CurrentDate = new Date();
+                var firstMonth = CurrentDate.getMonth() + 1;
+                new instalmentDate[req.body.quantInstalments]();
+                instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 20);
+                for (i = 1; i <= req.body.quantInstalments; i++) {
+                    instalmentDate[i] = new Date(
+                        instalmentDate[0].getFullYear,
+                        instalmentDate[0].getMonth + 1,
+                        20
+                    );
+                }
+            } else if (req.body.dueDate == 25) {
+                var CurrentDate = new Date();
+                var firstMonth = CurrentDate.getMonth() + 1;
+                new instalmentDate[req.body.quantInstalments]();
+                instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 25);
+                for (i = 1; i <= req.body.quantInstalments; i++) {
+                    instalmentDate[i] = new Date(
+                        instalmentDate[0].getFullYear,
+                        instalmentDate[0].getMonth + 1,
+                        25
+                    );
+                }
+            } else {
+                res.status(400).send("Escolha um número de parcelas");
+            }
+            return;
+            for (i = 1; i <= req.body.quantInstalments; i++) {
+                instalment.create({
+                    isPaid: false,
+                    value: Instalment,
+                    dueDate: instalmentDate[i],
+                    overdraftDebtId: OverdraftDebt.id
+                });
+            }
+        });
+    }
+};
+>>>>>>> 9222d2f5e2d6bfaaa685da0d3fbfe0620eefc594

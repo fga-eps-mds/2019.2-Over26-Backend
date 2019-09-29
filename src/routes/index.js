@@ -10,11 +10,11 @@ const instalmentController = require('../controllers').instalment;
 
 /* GET Home */
 router.get('/', function (req, res, next) {
-	res.send('respond witsh a resource');
+    res.send('respond witsh a resource');
 });
 
 router.get("/transaction", function (req, res) {
-	res.sendFile("/app/src/views/index.html");
+    res.sendFile("/app/src/views/index.html");
 });
 
 /* Overdraft Router */
@@ -38,9 +38,15 @@ router.put('/api/users/:id', userController.update);
 
 /* OverdraftDebt Router */
 router.post('/api/users/:id/overdraftDebt', overdraftDebtController.create);
+<<<<<<< HEAD
 router.get('/api/overdraftDebts/:id', overdraftDebtController.getByPk);
 router.get('/api/overdraftDebts/:id/options', overdraftDebtController.getInstalmentsOptions);
 router.get('/api/overdraftDebts/:id/check', overdraftDebtController.checkAmount);
+=======
+router.get('/api/overdraftDebts/:id', overdraftDebtController.getByPK);
+//router.get('/api/overdraftDebts/:id/options', overdraftDebtController.getInstalmentsOptions);
+router.get('/api/overdraftDebts/:cpf/check', overdraftDebtController.checkAmount);
+>>>>>>> 9222d2f5e2d6bfaaa685da0d3fbfe0620eefc594
 router.post('/api/overdraftDebts/:id/instalments', overdraftDebtController.createInstalments);
 
 
