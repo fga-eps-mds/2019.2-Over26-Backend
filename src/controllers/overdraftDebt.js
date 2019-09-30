@@ -68,39 +68,84 @@ module.exports = {
     },
 
     getInstalmentsOptions(req, res) {
-        return overdraftDebt.findOne({
+        console.log('teste 1')
+
+        return OverdraftDebt.findOne({
             where: { userCPF: req.params.cpf },
             order: [['createdAt', 'DESC']],
-        
         })
             .then(overdraftDebt => {
 
-                console.log('teste1')
+                console.log('teste 2')
                 if (!overdraftDebt) {
                     return res.status(404).send({
                         message: "OverdraftDebt Not Found"
                     });
                 }
+                console.log('teste 3')
+
                 const currentDate = new Date();
+
+                console.log('teste 4')
+
                 const dateDiff = currentDate.getTime() - overdraftDebt.entryDate.getTime();
+
+                console.log('teste 5')
+
                 const dateDiffDays = dateDiff / 86400000;
+
+                console.log('teste 6')
+
                 const dateDiffDaysRound = ((dateDiffDays).toFixed(0));
+
+                console.log('teste 7')
+
                 const totalAmount = overdraftDebt.amount * Math.pow(1 + overdraftDebt.rate, dateDiffDaysRound)
+
+                console.log('teste 8')
 
                 const quantityInstalment = req.body.quantityInstalment;
                 instalmentValue = totalAmount / quantityInstalment;
 
+                console.log('teste 9')
+
                 const dueDay = req.body.day;
+                console.log(dueDay)
+
                 if (quantityInstalment != 1) {
+
+                    console.log('teste 10A')
+                    console.log(firstInstalmentDate.getDate())
+
                     firstInstalmentDate = currentDate.setMonth(currentDate.getMonth() + 1);
-                    firstInstalmentDate.setDay(dueDay);
+
+
+                    console.log('teste 11')
+
+
+                    firstInstalmentDate.setDate(dueDay);
+                    console.log(firstInstalmentDate.getDate())
+
+
+                    console.log('teste 12')
+
                     lastInstalmentDate = currentDate.setMonth(currentDate.getMonth() + quantityInstalment - 1);
+
+                    console.log('teste 13')
+
                     lastInstalmentDate.setDay(dueDay);
+
+                    console.log('teste 14')
+
+                    
                 } else {
+                    console.log('teste 10B')
+
                     firstInstalmentDate = currentDate.setMonth(currentDate.getMonth() + 1);
                     firstInstalmentDate.setDay(dueDay);
                     lastInstalmentDate = firstInstalmentDate
                 }
+
                 return res.status(200).send({
                     "valueOfIndividualInstalment": instalmentValue,
                     "firstInstalmentDate": firstInstalmentDate,
@@ -157,78 +202,78 @@ module.exports = {
 
                 const dueDay = req.body.day;
 
-            if (req.body.dueDate == 5) {
-                var CurrentDate = new Date();
-                var firstMonth = CurrentDate.getMonth() + 1;
-                new instalmentDate[req.body.quantityInstalments]();
-                instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 5);
-                for (i = 1; i <= req.body.quantityInstalment; i++) {
-                    instalmentDate[i] = new Date(
-                        instalmentDate[0].getFullYear,
-                        instalmentDate[0].getMonth + 1,
-                        5
-                    );
+                if (req.body.dueDate == 5) {
+                    var CurrentDate = new Date();
+                    var firstMonth = CurrentDate.getMonth() + 1;
+                    new instalmentDate[req.body.quantityInstalments]();
+                    instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 5);
+                    for (i = 1; i <= req.body.quantityInstalment; i++) {
+                        instalmentDate[i] = new Date(
+                            instalmentDate[0].getFullYear,
+                            instalmentDate[0].getMonth + 1,
+                            5
+                        );
+                    }
+                } else if (req.body.dueDate == 10) {
+                    var CurrentDate = new Date();
+                    var firstMonth = CurrentDate.getMonth() + 1;
+                    new instalmentDate[req.body.quantInstalments]();
+                    instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 10);
+                    for (i = 1; i <= req.body.quantInstalments; i++) {
+                        instalmentDate[i] = new Date(
+                            instalmentDate[0].getFullYear,
+                            instalmentDate[0].getMonth + 1,
+                            10
+                        );
+                    }
+                } else if (req.body.dueDate == 15) {
+                    var CurrentDate = new Date();
+                    var firstMonth = CurrentDate.getMonth() + 1;
+                    new instalmentDate[req.body.quantInstalments]();
+                    instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 15);
+                    for (i = 1; i <= req.body.quantInstalments; i++) {
+                        instalmentDate[i] = new Date(
+                            instalmentDate[0].getFullYear,
+                            instalmentDate[0].getMonth + 1,
+                            15
+                        );
+                    }
+                } else if (req.body.dueDate == 20) {
+                    var CurrentDate = new Date();
+                    var firstMonth = CurrentDate.getMonth() + 1;
+                    new instalmentDate[req.body.quantInstalments]();
+                    instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 20);
+                    for (i = 1; i <= req.body.quantInstalments; i++) {
+                        instalmentDate[i] = new Date(
+                            instalmentDate[0].getFullYear,
+                            instalmentDate[0].getMonth + 1,
+                            20
+                        );
+                    }
+                } else if (req.body.dueDate == 25) {
+                    var CurrentDate = new Date();
+                    var firstMonth = CurrentDate.getMonth() + 1;
+                    new instalmentDate[req.body.quantInstalments]();
+                    instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 25);
+                    for (i = 1; i <= req.body.quantInstalments; i++) {
+                        instalmentDate[i] = new Date(
+                            instalmentDate[0].getFullYear,
+                            instalmentDate[0].getMonth + 1,
+                            25
+                        );
+                    }
+                } else {
+                    res.status(400).send("Escolha um número de parcelas");
                 }
-            } else if (req.body.dueDate == 10) {
-                var CurrentDate = new Date();
-                var firstMonth = CurrentDate.getMonth() + 1;
-                new instalmentDate[req.body.quantInstalments]();
-                instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 10);
+                return;
                 for (i = 1; i <= req.body.quantInstalments; i++) {
-                    instalmentDate[i] = new Date(
-                        instalmentDate[0].getFullYear,
-                        instalmentDate[0].getMonth + 1,
-                        10
-                    );
+                    instalment.create({
+                        isPaid: false,
+                        value: Instalment,
+                        dueDate: instalmentDate[i],
+                        overdraftDebtId: OverdraftDebt.id
+                    });
                 }
-            } else if (req.body.dueDate == 15) {
-                var CurrentDate = new Date();
-                var firstMonth = CurrentDate.getMonth() + 1;
-                new instalmentDate[req.body.quantInstalments]();
-                instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 15);
-                for (i = 1; i <= req.body.quantInstalments; i++) {
-                    instalmentDate[i] = new Date(
-                        instalmentDate[0].getFullYear,
-                        instalmentDate[0].getMonth + 1,
-                        15
-                    );
-                }
-            } else if (req.body.dueDate == 20) {
-                var CurrentDate = new Date();
-                var firstMonth = CurrentDate.getMonth() + 1;
-                new instalmentDate[req.body.quantInstalments]();
-                instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 20);
-                for (i = 1; i <= req.body.quantInstalments; i++) {
-                    instalmentDate[i] = new Date(
-                        instalmentDate[0].getFullYear,
-                        instalmentDate[0].getMonth + 1,
-                        20
-                    );
-                }
-            } else if (req.body.dueDate == 25) {
-                var CurrentDate = new Date();
-                var firstMonth = CurrentDate.getMonth() + 1;
-                new instalmentDate[req.body.quantInstalments]();
-                instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 25);
-                for (i = 1; i <= req.body.quantInstalments; i++) {
-                    instalmentDate[i] = new Date(
-                        instalmentDate[0].getFullYear,
-                        instalmentDate[0].getMonth + 1,
-                        25
-                    );
-                }
-            } else {
-                res.status(400).send("Escolha um número de parcelas");
-            }
-            return;
-            for (i = 1; i <= req.body.quantInstalments; i++) {
-                instalment.create({
-                    isPaid: false,
-                    value: Instalment,
-                    dueDate: instalmentDate[i],
-                    overdraftDebtId: OverdraftDebt.id
-                });
-            }
-        });
+            });
     }
 };
