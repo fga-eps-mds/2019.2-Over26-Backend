@@ -5,13 +5,13 @@ module.exports = (sequelize, DataTypes) => {
     value: DataTypes.FLOAT,
     dueDate: DataTypes.DATE,
     overdraftDebtId: DataTypes.INTEGER
-  
-   
+
+
   }, {});
-  Instalment.associate = function(models) {
-    
-   // Instalment.belongsTo(models.overdraftDebtId, {foreignKey: 'id'})
-    
+  Instalment.associate = function (models) {
+
+    Instalment.belongsTo(models.OverdraftDebt,{foreignKey: 'id'})
+
   };
   return Instalment;
 };

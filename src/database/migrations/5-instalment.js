@@ -28,7 +28,9 @@ module.exports = {
     },
     overdraftDebtId: {
       type: Sequelize.INTEGER,
-      references: {model:'OverdraftDebts', key: 'id'},
+      references: {model:'OverdraftDebts',
+       key: 'id',
+      as:"overdraftDebtId"},
       onDelete: 'CASCADE',
       allowNull: false,
     }
