@@ -2,14 +2,14 @@ const instalment = require("../models").instalment;
 // Controllers are used for handle any incoming URL request
 module.exports = {
   // Create a new instalment
-  create(req, res) {
+  create(value,dueDate,overdraftDebtId) {
     return Instalment.create({
-      isPaid: req.body.isPaid,
-      value: req.body.value,
-      dueDate: req.body.dueDate,
-      overdraftDebtId: req.body.overdraftDebtId      
+      isPaid: false,
+      value: value,
+      dueDate: dueDate,
+      overdraftDebtId: overdraftDebtId      
     })
-      .then(instalment => res.status(201).send(instalment))
+      .then(instalment => res.status(201)).send(instalment)
       .catch(error => res.status(400).send(error));
   }
 

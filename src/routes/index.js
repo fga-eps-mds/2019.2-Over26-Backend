@@ -50,6 +50,6 @@ router.post('/api/accounts/:accountNumber/transactions/', transactionController.
 router.get('/api/transactions/:id', transactionController.getByPk);
 
 /* Instalments Router */
-router.post('/api/instalments/:id', instalmentController.create);
+router.post('/api/instalments/:id', overdraftDebtController.createInstalments);
 
 module.exports = router;
