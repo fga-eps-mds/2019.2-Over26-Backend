@@ -16,7 +16,25 @@ module.exports = {
       "Users",
       [
         {
-          cpf: 11111111111,
+          name: "João",
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }
+      ],
+      {}
+    );
+
+    return queryInterface.bulkInsert(
+      "Overdraft",
+      [
+        {
+          user: Luiza,
+	  id_overdraft: 1111111111,
+          solicitation_date: new Date(),
+          status: true,
+    	  limit: 100.11,
+          limit_max: 200.00,
+          limit_used: 11.11,
           name: "João",
           email: "joao@demo.com",
           phone: 11111111111,
@@ -27,6 +45,7 @@ module.exports = {
       ],
       {}
     );
+
   },
 
   down: (queryInterface, Sequelize) => {
@@ -37,6 +56,7 @@ module.exports = {
       Example:
       return queryInterface.bulkDelete('People', null, {});
     */
-    return queryInterface.bulkDelete("Users", null, {});
+    return queryInterface.bulkDelete("Accounts", null, {});
+    return queryInterface.bulkDelete("Overdraft", null, {});
   }
 };
