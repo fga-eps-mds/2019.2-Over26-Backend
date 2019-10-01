@@ -3,7 +3,6 @@ module.exports = (sequelize, DataTypes) => {
   const Account = sequelize.define(
     "Account",
     {
-      cpf: DataTypes.BIGINT(11),
       agency: {
         type: DataTypes.INTEGER(10)
       },

@@ -2,15 +2,6 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable("Accounts", {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      cpf: {
-        type: Sequelize.BIGINT(11)
-      },
       agency: {
         type: Sequelize.INTEGER(10),
         allowNull: false
