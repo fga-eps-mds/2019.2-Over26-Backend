@@ -68,7 +68,6 @@ module.exports = {
     },
 
     getInstalmentsOptions(req, res) {
-        console.log('teste 1')
 
         return OverdraftDebt.findOne({
             where: { userCPF: req.params.cpf },
@@ -76,80 +75,39 @@ module.exports = {
         })
             .then(overdraftDebt => {
 
-                console.log('teste 2')
                 if (!overdraftDebt) {
                     return res.status(404).send({
                         message: "OverdraftDebt Not Found"
                     });
                 }
-                console.log('teste 3')
 
                 const currentDate = new Date();
-
-                console.log('teste 4')
-
                 const dateDiff = currentDate.getTime() - overdraftDebt.entryDate.getTime();
-
-                console.log('teste 5')
-
                 const dateDiffDays = dateDiff / 86400000;
-
-                console.log('teste 6')
-
                 const dateDiffDaysRound = ((dateDiffDays).toFixed(0));
 
-                console.log('teste 7')
 
                 const totalAmount = overdraftDebt.amount * Math.pow(1 + overdraftDebt.rate, dateDiffDaysRound)
+                const quantityInstalment = req.body.quantityInstalment;//qunatity of instalments
+                const instalmentValue = totalAmount / quantityInstalment;//is the value of each instalment
 
-                console.log('teste 8')
+                const dueDay = req.body.day;//due day on each month for the instalments
+                var dateOptionsForInstalments = new Array();
+                var counter = 1;
+                const counterMax = parseInt(quantityInstalment, 10) + 1;
+                while (counter < counterMax) {
 
-                const quantityInstalment = req.body.quantityInstalment;
-                instalmentValue = totalAmount / quantityInstalment;
+                    dateOptionsForInstalments.push(new Date(currentDate.getFullYear(), (currentDate.getMonth() + counter), dueDay, 23, 59, 59, 999));
+                    counter++;
 
-                console.log('teste 9')
-
-                const dueDay = req.body.day;
-                console.log(dueDay)
-
-                if (quantityInstalment != 1) {
-
-                    console.log('teste 10A')
-                    console.log(firstInstalmentDate.getDate())
-
-                    firstInstalmentDate = currentDate.setMonth(currentDate.getMonth() + 1);
-
-
-                    console.log('teste 11')
-
-
-                    firstInstalmentDate.setDate(dueDay);
-                    console.log(firstInstalmentDate.getDate())
-
-
-                    console.log('teste 12')
-
-                    lastInstalmentDate = currentDate.setMonth(currentDate.getMonth() + quantityInstalment - 1);
-
-                    console.log('teste 13')
-
-                    lastInstalmentDate.setDay(dueDay);
-
-                    console.log('teste 14')
-
-                    
-                } else {
-                    console.log('teste 10B')
-
-                    firstInstalmentDate = currentDate.setMonth(currentDate.getMonth() + 1);
-                    firstInstalmentDate.setDay(dueDay);
-                    lastInstalmentDate = firstInstalmentDate
                 }
+                console.log(dateOptionsForInstalments);
+
 
                 return res.status(200).send({
                     "valueOfIndividualInstalment": instalmentValue,
-                    "firstInstalmentDate": firstInstalmentDate,
-                    "lastInstalmentDate": lastInstalmentDate
+                    "dateOptionsForInstalments": dateOptionsForInstalments,
+
                 })
 
             })
