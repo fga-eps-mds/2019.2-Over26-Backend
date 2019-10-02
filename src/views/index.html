@@ -52,6 +52,7 @@
       <input id="value" placeholder="Value" type="number" step="0.01" /><br />
       <input type="submit" value="Criar" /><br />
     </form>
+    <div id="message"></div>
     <script>
       function createTrasaction(e) {
         e.preventDefault();
@@ -70,10 +71,20 @@
           .then(res => {
             console.log(`statusCode: ${res.status}`);
             console.log(res);
+            displaySuccess(res.status);
           })
           .catch(error => {
             console.error(error);
+            displayError();
           });
+      }
+      function displaySuccess(statusCode){
+        if(statusCode == 201){
+          alert("Deu certo!")        
+        }
+      }
+      function displayError(){
+        alert("Que pena deu ruim!")
       }
     </script>
     <script
