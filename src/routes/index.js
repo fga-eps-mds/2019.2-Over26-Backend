@@ -41,7 +41,7 @@ router.post('/api/users/:id/overdraftDebt', overdraftDebtController.create);
 router.get('/api/overdraftDebts/:id', overdraftDebtController.getByPK);
 router.get('/api/overdraftDebts/:cpf/options', overdraftDebtController.getInstalmentsOptions);
 router.get('/api/overdraftDebts/:cpf/check', overdraftDebtController.checkAmount);
-router.post('/api/overdraftDebts/:id/instalments', overdraftDebtController.createInstalments);
+router.post('/api/overdraftDebts/:cpf/instalments', overdraftDebtController.createInstalments);
 
 
 /* Transaction Router */

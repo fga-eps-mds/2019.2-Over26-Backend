@@ -162,25 +162,30 @@ module.exports = {
 
                 var instalments = new Array();
 
-
                 const dueDay = req.body.day;//due day on each month for the instalments
                 var counter = 1;
+
                 const counterMax = parseInt(quantityInstalment, 10) + 1;
                 while (counter < counterMax) {
-                    var dueDate = new Date(currentDate.getFullYear(), (currentDate.getMonth() + counter), dueDay, 23, 59, 59, 999);
-                    instalments.push(await instalmentController.create(instalmentValue, dueDate, overdraftDebt.id));
 
+                    var dueDate = new Date(currentDate.getFullYear(), (currentDate.getMonth() + counter), dueDay, 23, 59, 59, 999);
+                    instalments.push(await instalmentController.create(instalmentValue, dueDate, overdraftDebt.id))
+                    console.log(counter)
                     counter++;
                 }
-                console.log(dateOptionsForInstalments);
 
-
+                await overdraftDebt.update({
+                    wasDivided: true,
+                    dueDay: parseInt(dueDay,10),
+                    quantityInstalment:parseInt(quantityInstalment,10),
+                })
+                console.log(overdraftDebt)
                 return res.status(200).send({
                     "instalments": instalments
                 })
 
             })
-            .catch(error => res.status(400).send("error"));
+            .catch(error => res.status(400).send({ "message": "couldn't create instalments" }));
 
 
 
