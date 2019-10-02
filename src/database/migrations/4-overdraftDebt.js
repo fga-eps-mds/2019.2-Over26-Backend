@@ -31,6 +31,12 @@ module.exports = {
           as: "userCPF"
         }
       },
+      dueDay:{
+        type: Sequelize.INTEGER
+      },
+      quantityInstalment:{
+        type: Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
