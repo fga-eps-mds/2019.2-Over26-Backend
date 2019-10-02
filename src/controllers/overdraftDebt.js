@@ -4,7 +4,6 @@ const User = require("../models").User;
 module.exports = {
   create(req, res) {
     return User.findByPk(req.params.id).then(user => {
-      console.log(user.cpf);
       const entryDate = new Date();
       const amount = 0;
       const rate = 0.1;
