@@ -21,8 +21,14 @@ router.get("/transaction", function (req, res) {
 router.get('/api/overdrafts', overdraftController.list);
 router.get('/api/users/:id/overdrafts', overdraftController.getByPk);
 router.post('/api/users/:id/overdrafts', overdraftController.create);
+<<<<<<< HEAD
 //router.put('/api/users/:id/overdrafts', overdraftController.activateCredit);
 router.put('/api/users/:id/overdrafts', overdraftController.update);
+=======
+router.put('/api/users/:id/overdrafts/activate', overdraftController.activateCredit);
+router.put('/api/users/:id/overdrafts/cancel', overdraftController.cancelCredit);
+router.put('/api/users/:id/overdrafts', overdraftController.updateCreditLimit);
+>>>>>>> 99d25ed9222022fd6dd696e7722cbae678282a5d
 router.delete('/api/users/:id/overdrafts', overdraftController.delete);
 router.get('/api/users/:cpf/overdrafts/usability', overdraftController.checkUsability)
 
