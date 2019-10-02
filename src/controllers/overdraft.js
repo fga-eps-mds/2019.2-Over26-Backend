@@ -65,7 +65,8 @@ module.exports = {
             status: req.body.status,
             limit: req.body.limit,
             limitMax: req.body.limitMax,
-            limitUsed: req.body.limitUsed
+            limitUsed: req.body.limitUsed,
+            firstUseDate: req.body.firstUseDate
           })
           .then(() => res.status(200).send(overdraft))
           .catch(error => res.status(400).send(error));
@@ -76,7 +77,7 @@ module.exports = {
     return Overdraft.findByPk(req.params.id)
       .then(Overdraft => {
         if (!Overdraft) {
-          return res.status(404).send({
+          return res.status(400).send({
             message: "Overdraft Not Found"
           });
         }
@@ -104,11 +105,74 @@ module.exports = {
             .update({
               status: true
             })
-            .then(() => res.status(200).send(overdraft))
+            .then(overdraft => res.status(200).send(overdraft))
             .catch(error => res.status(400).send(error));
         });
       })
       .catch(error => res.status(400).send(error));
+  },
+
+  checkUsability(req, res) {
+    return Overdraft.findOne({
+      where: {
+        userCPF: req.params.cpf
+      }
+    }).then(overdraft => {
+      if (!overdraft) {
+        return res.status(404).send({
+          message: "Overdraft Not Found"
+        });
+      }
+      if (overdraft.firstUseDate != null) {
+        const currentDate = new Date();
+        const dateDiff =
+          currentDate.getTime() - overdraft.firstUseDate.getTime();
+        const dateDiffDays = dateDiff / 86400000;
+        console.log(dateDiff);
+
+        if (dateDiffDays > 26) {
+          console.log(dateDiff);
+
+          return res.status(418).send(false);
+        } else {
+          console.log(dateDiff);
+
+          return res.status(200).send(true);
+        }
+      } else {
+        return res.status(200).send(true);
+      }
+    });
+  },
+  usabilityCheck(req) {
+    return Overdraft.findOne({
+      where: {
+        userCPF: req
+      }
+    }).then(overdraft => {
+      if (!overdraft) {
+        return true;
+      }
+      if (overdraft.firstUseDate != null) {
+        const currentDate = new Date();
+        const dateDiff =
+          currentDate.getTime() - overdraft.firstUseDate.getTime();
+        const dateDiffDays = dateDiff / 86400000;
+        console.log(dateDiffDays);
+
+        if (dateDiffDays > 26) {
+          console.log("firstUseDate!=null && daysSynceFistUseDate>26");
+
+          return false;
+        } else {
+          console.log("firstUseDate!=null && daysSynceFistUseDate<26");
+          return true;
+        }
+      } else {
+        console.log("firstUseDate==null");
+        return true;
+      }
+    });
   },
   cancelCredit(req, res) {
     return Overdraft.findByPk(req.params.id)

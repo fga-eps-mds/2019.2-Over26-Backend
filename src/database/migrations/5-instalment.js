@@ -19,13 +19,18 @@ module.exports = {
       allowNull: false,
       type: Sequelize.DATE
     },
+    dueDate:{
+      type: Sequelize.DATE
+    },
     updatedAt: {
       allowNull: false,
       type: Sequelize.DATE
     },
     overdraftDebtId: {
       type: Sequelize.INTEGER,
-      references: {model:'OverdraftDebts', key: 'id'},
+      references: {model:'OverdraftDebts',
+       key: 'id',
+      as:"overdraftDebtId"},
       onDelete: 'CASCADE',
       allowNull: false,
     }
