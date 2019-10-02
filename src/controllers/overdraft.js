@@ -77,7 +77,7 @@ module.exports = {
     return Overdraft.findByPk(req.params.id)
       .then(Overdraft => {
         if (!Overdraft) {
-          return res.status(400).send({
+          return res.status(404).send({
             message: "Overdraft Not Found"
           });
         }
@@ -128,14 +128,11 @@ module.exports = {
         const dateDiff =
           currentDate.getTime() - overdraft.firstUseDate.getTime();
         const dateDiffDays = dateDiff / 86400000;
-        console.log(dateDiff);
 
         if (dateDiffDays > 26) {
-          console.log(dateDiff);
 
           return res.status(418).send(false);
         } else {
-          console.log(dateDiff);
 
           return res.status(200).send(true);
         }
@@ -158,18 +155,14 @@ module.exports = {
         const dateDiff =
           currentDate.getTime() - overdraft.firstUseDate.getTime();
         const dateDiffDays = dateDiff / 86400000;
-        console.log(dateDiffDays);
 
         if (dateDiffDays > 26) {
-          console.log("firstUseDate!=null && daysSynceFistUseDate>26");
 
           return false;
         } else {
-          console.log("firstUseDate!=null && daysSynceFistUseDate<26");
           return true;
         }
       } else {
-        console.log("firstUseDate==null");
         return true;
       }
     });

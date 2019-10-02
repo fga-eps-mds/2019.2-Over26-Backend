@@ -11,17 +11,13 @@ const instalmentController = require('./instalment');
 module.exports = {
     create(req, res) {
         return User.findByPk(req.params.id).then(user => {
-            console.log(user.cpf);
             return Overdraft.findOne({
                 where: {
                     userCPF: user.cpf
                 }
             })
                 .then(async overdraft => {
-                    console.log(overdraft.firstUseDate)
-                    console.log(await overdraftController.usabilityCheck(user.cpf))
                     if (!(await overdraftController.usabilityCheck(user.cpf))) {
-                        console.log(user.cpf)
                         const rate = 0.15;
 
                         const firstUseDate = overdraft.firstUseDate;
@@ -52,15 +48,16 @@ module.exports = {
                 })
 
                 .catch(error => res.status(400).send('error'));
-        });
+        })
+        .catch(error => res.status(400).send('error'));
+
     },
-    getByPK(req, res) {
-        console.log("entrou")
-        return OverdraftDebt.findByPK(req.params.id)
+    getByPk(req, res) {
+        return OverdraftDebt.findByPk(req.params.id)
             .then(overdraftDebt => {
                 if (!overdraftDebt) {
                     return res.status(404).send({
-                        message: "Overdraft Not Found"
+                        message: "OverdraftDebt Not Found"
                     });
                 }
                 return res.status(200).send(overdraftDebt);
@@ -101,7 +98,6 @@ module.exports = {
                     counter++;
 
                 }
-                console.log(dateOptionsForInstalments);
 
 
                 return res.status(200).send({
@@ -170,7 +166,6 @@ module.exports = {
 
                     var dueDate = new Date(currentDate.getFullYear(), (currentDate.getMonth() + counter), dueDay, 23, 59, 59, 999);
                     instalments.push(await instalmentController.create(instalmentValue, dueDate, overdraftDebt.id))
-                    console.log(counter)
                     counter++;
                 }
 
