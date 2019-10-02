@@ -179,10 +179,8 @@ module.exports = {
                     dueDay: parseInt(dueDay,10),
                     quantityInstalment:parseInt(quantityInstalment,10),
                 })
-                console.log(overdraftDebt)
-                return res.status(200).send({
-                    "instalments": instalments
-                })
+
+                return res.status(200).send(instalments)
 
             })
             .catch(error => res.status(400).send({ "message": "couldn't create instalments" }));
