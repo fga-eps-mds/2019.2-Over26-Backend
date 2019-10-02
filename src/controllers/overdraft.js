@@ -11,27 +11,27 @@ module.exports = {
     },
     create(req, res) {
         return User.findByPk(req.params.id)
-        .then(user=>{
-        console.log(user.cpf)
-        const status = false
-        const userCPF = user.cpf
-        const limit = 200
-        const limitMax = 200
-        const limitUsed = 0
-        const firstUseDate = null
+            .then(user => {
+                console.log(user.cpf)
+                const status = false
+                const userCPF = user.cpf
+                const limit = 200
+                const limitMax = 200
+                const limitUsed = 0
+                const firstUseDate = null
 
 
-        return user.createOverdraft({
-            userCPF: userCPF,
-            status: status,
-            limit: limit,
-            limitMax: limitMax,
-            limitUsed: limitUsed,
-            firstUseDate: firstUseDate
-        })
-            .then(overdraft => res.status(201).send(overdraft))
-            .catch(error => res.status(400).send(error));
-    })
+                return user.createOverdraft({
+                    userCPF: userCPF,
+                    status: status,
+                    limit: limit,
+                    limitMax: limitMax,
+                    limitUsed: limitUsed,
+                    firstUseDate: firstUseDate
+                })
+                    .then(overdraft => res.status(201).send(overdraft))
+                    .catch(error => res.status(400).send(error));
+            })
     },
     getByPk(req, res) {
         return Overdraft.findByPk(req.params.id)
@@ -45,7 +45,8 @@ module.exports = {
             })
             .catch(error => res.status(400).send("error"));
     },
-    update(req, res) {
+    updateCreditLimit(req, res) {
+        const { limit } = req.body
         return Overdraft.findByPk(req.params.id)
             .then(overdraft => {
                 if (!overdraft) {
@@ -53,6 +54,12 @@ module.exports = {
                         message: "Overdraft Not Found"
                     });
                 }
+                if ((limit - overdraft.limitUsed < 0) || (limit - overdraft.limitMax > 0)) {
+                    return res.status(400).send({
+                        message: "Limit Used exceeds choosen limit"
+                    });
+                }
+
                 return overdraft
                     .update({
                         status: req.body.status,
@@ -91,6 +98,23 @@ module.exports = {
                 return overdraft
                     .update({
                         status: true
+                    })
+                    .then(() => res.status(200).send(overdraft))
+                    .catch(error => res.status(400).send(error));
+            })
+            .catch(error => res.status(400).send(error));
+    },
+    cancelCredit(req, res) {
+        return Overdraft.findByPk(req.params.id)
+            .then(overdraft => {
+                if (!overdraft) {
+                    return res.status(404).send({
+                        message: "Overdraft Not Found"
+                    });
+                }
+                return overdraft
+                    .update({
+                        status: false
                     })
                     .then(() => res.status(200).send(overdraft))
                     .catch(error => res.status(400).send(error));

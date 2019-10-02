@@ -20,8 +20,9 @@ router.get("/transaction", function(req, res) {
 router.get('/api/overdrafts', overdraftController.list);
 router.get('/api/users/:id/overdrafts', overdraftController.getByPk);
 router.post('/api/users/:id/overdrafts', overdraftController.create);
-router.put('/api/users/:id/overdrafts', overdraftController.activateCredit);
-router.put('/api/users/:id/overdrafts', overdraftController.update);
+router.put('/api/users/:id/overdrafts/activate', overdraftController.activateCredit);
+router.put('/api/users/:id/overdrafts/cancel', overdraftController.cancelCredit);
+router.put('/api/users/:id/overdrafts', overdraftController.updateCreditLimit);
 router.delete('/api/users/:id/overdrafts', overdraftController.delete);
 
 /* Account Router */
