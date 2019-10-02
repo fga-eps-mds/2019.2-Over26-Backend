@@ -88,10 +88,10 @@ module.exports = {
                 const dateDiffDaysRound = ((dateDiffDays).toFixed(0));
 
                 const totalAmount = overdraftDebt.amount * Math.pow(1 + overdraftDebt.rate, dateDiffDaysRound)
-                const quantityInstalment = req.body.quantityInstalment;//qunatity of instalments
+                const quantityInstalment = req.query.quantityInstalment;//qunatity of instalments
                 const instalmentValue = totalAmount / quantityInstalment;//is the value of each instalment
 
-                const dueDay = req.body.day;//due day on each month for the instalments
+                const dueDay = req.query.day;//due day on each month for the instalments
                 var dateOptionsForInstalments = new Array();
                 var counter = 1;
                 const counterMax = parseInt(quantityInstalment, 10) + 1;
