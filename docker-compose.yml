@@ -4,13 +4,10 @@ services:
   api:
     build:
       context: .
-      dockerfile: docker/Dockerfile-dev
-      args:
-        APP_DIR: /app
-        NODE_ENV: development
+      dockerfile: Dockerfile
     depends_on:
       - postgresql
-    entrypoint: ["/bin/bash", "./entrypoint.sh"]
+    command: npm run dev
     ports:
        - "3000:3000"
     volumes:
