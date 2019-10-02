@@ -3,11 +3,11 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable("Accounts", {
       agency: {
-        type: Sequelize.INTEGER(10),
+        type: Sequelize.INTEGER,
         allowNull: false
       },
       number: {
-        type: Sequelize.INTEGER(10),
+        type: Sequelize.INTEGER,
         allowNull: false,
         unique: true,
         primaryKey: true

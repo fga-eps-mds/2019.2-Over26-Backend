@@ -32,6 +32,8 @@ module.exports = {
                     .then(overdraft => res.status(201).send(overdraft))
                     .catch(error => res.status(400).send(error));
             })
+            .catch(error => res.status(400).send(error));
+
     },
     getByPk(req, res) {
         return Overdraft.findByPk(req.params.id)
@@ -76,7 +78,7 @@ module.exports = {
         return Overdraft.findByPk(req.params.id)
             .then(Overdraft => {
                 if (!Overdraft) {
-                    return res.status(400).send({
+                    return res.status(404).send({
                         message: "Overdraft Not Found"
                     });
                 }

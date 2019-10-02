@@ -21,15 +21,17 @@ module.exports = {
         })
         .then(overdraftDebt => res.status(201).send(overdraftDebt))
         .catch(error => res.status(400).send(error));
-    });
+    })
+    .catch(error => res.status(400).send(error));
+
   },
   getByPk(req, res) {
-    return overdraftDebt
+    return OverdraftDebt
       .findByPk(req.params.id)
       .then(overdraftDebt => {
         if (!overdraftDebt) {
           return res.status(404).send({
-            message: "overdraftDebt Not Found"
+            message: "OverdraftDebt Not Found"
           });
         }
         return res.status(200).send(overdraftDebt);
