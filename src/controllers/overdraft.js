@@ -105,10 +105,10 @@ module.exports = {
                     overdraft.update({
                         status: true
                     })
-                        .then(() => res.status(200).send(overdraft))
-                        .catch(error => res.status(400).send(error));
-
+                    .then(overdraft => res.status(200).send(overdraft))
+                    .catch(error => res.status(400).send(error))
                 })
+
             })
             .catch(error => res.status(400).send(error));
     },
