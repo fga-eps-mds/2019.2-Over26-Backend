@@ -4,12 +4,12 @@ module.exports = (sequelize, DataTypes) => {
     "Account",
     {
       agency: {
-        type: DataTypes.INTEGER(10)
+        type: DataTypes.INTEGER
       },
       number: {
         primaryKey: true,
         unique: true,
-        type: DataTypes.INTEGER(10)
+        type: DataTypes.INTEGER
       },
       balance: DataTypes.DECIMAL(10, 2),
     },
