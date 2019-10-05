@@ -1,5 +1,6 @@
 const Overdraft = require("../models").Overdraft;
 const User = require("../models").User;
+const OverdraftUtils = require("../utils/overdraftUtils");
 
 module.exports = {
   list(req, res) {
@@ -117,56 +118,18 @@ module.exports = {
       where: {
         userCPF: req.params.cpf
       }
-    }).then(overdraft => {
+    }).then(async overdraft => {
       if (!overdraft) {
         return res.status(404).send({
           message: "Overdraft Not Found"
         });
+      }else{      
+        return res.status(200).send(await OverdraftUtils.usabilityCheck(req.params.cpf));
       }
-      if (overdraft.firstUseDate != null) {
-        const currentDate = new Date();
-        const dateDiff =
-          currentDate.getTime() - overdraft.firstUseDate.getTime();
-        const dateDiffDays = dateDiff / 86400000;
 
-        if (dateDiffDays > 26) {
-
-          return res.status(418).send(false);
-        } else {
-
-          return res.status(200).send(true);
-        }
-      } else {
-        return res.status(200).send(true);
-      }
     });
   },
-  usabilityCheck(req) {
-    return Overdraft.findOne({
-      where: {
-        userCPF: req
-      }
-    }).then(overdraft => {
-      if (!overdraft) {
-        return true;
-      }
-      if (overdraft.firstUseDate != null) {
-        const currentDate = new Date();
-        const dateDiff =
-          currentDate.getTime() - overdraft.firstUseDate.getTime();
-        const dateDiffDays = dateDiff / 86400000;
 
-        if (dateDiffDays > 26) {
-
-          return false;
-        } else {
-          return true;
-        }
-      } else {
-        return true;
-      }
-    });
-  },
   cancelCredit(req, res) {
     return Overdraft.findByPk(req.params.id)
       .then(overdraft => {
