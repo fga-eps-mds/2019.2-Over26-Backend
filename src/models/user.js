@@ -5,13 +5,32 @@ module.exports = (sequelize, DataTypes) => {
     {
       id_user: {
         type: DataTypes.BIGINT,
-        primaryKey: true
+        primaryKey: true,
+        allowNull: false,
+        autoIncrement: true
       },
-      cpf: DataTypes.BIGINT,
-      name: DataTypes.STRING,
-      email: DataTypes.STRING,
-      phone: DataTypes.BIGINT,
-      monthly_income: DataTypes.DECIMAL(10, 2)
+      cpf: {
+        type: DataTypes.BIGINT,
+        allowNull: false,
+        unique: true
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+      },
+      phone: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      monthly_income: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false
+      }
     },
     {}
   );

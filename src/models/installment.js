@@ -5,11 +5,23 @@ module.exports = (sequelize, DataTypes) => {
     {
       id_installment: {
         type: DataTypes.BIGINT,
-        primaryKey: true
+        primaryKey: true,
+        allowNull: false,
+        autoIncrement: true
       },
-      is_paid: DataTypes.BOOLEAN,
-      value: DataTypes.FLOAT,
-      due_date: DataTypes.DATE
+      is_paid: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
+      value: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+      },
+      due_date: {
+        type: DataTypes.DATE,
+        allowNull: false
+      }
     },
     {}
   );

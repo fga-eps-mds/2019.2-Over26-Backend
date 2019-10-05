@@ -5,14 +5,23 @@ module.exports = (sequelize, DataTypes) => {
     {
       id_account: {
         type: DataTypes.BIGINT,
-        primaryKey: true
+        primaryKey: true,
+        allowNull: false,
+        autoIncrement: true
       },
-      agency: {type: DataTypes.INTEGER},
+      agency: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
       number: {
         type: DataTypes.INTEGER,
+        allowNull: false,
         unique: true        
       },
-      balance: DataTypes.DECIMAL(10, 2),
+      balance: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false
+      }
     },
     {}
   );
