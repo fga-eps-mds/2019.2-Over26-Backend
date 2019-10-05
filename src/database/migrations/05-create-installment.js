@@ -21,7 +21,7 @@ module.exports = {
       type: Sequelize.DATE,
       allowNull: false
     },
-    overdraftDebtId: {
+    id_overdraft_debt: {
       type: Sequelize.INTEGER,
       onDelete: "CASCADE",
       allowNull: false,
