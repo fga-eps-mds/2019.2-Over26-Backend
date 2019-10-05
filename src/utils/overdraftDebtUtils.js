@@ -1,18 +1,16 @@
 const OverdraftDebt = require("../models").OverdraftDebt;
 
-module.exports= {
-    returnInstalmentDates(req, res) {
+module.exports = {
+    returnInstalmentDates(day, quantityInstalment, instalmentValue, cpf) {
 
         return OverdraftDebt.findOne({
-            where: { userCPF: req.params.cpf },
+            where: { userCPF: cpf },
             order: [['createdAt', 'DESC']],
         })
             .then(overdraftDebt => {
 
                 if (!overdraftDebt) {
-                    return res.status(404).send({
-                        message: "OverdraftDebt Not Found"
-                    });
+                    return 0;
                 }
 
                 const currentDate = new Date();
@@ -21,10 +19,9 @@ module.exports= {
                 const dateDiffDaysRound = ((dateDiffDays).toFixed(0));
 
                 const totalAmount = overdraftDebt.amount * Math.pow(1 + overdraftDebt.rate, dateDiffDaysRound)
-                const quantityInstalment = req.query.quantityInstalment;//qunatity of instalments
-                const instalmentValue = totalAmount / quantityInstalment;//is the value of each instalment
+                instalmentValue = totalAmount / quantityInstalment;//is the value of each instalment
 
-                const dueDay = req.query.day;//due day on each month for the instalments
+                const dueDay = day;//due day on each month for the instalments
                 var dateOptionsForInstalments = new Array();
                 var counter = 1;
                 const counterMax = parseInt(quantityInstalment, 10) + 1;
@@ -36,10 +33,11 @@ module.exports= {
                 }
 
 
-                return dateOptionsForInstalments; 
-                    
+                return dateOptionsForInstalments;
+
 
             }
 
+            );
     },
-   }
+}
