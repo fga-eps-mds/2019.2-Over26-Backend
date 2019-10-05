@@ -31,8 +31,8 @@ module.exports = (sequelize, DataTypes) => {
   );
   Transaction.associate = function(models) {
     Transaction.belongsTo(models.Account, {
-      foreignKey: "id_account",
-      as: "Account"
+      foreignKey: "number",
+      as: "AccountNumber"
     });
   };
   Transaction.removeAttribute("id");

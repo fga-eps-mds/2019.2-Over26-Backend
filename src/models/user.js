@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
     });
     User.hasOne(models.Overdraft, {
       foreignKey: "id_overdraft",
-      as: "Overdarft"
+      as: "Overdraft"
     });
     User.hasMany(models.OverdraftDebt, {
       foreignKey: "id_overdraft_debt",
