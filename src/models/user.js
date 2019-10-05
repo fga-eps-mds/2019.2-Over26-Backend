@@ -1,10 +1,13 @@
 "use strict";
-
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     "User",
     {
-      cpf: { type: DataTypes.BIGINT, primaryKey: true },
+      id_user: {
+        type: DataTypes.BIGINT,
+        primaryKey: true
+      },
+      cpf: DataTypes.BIGINT,
       name: DataTypes.STRING,
       email: DataTypes.STRING,
       phone: DataTypes.BIGINT,
@@ -13,17 +16,18 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   User.associate = function(models) {
-    // associations can be defined here
     User.hasOne(models.Account, {
-      foreignKey: 'userCPF',
-    });
-    User.hasMany(models.OverdraftDebt, {
-      foreignKey: "userCPF",
-      as: "OverdraftDebts"
+      foreignKey: "id_account",
+      as: "Account"
     });
     User.hasOne(models.Overdraft, {
-      foreignKey: 'userCPF',
+      foreignKey: "id_overdraft",
+      as: "Overdarft"
     });
+    User.hasMany(models.OverdraftDebt, {
+      foreignKey: "id_overdraft_debt",
+      as: "OverdraftDebts"
+    }); 
   };
   User.removeAttribute("id");
   return User;

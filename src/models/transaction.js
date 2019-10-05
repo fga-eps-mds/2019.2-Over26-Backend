@@ -3,6 +3,10 @@ module.exports = (sequelize, DataTypes) => {
   const Transaction = sequelize.define(
     "Transaction",
     {
+      id_transaction: {
+        type: DataTypes.BIGINT,
+        primaryKey: true
+      },
       name: DataTypes.STRING(30),
       date: DataTypes.DATE,
       type: DataTypes.STRING(30),
@@ -11,11 +15,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-
   Transaction.associate = function(models) {
     Transaction.belongsTo(models.Account, {
-      foreignKey: "accountNumber"
+      foreignKey: "id_account",
+      as: "Account"
     });
   };
+  Transaction.removeAttribute("id");
   return Transaction;
 };

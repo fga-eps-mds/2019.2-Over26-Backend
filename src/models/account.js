@@ -3,13 +3,14 @@ module.exports = (sequelize, DataTypes) => {
   const Account = sequelize.define(
     "Account",
     {
-      agency: {
-        type: DataTypes.INTEGER
+      id_account: {
+        type: DataTypes.BIGINT,
+        primaryKey: true
       },
+      agency: {type: DataTypes.INTEGER},
       number: {
-        primaryKey: true,
-        unique: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        unique: true        
       },
       balance: DataTypes.DECIMAL(10, 2),
     },
@@ -17,11 +18,12 @@ module.exports = (sequelize, DataTypes) => {
   );
   Account.associate = function(models) {
     Account.belongsTo(models.User, {
-      foreignKey: "userCPF"
+      foreignKey: "id_user",
+      as: "User"
     });
     Account.hasMany(models.Transaction, {
-      foreignKey: "accountNumber",
-      as: "transactions"
+      foreignKey: "id_transaction",
+      as: "Transactions"
     });
   };
   Account.removeAttribute("id");
