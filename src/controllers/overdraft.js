@@ -74,6 +74,7 @@ module.exports = {
       })
       .catch(error => res.status(400).send(error));
   },
+
   delete(req, res) {
     return Overdraft.findByPk(req.params.id)
       .then(Overdraft => {
@@ -88,6 +89,7 @@ module.exports = {
       })
       .catch(error => res.status(400).send(error));
   },
+  
   activateCredit(req, res) {
     return User.findByPk(req.params.id)
       .then(user => {
