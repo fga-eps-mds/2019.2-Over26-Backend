@@ -1,3 +1,4 @@
+
 const OverdraftDebt = require("../models").OverdraftDebt;
 const User = require("../models").User;
 const Overdraft = require("../models").Overdraft;
@@ -6,6 +7,9 @@ const overdraftController = require('./overdraft');
 const instalmentController = require('./instalment');
 const OverdraftUtils = require("../utils/overdraftUtils");
 const OverdraftDebtUtils = require("../utils/overdraftDebtUtils");
+const InstalmentUtils = require("../utils/instalmentUtils");
+
+
 
 
 
@@ -129,13 +133,27 @@ module.exports = {
             order: [['createdAt', 'DESC']],
         })
             .then(async overdraftDebt => {
-
                 if (!overdraftDebt) {
                     return res.status(404).send({
                         message: "Non divided OverdraftDebt Not Found"
                     });
                 }
-                const//...;
+                const instalmentValue = await OverdraftDebtUtils.returnInstalmentValue(req.body.quantityInstalment, overdraftDebt.userCPF);
+                const dateOptionsForInstalments = await OverdraftDebtUtils.returnInstalmentDates(req.body.day, req.body.quantityInstalment, overdraftDebt.userCPF);
+                console.log(dateOptionsForInstalments)
+                var instalments = new Array();
+                const dueDay = req.body.day;//due day on each month for the instalments
+                const quantityInstalment = req.body.quantityInstalment;
+                var counter = 0;
+                const counterMax = parseInt(quantityInstalment, 10);
+                console.log(instalmentValue)
+                while (counter < counterMax) {
+                    
+                    instalments.push(await InstalmentUtils.creatInstalment(instalmentValue, dateOptionsForInstalments[counter], overdraftDebt.id));
+                    counter++;
+
+
+                }
 
                 await overdraftDebt.update({
                     wasDivided: true,
