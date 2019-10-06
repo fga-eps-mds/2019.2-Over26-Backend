@@ -10,7 +10,7 @@ describe("Account Controller", function() {
     it("returns account create on sucess", async () => {
       let req = {
         body: {
-          userCPF: 1234,
+          userID: 1,
           agency: 1,
           number: 12345,
           balance: 100
@@ -23,6 +23,9 @@ describe("Account Controller", function() {
       };
 
       jest.spyOn(Account, "create").mockImplementation(data => {
+        if(data.userID == null){
+          return Promise.reject("Erro")
+        }
         data.id = 1;
         data.updatedAt = Math.floor(new Date().getTime() / 1000);
         data.createdAt = Math.floor(new Date().getTime() / 1000);
@@ -42,7 +45,7 @@ describe("Account Controller", function() {
     it("returns an error when fails", async () => {
       let req = {
         body: {
-          userCPF: 1234,
+          userID: 1,
           agency: 1,
           number: 12345,
           balance: 100
@@ -114,7 +117,7 @@ describe("Account Controller", function() {
       let req = {
         params: { id: 1 },
         body: {
-          userCPF: 1234,
+          userID: 1,
           agency: 1,
           number: 12345,
           balance: 100
@@ -128,7 +131,7 @@ describe("Account Controller", function() {
 
       jest.spyOn(Account, "findByPk").mockImplementation(pk =>
         Promise.resolve({
-          userCPF: req.body.userCPF,
+          userID: req.body.userID,
           agency: req.body.agency,
           number: req.body.number,
           balance: req.body.balance,
@@ -154,7 +157,7 @@ describe("Account Controller", function() {
     it("returns account update on sucess", async () => {
       let req = {
         body: {
-          userCPF: 1234,
+          userID: 1,
           agency: 1,
           number: 12345,
           balance: 100
@@ -171,7 +174,7 @@ describe("Account Controller", function() {
 
       jest.spyOn(Account, "findByPk").mockImplementation(pk =>
         Promise.resolve({
-          userCPF: req.body.userCPF,
+          userID: req.body.userID,
           agency: req.body.agency,
           number: req.body.number,
           balance: req.body.balance,
@@ -179,7 +182,7 @@ describe("Account Controller", function() {
           createdAt: Math.floor(new Date().getTime() / 1000),
           update: data =>
             Promise.resolve({
-              userCPF: req.body.userCPF,
+              userID: req.body.userID,
               agency: req.body.agency,
               number: req.body.number,
               balance: req.body.balance,
@@ -193,7 +196,7 @@ describe("Account Controller", function() {
 
       expect(status).toHaveBeenCalledWith(200);
       let account = {
-        userCPF: req.body.userCPF,
+        userID: req.body.userID,
         agency: req.body.agency,
         number: req.body.number,
         balance: req.body.balance,
@@ -205,7 +208,7 @@ describe("Account Controller", function() {
     it("returns error 404 when account not found", async () => {
       let req = {
         body: {
-          userCPF: 1234,
+          userID: 1,
           agency: 1,
           number: 12345,
           balance: 100
@@ -235,7 +238,7 @@ describe("Account Controller", function() {
     it("returns error 400 when error on find account by pk", async () => {
       let req = {
         body: {
-          userCPF: 1234,
+          userID: 1,
           agency: 1,
           number: 12345,
           balance: 100
@@ -263,7 +266,7 @@ describe("Account Controller", function() {
     it("returns error 400 when error on update account", async () => {
       let req = {
         body: {
-          userCPF: 1234,
+          userID: 1,
           agency: 1,
           number: 12345,
           balance: 100

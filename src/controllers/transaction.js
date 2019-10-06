@@ -14,7 +14,7 @@ module.exports = {
   // Create a new transaction
   makeTransaction(req, res) {
     const { type, description, value, name } = req.body
-    return Account.findByPk(req.params.id)
+    return Account.findOne({where: {number: req.body.accountNumber}})
       .then(account => {
         if (!account) {
           return res.status(404).send({
@@ -83,7 +83,8 @@ module.exports = {
                       balance:
                           parseFloat(account.balance) - parseFloat(transaction.value),
                     })
-                    .then(() => res.status(201).send(transaction));
+                    .then(() => res.status
+                    (201).send(transaction));
                 });
             }
           }

@@ -47,7 +47,7 @@ router.post('/api/overdraftDebts/:id/instalments', overdraftDebtController.creat
 
 /* Transaction Router */
 router.get('/api/transactions', transactionController.list);
-router.post('/api/accounts/:id/transactions/', transactionController.makeTransaction);
+router.post('/api/transactions/', transactionController.makeTransaction);
 router.get('/api/transactions/:id', transactionController.getByPk);
 
 /* Instalments Router */
