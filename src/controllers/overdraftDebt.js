@@ -4,52 +4,56 @@ const Overdraft = require("../models").Overdraft;
 const Instalment = require("../models").Instalment;
 const overdraftController = require('./overdraft');
 const instalmentController = require('./instalment');
+const OverdraftUtils = require("../utils/overdraftUtils");
+const OverdraftDebtUtils = require("../utils/overdraftDebtUtils");
+
 
 
 
 
 module.exports = {
     create(req, res) {
-        return User.findByPk(req.params.id).then(user => {
-            return Overdraft.findOne({
-                where: {
-                    userCPF: user.cpf
-                }
-            })
-                .then(async overdraft => {
-                    if (!(await overdraftController.usabilityCheck(user.cpf))) {
-                        const rate = 0.15;
-
-                        const firstUseDate = overdraft.firstUseDate;
-
-                        const entryDate = firstUseDate;
-                        entryDate.setDate(entryDate.getDate() + 26);
-                        //sets entryDate of overdraftDebt to firtUsedDate of overdraft+26days
-
-
-                        const amount = overdraft.limitUsed;
-                        //is the amount of money due in the moment of the debt start
-
-                        const wasDivided = false;
-                        const userCPF = user.cpf;
-
-                        return user.createOverdraftDebt({
-                            userCPF: userCPF,
-                            entryDate: entryDate,
-                            amount: amount,
-                            rate: rate,
-                            wasDivided: wasDivided
-                        }).then(overdraftDebt => res.status(201).send(overdraftDebt));
-                    } else {
-                        return res.status(400).send({
-                            message: "overdraft still haven't reached it's deadline or wasn't used"
-                        });
+        return User.findByPk(req.params.id)
+            .then(user => {
+                return Overdraft.findOne({
+                    where: {
+                        userCPF: user.cpf
                     }
                 })
+                    .then(async overdraft => {
+                        if (!(await OverdraftUtils.usabilityCheck(overdraft.userCPF))) {
+                            const rate = 0.15;
 
-                .catch(error => res.status(400).send('error'));
-        })
-        .catch(error => res.status(400).send('error'));
+                            const firstUseDate = overdraft.firstUseDate;
+
+                            const entryDate = firstUseDate;
+                            entryDate.setDate(entryDate.getDate() + 26);
+                            //sets entryDate of overdraftDebt to firtUsedDate of overdraft+26days
+
+
+                            const amount = overdraft.limitUsed;
+                            //is the amount of money due in the moment of the debt start
+
+                            const wasDivided = false;
+                            const userCPF = user.cpf;
+
+                            return user.createOverdraftDebt({
+                                userCPF: userCPF,
+                                entryDate: entryDate,
+                                amount: amount,
+                                rate: rate,
+                                wasDivided: wasDivided
+                            }).then(overdraftDebt => res.status(201).send(overdraftDebt));
+                        } else {
+                            return res.status(400).send({
+                                message: "overdraft still haven't reached it's deadline or wasn't used"
+                            });
+                        }
+                    })
+
+                    .catch(error => res.status(400).send('error'));
+            })
+            .catch(error => res.status(400).send('error'));
 
     },
     getByPk(req, res) {
@@ -71,15 +75,17 @@ module.exports = {
             where: { userCPF: req.params.cpf },
             order: [['createdAt', 'DESC']],
         })
-            .then(overdraftDebt => {
+            .then(async overdraftDebt => {
 
                 if (!overdraftDebt) {
                     return res.status(404).send({
                         message: "OverdraftDebt Not Found"
                     });
                 }
-                var instalmentValue;
-                const dateOptionsForInstalments = overdraftDebtUtils.returnInstalmentDates(req.body.day, re.body.quantityInstalment, instalmentValue, overdraftDebt.userCPF);
+                var instalmentValue = await OverdraftDebtUtils.returnInstalmentValue(req.body.quantityInstalment, overdraftDebt.userCPF);
+                console.log(overdraftDebt.amount)
+               
+                var dateOptionsForInstalments = await OverdraftDebtUtils.returnInstalmentDates(req.body.day, req.body.quantityInstalment, overdraftDebt.userCPF);
                 return res.status(200).send({
                     "valueOfIndividualInstalment": instalmentValue,
                     "dateOptionsForInstalments": dateOptionsForInstalments,
@@ -151,8 +157,8 @@ module.exports = {
 
                 await overdraftDebt.update({
                     wasDivided: true,
-                    dueDay: parseInt(dueDay,10),
-                    quantityInstalment:parseInt(quantityInstalment,10),
+                    dueDay: parseInt(dueDay, 10),
+                    quantityInstalment: parseInt(quantityInstalment, 10),
                 })
 
                 return res.status(200).send(instalments)
