@@ -84,7 +84,7 @@ module.exports = {
                 }
                 var instalmentValue = await OverdraftDebtUtils.returnInstalmentValue(req.body.quantityInstalment, overdraftDebt.userCPF);
                 console.log(overdraftDebt.amount)
-               
+
                 var dateOptionsForInstalments = await OverdraftDebtUtils.returnInstalmentDates(req.body.day, req.body.quantityInstalment, overdraftDebt.userCPF);
                 return res.status(200).send({
                     "valueOfIndividualInstalment": instalmentValue,
@@ -103,18 +103,18 @@ module.exports = {
             where: { userCPF: req.params.cpf },
             order: [['createdAt', 'DESC']]
         })
-            .then(overdraftDebt => {
+            .then(async overdraftDebt => {
                 if (!overdraftDebt) {
                     return res.status(404).send({
                         message: "OverdraftDebt Not Found"
                     });
                 }
-                const currentDate = new Date();
-                const dateDiff = currentDate.getTime() - overdraftDebt.entryDate.getTime();
-                const dateDiffDays = dateDiff / 86400000;
-                const dateDiffDaysRound = ((dateDiffDays).toFixed(0));
-                const totalAmount = overdraftDebt.amount * Math.pow(1 + overdraftDebt.rate, dateDiffDaysRound)
-                return res.status(200).send({ "totalAmount": totalAmount });
+            
+                const totalAmount = await OverdraftDebtUtils.returnInstalmentValue(1, overdraftDebt.userCPF);
+
+                return res.status(200).send({
+                    "totalAmount": totalAmount,
+                });
 
             })
             .catch(error => res.status(400).send("error"));

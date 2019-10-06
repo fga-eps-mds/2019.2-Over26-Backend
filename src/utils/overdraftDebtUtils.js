@@ -18,6 +18,7 @@ module.exports = {
 
                 const totalAmount = overdraftDebt.amount * Math.pow(1 + overdraftDebt.rate, dateDiffDaysRound)
                 const instalmentValue = totalAmount / quantityInstalment;//is the value of each instalment
+
                 return instalmentValue;
 
             })
