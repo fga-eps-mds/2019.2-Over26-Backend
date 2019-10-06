@@ -14,7 +14,7 @@ module.exports = {
   // Create a new transaction
   makeTransaction(req, res) {
     const { type, description, value, name } = req.body
-    return Account.findByPk(req.params.accountNumber)
+    return Account.findByPk(req.params.id)
       .then(account => {
         if (!account) {
           return res.status(404).send({
@@ -24,7 +24,7 @@ module.exports = {
 
         return Overdraft.findOne({
           where: {
-            userCPF: account.userCPF
+            userID: account.userID
           }
         }).then(overdraft => {
 

@@ -13,11 +13,11 @@ module.exports = {
         return User.findByPk(req.params.id).then(user => {
             return Overdraft.findOne({
                 where: {
-                    userCPF: user.cpf
+                    userID: user.id
                 }
             })
                 .then(async overdraft => {
-                    if (!(await overdraftController.usabilityCheck(user.cpf))) {
+                    if (!(await overdraftController.usabilityCheck(user.id))) {
                         const rate = 0.15;
 
                         const firstUseDate = overdraft.firstUseDate;
@@ -31,10 +31,10 @@ module.exports = {
                         //is the amount of money due in the moment of the debt start
 
                         const wasDivided = false;
-                        const userCPF = user.cpf;
+                        const userID = user.id;
 
                         return user.createOverdraftDebt({
-                            userCPF: userCPF,
+                            userID: userID,
                             entryDate: entryDate,
                             amount: amount,
                             rate: rate,
@@ -68,7 +68,7 @@ module.exports = {
     getInstalmentsOptions(req, res) {
 
         return OverdraftDebt.findOne({
-            where: { userCPF: req.params.cpf },
+            where: { userID: req.params.id },
             order: [['createdAt', 'DESC']],
         })
             .then(overdraftDebt => {
@@ -114,7 +114,7 @@ module.exports = {
     checkAmount(req, res) {
 
         return OverdraftDebt.findOne({
-            where: { userCPF: req.params.cpf },
+            where: { userID: req.params.id },
             order: [['createdAt', 'DESC']]
         })
             .then(overdraftDebt => {
@@ -136,7 +136,7 @@ module.exports = {
 
     createInstalments(req, res) {
         return OverdraftDebt.findOne({
-            where: { userCPF: req.params.cpf },
+            where: { userID: req.params.id },
             order: [['createdAt', 'DESC']],
         })
             .then(async overdraftDebt => {

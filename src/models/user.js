@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     "User",
     {
-      cpf: { type: DataTypes.BIGINT, primaryKey: true },
+      cpf: { type: DataTypes.BIGINT },
       name: DataTypes.STRING,
       email: DataTypes.STRING,
       phone: DataTypes.BIGINT,
@@ -15,16 +15,15 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = function(models) {
     // associations can be defined here
     User.hasOne(models.Account, {
-      foreignKey: 'userCPF',
+      foreignKey: 'userID',
     });
     User.hasMany(models.OverdraftDebt, {
-      foreignKey: "userCPF",
+      foreignKey: "userID",
       as: "OverdraftDebts"
     });
     User.hasOne(models.Overdraft, {
-      foreignKey: 'userCPF',
+      foreignKey: 'userID',
     });
   };
-  User.removeAttribute("id");
   return User;
 };

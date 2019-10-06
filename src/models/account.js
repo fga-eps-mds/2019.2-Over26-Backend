@@ -7,7 +7,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER
       },
       number: {
-        primaryKey: true,
         unique: true,
         type: DataTypes.INTEGER
       },
@@ -17,14 +16,13 @@ module.exports = (sequelize, DataTypes) => {
   );
   Account.associate = function(models) {
     Account.belongsTo(models.User, {
-      foreignKey: "userCPF"
+      foreignKey: "userID"
     });
     Account.hasMany(models.Transaction, {
-      foreignKey: "accountNumber",
+      foreignKey: "accountID",
       as: "transactions"
     });
   };
-  Account.removeAttribute("id");
 
   return Account;
 };
