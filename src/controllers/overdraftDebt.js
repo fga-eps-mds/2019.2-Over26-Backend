@@ -135,22 +135,7 @@ module.exports = {
                         message: "Non divided OverdraftDebt Not Found"
                     });
                 }
-                const instalmentValue = await OverdraftDebtUtils.returnInstalmentValue(req.body.quantityInstalment, overdraftDebt.userCPF);
-
-                const dateOptionsForInstalments = await OverdraftDebtUtils.returnInstalmentDates(req.body.day, req.body.quantityInstalment, overdraftDebt.userCPF);
-
-                var instalments = new Array();
-
-                const dueDay = req.body.day;//due day on each month for the instalments
-                const quantityInstalment = req.body.quantityInstalment;
-
-                var counter = 0;
-                const counterMax = parseInt(quantityInstalment, 10);
-                while (counter < counterMax) {
-
-                    instalments.push(await instalmentController.create(instalmentValue, dateOptionsForInstalments[counter], overdraftDebt.id))
-                    counter++;
-                }
+                const//...;
 
                 await overdraftDebt.update({
                     wasDivided: true,
