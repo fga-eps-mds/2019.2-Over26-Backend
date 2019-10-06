@@ -5,11 +5,16 @@ module.exports = (sequelize, DataTypes) => {
    amount: DataTypes.FLOAT,
    rate: DataTypes.FLOAT,
    wasDivided: DataTypes.BOOLEAN,
+   dueDay: DataTypes.INTEGER,
+   quantityInstalment: DataTypes.INTEGER,
+
    
   }, {});
   OverdraftDebt.associate = function(models) {
     // associations can be defined here
-   //OverdraftDebt.hasMany(models.Instalment,{foreignKey: 'id'})
+   OverdraftDebt.hasMany(models.Instalment,{
+     foreignKey: 'id'
+    })
    OverdraftDebt.belongsTo(models.User,{ 
       foreignKey: 'userCPF',
     })

@@ -43,7 +43,7 @@ module.exports = {
             phone: req.body.phone,
             monthly_income: req.body.monthly_income 
           })
-          .then(() => res.status(200).send(user))
+          .then(user => res.status(200).send(user))
           .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error));
