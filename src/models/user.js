@@ -3,34 +3,12 @@ module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     "User",
     {
-      id_user: {
-        type: DataTypes.BIGINT,
-        primaryKey: true,
-        allowNull: false,
-        autoIncrement: true
-      },
-      cpf: {
-        type: DataTypes.BIGINT,
-        allowNull: false,
-        unique: true
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
-      },
-      phone: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      monthly_income: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false
-      }
+      id_user: DataTypes.BIGINT,
+      cpf: DataTypes.BIGINT,
+      name: DataTypes.STRING,
+      email: DataTypes.STRING,
+      phone: DataTypes.STRING,
+      monthly_income: DataTypes.DECIMAL(10, 2)
     },
     {}
   );

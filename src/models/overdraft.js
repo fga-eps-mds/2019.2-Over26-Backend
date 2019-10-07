@@ -3,32 +3,12 @@ module.exports = (sequelize, DataTypes) => {
   const Overdraft = sequelize.define(
     "Overdraft",
     {
-      id_overdraft: {
-        type: DataTypes.BIGINT,
-        primaryKey: true,
-        allowNull: false,
-        autoIncrement: true
-      },
-      is_active: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false
-      },
-      is_blocked: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false
-      },
-      limit: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false
-      },
-      limitMax: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false
-      },
-      limitUsed: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false
-      },
+      id_overdraft: DataTypes.BIGINT,
+      is_active: DataTypes.BOOLEAN,
+      is_blocked: DataTypes.BOOLEAN,
+      limit: DataTypes.DECIMAL(10, 2),
+      limitMax: DataTypes.DECIMAL(10, 2),
+      limitUsed: DataTypes.DECIMAL(10, 2),
       firstUseDate: DataTypes.DATE
     },
     {}

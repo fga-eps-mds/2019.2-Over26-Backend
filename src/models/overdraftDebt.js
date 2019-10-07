@@ -3,29 +3,11 @@ module.exports = (sequelize, DataTypes) => {
   const OverdraftDebt = sequelize.define(
     "OverdraftDebt",
     {
-      id_overdraft_debt: {
-        type: DataTypes.BIGINT,
-        primaryKey: true,
-        allowNull: false,
-        autoIncrement: true
-      },
-      entry_date: {
-        type: DataTypes.DATE,
-        allowNull: false
-      },
-      amount: {
-        type: DataTypes.FLOAT,
-        allowNull: false
-      },
-      rate: {
-        type: DataTypes.FLOAT,
-        allowNull: false
-      },
-      is_divided: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
-      },
+      id_overdraft_debt: DataTypes.BIGINT,
+      entry_date: DataTypes.DATE,
+      amount: DataTypes.FLOAT,
+      rate: DataTypes.FLOAT,
+      is_divided: DataTypes.BOOLEAN,
       due_date: DataTypes.INTEGER,
       quantity_installment: DataTypes.INTEGER,
     },

@@ -3,28 +3,12 @@ module.exports = (sequelize, DataTypes) => {
   const Installment = sequelize.define(
     "Installment",
     {
-      id_installment: {
-        type: DataTypes.BIGINT,
-        primaryKey: true,
-        allowNull: false,
-        autoIncrement: true
-      },
-      is_paid: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
-      },
-      value: {
-        type: DataTypes.FLOAT,
-        allowNull: false
-      },
-      due_date: {
-        type: DataTypes.DATE,
-        allowNull: false
-      }
-    },
-    {}
-  );
+      id_installment: DataTypes.BIGINT,
+      is_paid: DataTypes.BOOLEAN,
+      value: DataTypes.FLOAT,
+      due_date: DataTypes.DATE
+      
+    });
   Installment.associate = function (models) {
     Installment.belongsTo(models.OverdraftDebt,{
       foreignKey: "id_overdraft_debt",
