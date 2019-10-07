@@ -28,7 +28,6 @@ module.exports = {
           }
         }).then(overdraft => {
 
-          console.log(type)
 
           if (type != "in") {                           //Checa para saber se é um cash-out
             if (account.balance - value < 0) {          //Checa se o valor final após cash-out será negativo
@@ -44,7 +43,6 @@ module.exports = {
                       name: name
                     })
                     .then(transaction => {
-                      console.log('Deus é top')
                       return account
                         .update({
                           balance:
@@ -55,8 +53,7 @@ module.exports = {
                             limitUsed: Math.abs(account.balance) + parseFloat(overdraft.limitUsed),
                             firstUseDate: overdraft.firstUseDate? overdraft.firstUseDate: new Date()
                           })
-                          .then(account => console.log(account))
-                            .then(() => res.status(201).send(transaction))
+                            .then(transaction => res.status(201).send(transaction))
                         })
                     });
                 }
@@ -99,7 +96,6 @@ module.exports = {
               value: value
             })
             .then(transaction => {
-              console.log(transaction);
               return account
                 .update({
                   balance:

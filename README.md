@@ -13,3 +13,4 @@
     O repositório FrontEnd do projeto encontra-se <a href="https://github.com/fga-eps-mds/2019.2-Over26"><strong> aqui</strong></a>
 </p>
 
+[![codecov](https://codecov.io/gh/fga-eps-mds/2019.2-Over26-Backend/branch/devel/graph/badge.svg)](https://codecov.io/gh/fga-eps-mds/2019.2-Over26-Backend)

@@ -3,26 +3,36 @@ module.exports = (sequelize, DataTypes) => {
   const Account = sequelize.define(
     "Account",
     {
-      cpf: DataTypes.BIGINT(11),
+      id_account: {
+        type: DataTypes.BIGINT,
+        primaryKey: true,
+        allowNull: false,
+        autoIncrement: true
+      },
       agency: {
-        type: DataTypes.INTEGER(10)
+        type: DataTypes.INTEGER,
+        allowNull: false
       },
       number: {
-        primaryKey: true,
-        unique: true,
-        type: DataTypes.INTEGER(10)
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        unique: true        
       },
-      balance: DataTypes.DECIMAL(10, 2),
+      balance: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false
+      }
     },
     {}
   );
   Account.associate = function(models) {
     Account.belongsTo(models.User, {
-      foreignKey: "userCPF"
+      foreignKey: "id_user",
+      as: "User"
     });
     Account.hasMany(models.Transaction, {
-      foreignKey: "accountNumber",
-      as: "transactions"
+      foreignKey: "id_transaction",
+      as: "Transactions"
     });
   };
   Account.removeAttribute("id");

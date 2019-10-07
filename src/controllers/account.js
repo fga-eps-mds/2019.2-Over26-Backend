@@ -44,7 +44,7 @@ module.exports = {
             number: req.body.number,
             balance: req.body.balance
           })
-          .then(() => res.status(200).send(account))
+          .then(account => res.status(200).send(account))
           .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error));
