@@ -21,14 +21,14 @@ module.exports = {
       wasDivided: {
         type: Sequelize.BOOLEAN
       },
-      userCPF: {
+      userID: {
         type: Sequelize.BIGINT,
         onDelete: "CASCADE",
         allowNull: false,
         references: {
           model: "Users",
-          key: "cpf",
-          as: "userCPF"
+          key: "id",
+          as: "userID"
         }
       },
       dueDay:{

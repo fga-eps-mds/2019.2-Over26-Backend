@@ -24,7 +24,7 @@ module.exports = {
 			firstUseDate: {
 				type: Sequelize.DATE
 			},
-			userCPF: {
+			userID: {
 				unique: true,
 				primaryKey: true,
 				type: Sequelize.BIGINT,
@@ -32,8 +32,8 @@ module.exports = {
 				allowNull: false,
 				references: {
 					model: "Users",
-					key: "cpf",
-					as: "userCPF"
+					key: "id",
+					as: "userID"
 				}
 			},
 			createdAt: {

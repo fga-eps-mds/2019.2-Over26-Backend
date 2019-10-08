@@ -24,13 +24,13 @@ module.exports = {
       value: {
         type: Sequelize.DECIMAL(10, 2)
       },
-      accountNumber: {
+      accountID: {
         type: Sequelize.INTEGER,
         onDelete: "CASCADE",
         references: {
           model: "Accounts",
-          key: "number",
-          as: "accountNumber"
+          key: "id",
+          as: "accountID"
         }
       },
       createdAt: {

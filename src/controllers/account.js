@@ -7,7 +7,7 @@ module.exports = {
   // Create a new account
   create(req, res) {
     return Account.create({
-      userCPF: req.body.userCPF,
+      userID: req.body.userID,
       agency: req.body.agency,
       number: req.body.number,
       balance: req.body.balance,
@@ -17,7 +17,7 @@ module.exports = {
   },
   // Get a account by primary key
   getByPk(req, res) {
-    return Account.findByPk(req.params.accountNumber)
+    return Account.findByPk(req.params.id)
       .then(account => {
         if (!account) {
           return res.status(404).send({
@@ -39,7 +39,7 @@ module.exports = {
         }
         return account
           .update({
-            userCPF: req.body.userCPF,
+            userID: req.body.userID,
             agency: req.body.agency,
             number: req.body.number,
             balance: req.body.balance

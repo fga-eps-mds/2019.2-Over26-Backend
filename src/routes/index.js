@@ -25,10 +25,10 @@ router.put('/api/users/:id/overdrafts/activate', overdraftController.activateCre
 router.put('/api/users/:id/overdrafts/cancel', overdraftController.cancelCredit);
 router.put('/api/users/:id/overdrafts', overdraftController.updateCreditLimit);
 router.delete('/api/users/:id/overdrafts', overdraftController.delete);
-router.get('/api/users/:cpf/overdrafts/usability', overdraftController.checkUsability)
+router.get('/api/users/:id/overdrafts/usability', overdraftController.checkUsability)
 
 /* Account Router */
-router.get('/api/accounts/:accountNumber', accountController.getByPk);
+router.get('/api/accounts/:id', accountController.getByPk);
 router.post('/api/accounts', accountController.create);
 router.put('/api/accounts/:id', accountController.update);
 
@@ -39,15 +39,15 @@ router.put('/api/users/:id', userController.update);
 
 /* OverdraftDebt Router */
 router.post('/api/users/:id/overdraftDebt', overdraftDebtController.create);
-router.get('/api/overdraftDebts/:id', overdraftDebtController.getByPK);
-router.get('/api/overdraftDebts/:cpf/options', overdraftDebtController.getInstalmentsOptions);
-router.get('/api/overdraftDebts/:cpf/check', overdraftDebtController.checkAmount);
-router.post('/api/overdraftDebts/:cpf/instalments', overdraftDebtController.createInstalments);
+router.get('/api/overdraftDebts/:id', overdraftDebtController.getByPk);
+router.get('/api/overdraftDebts/:id/options', overdraftDebtController.getInstalmentsOptions);
+router.get('/api/overdraftDebts/:id/check', overdraftDebtController.checkAmount);
+router.post('/api/overdraftDebts/:id/instalments', overdraftDebtController.createInstalments);
 
 
 /* Transaction Router */
 router.get('/api/transactions', transactionController.list);
-router.post('/api/accounts/:accountNumber/transactions/', transactionController.makeTransaction);
+router.post('/api/transactions/', transactionController.makeTransaction);
 router.get('/api/transactions/:id', transactionController.getByPk);
 
 /* Instalments Router */

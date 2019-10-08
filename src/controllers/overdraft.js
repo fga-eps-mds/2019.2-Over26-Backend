@@ -13,7 +13,7 @@ module.exports = {
     return User.findByPk(req.params.id)
       .then(user => {
         const status = false;
-        const userCPF = user.cpf;
+        const userID = user.id;
         const limit = 200;
         const limitMax = 200;
         const limitUsed = 0;
@@ -21,7 +21,7 @@ module.exports = {
 
         return user
           .createOverdraft({
-            userCPF: userCPF,
+            userID: userID,
             status: status,
             limit: limit,
             limitMax: limitMax,
@@ -115,7 +115,7 @@ module.exports = {
   checkUsability(req, res) {
     return Overdraft.findOne({
       where: {
-        userCPF: req.params.cpf
+        userID: req.params.id
       }
     }).then(overdraft => {
       if (!overdraft) {
@@ -144,7 +144,7 @@ module.exports = {
   usabilityCheck(req) {
     return Overdraft.findOne({
       where: {
-        userCPF: req
+        userID: req
       }
     }).then(overdraft => {
       if (!overdraft) {

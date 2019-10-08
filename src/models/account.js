@@ -4,12 +4,13 @@ module.exports = (sequelize, DataTypes) => {
     "Account",
     {
       agency: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        allowNull: false
       },
       number: {
-        primaryKey: true,
         unique: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        allowNull: false
       },
       balance: DataTypes.DECIMAL(10, 2),
     },
@@ -17,14 +18,13 @@ module.exports = (sequelize, DataTypes) => {
   );
   Account.associate = function(models) {
     Account.belongsTo(models.User, {
-      foreignKey: "userCPF"
+      foreignKey: "userID"
     });
     Account.hasMany(models.Transaction, {
-      foreignKey: "accountNumber",
+      foreignKey: "accountID",
       as: "transactions"
     });
   };
-  Account.removeAttribute("id");
 
   return Account;
 };

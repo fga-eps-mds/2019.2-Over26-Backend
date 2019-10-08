@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
      foreignKey: 'id'
     })
    OverdraftDebt.belongsTo(models.User,{ 
-      foreignKey: 'userCPF',
+      foreignKey: 'userID',
     })
   };
   return OverdraftDebt;
