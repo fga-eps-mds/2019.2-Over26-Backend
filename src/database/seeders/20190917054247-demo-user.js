@@ -1,3 +1,4 @@
+
 "use strict";
 
 module.exports = {
@@ -5,7 +6,6 @@ module.exports = {
         /*
           Add altering commands here.
           Return a promise to correctly handle asynchronicity.
-    
           Example:
           return queryInterface.bulkInsert('People', [{
             name: 'John Doe',
@@ -18,6 +18,9 @@ module.exports = {
                 {
                     name: "Ana",
                     cpf: 1234,
+                    email: "ana@SpeechGrammarList.com",
+                    phone: "912345678",
+                    monthlyIncome: 3000,
                     createdAt: new Date(),
                     updatedAt: new Date()
                 }
@@ -31,11 +34,9 @@ module.exports = {
         /*
           Add reverting commands here.
           Return a promise to correctly handle asynchronicity.
-    
           Example:
           return queryInterface.bulkDelete('People', null, {});
         */
         return queryInterface.bulkDelete("Accounts", null, {});
-        return queryInterface.bulkDelete("Overdraft", null, {});
     }
 };

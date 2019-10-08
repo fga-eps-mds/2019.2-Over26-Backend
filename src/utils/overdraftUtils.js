@@ -1,10 +1,10 @@
 const Overdraft = require("../models").Overdraft;
 
 module.exports = {
-    usabilityCheck(cpf) {
+    usabilityCheck(id) {
         return Overdraft.findOne({
             where: {
-                userCPF: cpf
+                userId: id
             }
         }).then(overdraft => {
             if (!overdraft) {

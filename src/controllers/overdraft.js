@@ -13,17 +13,17 @@ module.exports = {
     create(req, res) {
         return User.findByPk(req.params.id)
             .then(user => {
-                const status = false;
-                const userCPF = user.cpf;
+                const userId = user.id;
+                const isActive = false;
+                const isBlocked = false;
                 const limit = 200;
                 const limitMax = 200;
                 const limitUsed = 0;
                 const firstUseDate = null;
-
-                return user
-                    .createOverdraft({
-                        userCPF: userCPF,
-                        status: status,
+                return user.createOverdraft({
+                        userId: userId,
+                        isActive: isActive,
+                        isBlocked: isBlocked,
                         limit: limit,
                         limitMax: limitMax,
                         limitUsed: limitUsed,
@@ -118,7 +118,7 @@ module.exports = {
     checkUsability(req, res) {
         return Overdraft.findOne({
             where: {
-                userCPF: req.params.cpf
+                userId: req.params.id
             }
         }).then(async overdraft => {
             if (!overdraft) {
@@ -126,7 +126,7 @@ module.exports = {
                     message: "Overdraft Not Found"
                 });
             } else {
-                return res.status(200).send(await OverdraftUtils.usabilityCheck(req.params.cpf));
+                return res.status(200).send(await OverdraftUtils.usabilityCheck(req.params.id));
             }
 
         });

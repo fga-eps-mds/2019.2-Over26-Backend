@@ -12,20 +12,17 @@ const InstalmentUtils = require("../utils/instalmentUtils");
 
 
 
-
-
-
 module.exports = {
     create(req, res) {
         return User.findByPk(req.params.id)
             .then(user => {
                 return Overdraft.findOne({
                     where: {
-                        userCPF: user.cpf
+                        userId: user.id
                     }
                 })
                     .then(async overdraft => {
-                        if (!(await OverdraftUtils.usabilityCheck(overdraft.userCPF))) {
+                        if (!(await OverdraftUtils.usabilityCheck(overdraft.userId))) {
                             const rate = 0.15;
 
                             const firstUseDate = overdraft.firstUseDate;
@@ -38,15 +35,15 @@ module.exports = {
                             const amount = overdraft.limitUsed;
                             //is the amount of money due in the moment of the debt start
 
-                            const wasDivided = false;
-                            const userCPF = user.cpf;
-
+                            const isDivided = false;
+                            const userId = user.id;
+                            console.log("aaaaaaaaaaaaaa")
                             return user.createOverdraftDebt({
-                                userCPF: userCPF,
+                                userId: userId,
                                 entryDate: entryDate,
                                 amount: amount,
                                 rate: rate,
-                                wasDivided: wasDivided
+                                isDivided: isDivided
                             }).then(overdraftDebt => res.status(201).send(overdraftDebt));
                         } else {
                             return res.status(400).send({
@@ -72,11 +69,10 @@ module.exports = {
             })
             .catch(error => res.status(400).send("error"));
     },
-
     getInstalmentsOptions(req, res) {
 
         return OverdraftDebt.findOne({
-            where: { userCPF: req.params.cpf },
+            where: { userId: req.params.id },
             order: [['createdAt', 'DESC']],
         })
             .then(async overdraftDebt => {
@@ -86,35 +82,32 @@ module.exports = {
                         message: "OverdraftDebt Not Found"
                     });
                 }
-                const instalmentValue = await OverdraftDebtUtils.returnInstalmentValue(req.body.quantityInstalment, overdraftDebt.userCPF);
+                const instalmentValue = await OverdraftDebtUtils.returnInstalmentValue(req.body.quantityInstalment, overdraftDebt.userId);
 
-                const dateOptionsForInstalments = await OverdraftDebtUtils.returnInstalmentDates(req.body.day, req.body.quantityInstalment, overdraftDebt.userCPF);
+                const dateOptionsForInstalments = await OverdraftDebtUtils.returnInstalmentDates(req.body.day, req.body.quantityInstalment, overdraftDebt.userId);
 
                 return res.status(200).send({
                     "valueOfIndividualInstalment": instalmentValue,
                     "dateOptionsForInstalments": dateOptionsForInstalments,
 
                 })
-
             })
             .catch(error => res.status(400).send("error"));
-
     },
-
     checkAmount(req, res) {
-
         return OverdraftDebt.findOne({
-            where: { userCPF: req.params.cpf },
+            where: { userId: req.params.id },
             order: [['createdAt', 'DESC']]
         })
             .then(async overdraftDebt => {
+                console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
                 if (!overdraftDebt) {
                     return res.status(404).send({
                         message: "OverdraftDebt Not Found"
                     });
                 }
 
-                const totalAmount = await OverdraftDebtUtils.returnInstalmentValue(1, overdraftDebt.userCPF);
+                const totalAmount = await OverdraftDebtUtils.returnInstalmentValue(1, overdraftDebt.userId);
 
                 return res.status(200).send({
                     "totalAmount": totalAmount,
@@ -123,14 +116,15 @@ module.exports = {
             })
             .catch(error => res.status(400).send("error"));
     },
-
     createInstalments(req, res) {
         return OverdraftDebt.findOne({
             where: {
-                userCPF: req.params.cpf,
-                wasDivided: false,
+                userId: req.params.id,
+                isDivided: false,
             },
             order: [['createdAt', 'DESC']],
+
+
         })
             .then(async overdraftDebt => {
                 if (!overdraftDebt) {
@@ -138,9 +132,9 @@ module.exports = {
                         message: "Non divided OverdraftDebt Not Found"
                     });
                 }
-                const instalmentValue = await OverdraftDebtUtils.returnInstalmentValue(req.body.quantityInstalment, overdraftDebt.userCPF);
-                const dateOptionsForInstalments = await OverdraftDebtUtils.returnInstalmentDates(req.body.day, req.body.quantityInstalment, overdraftDebt.userCPF);
-                console.log(dateOptionsForInstalments)
+                const instalmentValue = await OverdraftDebtUtils.returnInstalmentValue(req.body.quantityInstalment, overdraftDebt.userId);
+                const dateOptionsForInstalments = await OverdraftDebtUtils.returnInstalmentDates(req.body.day, req.body.quantityInstalment, overdraftDebt.userId);
+                //console.log(dateOptionsForInstalments)
                 var instalments = new Array();
                 const dueDay = req.body.day;//due day on each month for the instalments
                 const quantityInstalment = req.body.quantityInstalment;
@@ -148,25 +142,21 @@ module.exports = {
                 const counterMax = parseInt(quantityInstalment, 10);
                 console.log(instalmentValue)
                 while (counter < counterMax) {
-                    
+                    console.log(counter)
                     instalments.push(await InstalmentUtils.creatInstalment(instalmentValue, dateOptionsForInstalments[counter], overdraftDebt.id));
-                    counter++;
 
+                    counter++;
 
                 }
 
                 await overdraftDebt.update({
-                    wasDivided: true,
+                    isDivided: true,
                     dueDay: parseInt(dueDay, 10),
                     quantityInstalment: parseInt(quantityInstalment, 10),
                 })
-
                 return res.status(200).send(instalments)
 
             })
             .catch(error => res.status(400).send({ "message": "couldn't create instalments" }));
-
-
-
     },
 };

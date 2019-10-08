@@ -25,11 +25,11 @@ describe("OverdraftDebts Controller", function () {
 
             jest.spyOn(User, "findByPk").mockImplementation(id =>
                 Promise.resolve({
-                    cpf: 1234,
+                    id: 1,
                     createOverdraftDebt: data => {
                         let entry = new Date();
                         return Promise.resolve({
-                            userCPF: 1234,
+                            userID: 1,
                             entryDate: Math.floor(entry.setDate(entry.getDate() + 26) / 1000),
                             amount: 10,
                             rate: 0.15,
@@ -54,7 +54,7 @@ describe("OverdraftDebts Controller", function () {
             await overdraftDebtController.create(req, res);
             let entry = new Date();
             let overdraft = {
-                userCPF: 1234,
+                userID: 1,
                 entryDate: Math.floor(entry.setDate(entry.getDate() + 26) / 1000),
                 amount: 10,
                 rate: 0.15,
@@ -119,7 +119,7 @@ describe("OverdraftDebts Controller", function () {
                 status
             };
             let overdraftDebt = {
-                userCPF: 1234,
+                userID: 1,
                 entryDate: Math.floor(new Date().getTime() / 1000),
                 amount: 0,
                 rate: 0.1,

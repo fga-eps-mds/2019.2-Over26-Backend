@@ -24,7 +24,7 @@ module.exports = {
 
                 return Overdraft.findOne({
                     where: {
-                        userCPF: account.userCPF
+                        userId: account.userId
                     }
                 }).then(overdraft => {
 

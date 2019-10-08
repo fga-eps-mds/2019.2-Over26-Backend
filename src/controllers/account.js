@@ -7,7 +7,7 @@ module.exports = {
     // Create a new account
     create(req, res) {
         return Account.create({
-            userCPF: req.body.userCPF,
+            userId: req.body.userId,
             agency: req.body.agency,
             number: req.body.number,
             balance: req.body.balance,
@@ -39,7 +39,7 @@ module.exports = {
                 }
                 return account
                     .update({
-                        userCPF: req.body.userCPF,
+                        userId: req.body.userId,
                         agency: req.body.agency,
                         number: req.body.number,
                         balance: req.body.balance

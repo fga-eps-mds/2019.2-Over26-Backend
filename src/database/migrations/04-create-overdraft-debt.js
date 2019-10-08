@@ -1,41 +1,43 @@
 "use strict";
-
 module.exports = {
     up: (queryInterface, Sequelize) => {
         return queryInterface.createTable("OverdraftDebts", {
             id: {
-                allowNull: false,
-                autoIncrement: true,
+                type: Sequelize.BIGINT,
                 primaryKey: true,
-                type: Sequelize.INTEGER
+                allowNull: false,
+                autoIncrement: true
             },
             entryDate: {
-                type: Sequelize.DATE
+                type: Sequelize.DATE,
+                allowNull: false
             },
             amount: {
-                type: Sequelize.FLOAT
+                type: Sequelize.FLOAT,
+                allowNull: false
             },
             rate: {
-                type: Sequelize.FLOAT
+                type: Sequelize.FLOAT,
+                allowNull: false
             },
-            wasDivided: {
-                type: Sequelize.BOOLEAN
+            isDivided: {
+                type: Sequelize.BOOLEAN,
+                allowNull: false,
+                defaultValue: false
             },
-            userCPF: {
+            dueDay: Sequelize.INTEGER,
+
+            quantityInstalment: Sequelize.INTEGER,
+
+            userId: {
                 type: Sequelize.BIGINT,
                 onDelete: "CASCADE",
                 allowNull: false,
                 references: {
                     model: "Users",
-                    key: "cpf",
-                    as: "userCPF"
+                    key: "id",
+                    as: "User"
                 }
-            },
-            dueDay: {
-                type: Sequelize.INTEGER
-            },
-            quantityInstalment: {
-                type: Sequelize.INTEGER
             },
             createdAt: {
                 allowNull: false,
@@ -47,7 +49,6 @@ module.exports = {
             }
         });
     },
-
     down: (queryInterface, Sequelize) => {
         return queryInterface.dropTable("OverdraftDebts");
     }
