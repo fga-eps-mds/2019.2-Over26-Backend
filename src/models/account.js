@@ -5,16 +5,15 @@ module.exports = (sequelize, DataTypes) => {
         number: DataTypes.INTEGER,
         balance: DataTypes.DECIMAL(10, 2)
     });
-
     Account.associate = function (models) {
         Account.belongsTo(models.User, {
-            foreignKey: "UserId",
+            foreignKey: "id",
+            as: "userId"
         });
         Account.hasMany(models.Transaction, {
-            foreignKey: "accountNumber",
-            as: "transactions"
+            foreignKey: "id",
+            as: "Transactions"
         });
     };
-
     return Account;
 };

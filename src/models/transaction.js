@@ -7,11 +7,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(30),
         description: DataTypes.STRING(256),
         value: DataTypes.DECIMAL(10, 2),
-    }, {}
-    );
+    });
     Transaction.associate = function (models) {
         Transaction.belongsTo(models.Account, {
-            foreignKey: "accountNumber",
+            foreignKey: "accountId",
         });
     };
     return Transaction;

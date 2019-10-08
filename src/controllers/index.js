@@ -5,8 +5,6 @@ const transaction = require('./transaction');
 const overdraftDebt = require('./overdraftDebt');
 const instalment = require('./instalment');
 
-
-
 module.exports = {
   // Add your controllers here
   user,
@@ -14,6 +12,5 @@ module.exports = {
   account,
   transaction,
   overdraftDebt,
-  instalment,
-
+  instalment
 };

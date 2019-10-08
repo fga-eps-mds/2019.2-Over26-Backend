@@ -43,7 +43,7 @@
     <h1>Tela de Transações</h1>
     <form onsubmit="createTrasaction(event)">
       <input id="name" placeholder="Name" type="text" /><br />
-      <input id="account" placeholder="Account" type="text" /><br />
+      <input id="accountNumber" placeholder="Account" type="text" /><br />
       <select name="type" id="type">
         <option value="in">Entrada</option>
         <option value="out">Saida</option> </select
@@ -58,10 +58,9 @@
         e.preventDefault();
         axios
           .post(
-            `http://localhost:3000/api/accounts/${$(
-              "#account"
-            ).val()}/transactions`,
+            `http://localhost:3000/api/transactions`,
             {
+              accountNumber: $("#accountNumber").val(),
               name: $("#name").val(),
               type: $("#type").val(),
               description: $("#description").val(),

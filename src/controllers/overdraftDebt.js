@@ -5,9 +5,6 @@ const Instalment = require("../models").Instalment;
 const overdraftController = require('./overdraft');
 const instalmentController = require('./instalment');
 
-
-
-
 module.exports = {
     create(req, res) {
         return User.findByPk(req.params.id).then(user => {
@@ -25,7 +22,6 @@ module.exports = {
                         const entryDate = firstUseDate;
                         entryDate.setDate(entryDate.getDate() + 26);
                         //sets entryDate of overdraftDebt to firtUsedDate of overdraft+26days
-
 
                         const amount = overdraft.limitUsed;
                         //is the amount of money due in the moment of the debt start
@@ -64,7 +60,6 @@ module.exports = {
             })
             .catch(error => res.status(400).send("error"));
     },
-
     getInstalmentsOptions(req, res) {
 
         return OverdraftDebt.findOne({
@@ -78,7 +73,6 @@ module.exports = {
                         message: "OverdraftDebt Not Found"
                     });
                 }
-
                 const currentDate = new Date();
                 const dateDiff = currentDate.getTime() - overdraftDebt.entryDate.getTime();
                 const dateDiffDays = dateDiff / 86400000;
@@ -93,26 +87,19 @@ module.exports = {
                 var counter = 1;
                 const counterMax = parseInt(quantityInstalment, 10) + 1;
                 while (counter < counterMax) {
-
                     dateOptionsForInstalments.push(new Date(currentDate.getFullYear(), (currentDate.getMonth() + counter), dueDay, 23, 59, 59, 999));
                     counter++;
-
                 }
-
 
                 return res.status(200).send({
                     "valueOfIndividualInstalment": instalmentValue,
                     "dateOptionsForInstalments": dateOptionsForInstalments,
 
                 })
-
             })
             .catch(error => res.status(400).send("error"));
-
     },
-
     checkAmount(req, res) {
-
         return OverdraftDebt.findOne({
             where: { userId: req.params.id },
             order: [['createdAt', 'DESC']]
@@ -133,20 +120,17 @@ module.exports = {
             })
             .catch(error => res.status(400).send("error"));
     },
-
     createInstalments(req, res) {
         return OverdraftDebt.findOne({
             where: { userId: req.params.id },
             order: [['createdAt', 'DESC']],
         })
             .then(async overdraftDebt => {
-
                 if (!overdraftDebt) {
                     return res.status(404).send({
                         message: "OverdraftDebt Not Found"
                     });
                 }
-
                 const currentDate = new Date();
                 const dateDiff = currentDate.getTime() - overdraftDebt.entryDate.getTime();
                 const dateDiffDays = dateDiff / 86400000;
@@ -174,13 +158,9 @@ module.exports = {
                     dueDay: parseInt(dueDay,10),
                     quantityInstalment:parseInt(quantityInstalment,10),
                 })
-
                 return res.status(200).send(instalments)
 
             })
             .catch(error => res.status(400).send({ "message": "couldn't create instalments" }));
-
-
-
     },
 };

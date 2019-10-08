@@ -7,15 +7,15 @@ module.exports = (sequelize, DataTypes) => {
         wasDivided: DataTypes.BOOLEAN,
         dueDay: DataTypes.INTEGER,
         quantityInstalment: DataTypes.INTEGER,
-
-    }, {});
+    });
     OverdraftDebt.associate = function (models) {
-
         OverdraftDebt.hasMany(models.Installment, {
             foreignKey: "id",
+            as: "Installments"
         })
         OverdraftDebt.belongsTo(models.User, {
-            as: "userId"
+            foreignKey: "id",
+            as: "UserId"
         })
     };
     return OverdraftDebt;
