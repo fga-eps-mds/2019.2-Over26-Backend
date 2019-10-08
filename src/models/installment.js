@@ -1,20 +1,17 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-  const Installment = sequelize.define(
-    "Installment",
-    {
-      id_installment: DataTypes.BIGINT,
-      is_paid: DataTypes.BOOLEAN,
-      value: DataTypes.FLOAT,
-      due_date: DataTypes.DATE
-      
-    });
+  const Installment = sequelize.define("Installment", {
+
+    isPaid: DataTypes.BOOLEAN,
+    value: DataTypes.FLOAT,
+    dueDate: DataTypes.DATE,
+    overdraftDebtId: DataTypes.INTEGER
+
+  });
   Installment.associate = function (models) {
-    Installment.belongsTo(models.OverdraftDebt,{
-      foreignKey: "id_overdraft_debt",
-      as: "OverdraftDebt"
+    Installment.belongsTo(models.OverdraftDebt, {
+      foreignKey: "id"
     })
   };
-  Installment.removeAttribute("id");
   return Installment;
 };

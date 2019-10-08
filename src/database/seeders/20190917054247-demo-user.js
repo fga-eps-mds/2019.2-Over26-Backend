@@ -18,6 +18,9 @@ module.exports = {
         {
           name: "Ana",
           cpf: 1234,
+          email:"ana@SpeechGrammarList.com",
+          phone:"912345678",
+          monthlyIncome:3000,
           createdAt: new Date(),
           updatedAt: new Date()
         }

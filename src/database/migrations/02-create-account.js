@@ -2,7 +2,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable("Accounts", {
-      id_account: {
+      id: {
         type: Sequelize.BIGINT,
         primaryKey: true,
         allowNull: false,
@@ -21,13 +21,13 @@ module.exports = {
         type: Sequelize.DECIMAL(10, 2),
         allowNull: false
       },
-      id_user: {
+      userId: {
         type: Sequelize.BIGINT,
         onDelete: "CASCADE",
         allowNull: false,
         references: {
           model: "Users",
-          key: "id_user",
+          key: "id",
           as: "User"
         }
       },
