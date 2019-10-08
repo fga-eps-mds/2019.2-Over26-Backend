@@ -14,7 +14,7 @@ describe("User Controller", function() {
           name: "Ana",
           email: "ana@email.com",
           phone: "6112341234",
-          monthly_income: "1000"
+          monthlyIncome: "1000"
         }
       };
       let send = jest.fn(data => ({ data }));
@@ -38,7 +38,7 @@ describe("User Controller", function() {
         name: "Ana",
         email: "ana@email.com",
         phone: "6112341234",
-        monthly_income: "1000",
+        monthlyIncome: "1000",
         id: 1,
         updatedAt: Math.floor(new Date().getTime() / 1000),
         createdAt: Math.floor(new Date().getTime() / 1000)
@@ -52,7 +52,7 @@ describe("User Controller", function() {
           name: "Ana",
           email: "ana@email.com",
           phone: "6112341234",
-          monthly_income: "1000"
+          monthlyIncome: "1000"
         }
       };
       let send = jest.fn(data => ({ data }));
@@ -134,7 +134,7 @@ describe("User Controller", function() {
           name: "Ana",
           email: "ana@email.com",
           phone: "6112341234",
-          monthly_income: "1000",
+          monthlyIncome: "1000",
           updatedAt: Math.floor(new Date().getTime() / 1000),
           createdAt: Math.floor(new Date().getTime() / 1000)
         })
@@ -149,7 +149,7 @@ describe("User Controller", function() {
         name: "Ana",
         email: "ana@email.com",
         phone: "6112341234",
-        monthly_income: "1000",
+        monthlyIncome: "1000",
         updatedAt: Math.floor(new Date().getTime() / 1000),
         createdAt: Math.floor(new Date().getTime() / 1000)
       });
@@ -167,7 +167,7 @@ describe("User Controller", function() {
           name: "Ana",
           email: "ana@email.com",
           phone: "6112341234",
-          monthly_income: "1000"
+          monthlyIncome: "1000"
         },
         params: {
           id: 1
@@ -186,7 +186,7 @@ describe("User Controller", function() {
           name: "Ana",
           email: "ana@email.com",
           phone: "6112341234",
-          monthly_income: "1000",
+          monthlyIncome: "1000",
           updatedAt: Math.floor(new Date().getTime() / 1000),
           createdAt: Math.floor(new Date().getTime() / 1000),
           update: data =>
@@ -196,7 +196,7 @@ describe("User Controller", function() {
               name: "Ana",
               email: "ana@email.com",
               phone: "6112341234",
-              monthly_income: "1000",
+              monthlyIncome: "1000",
               updatedAt: Math.floor(new Date().getTime() / 1000),
               createdAt: Math.floor(new Date().getTime() / 1000)
             })
@@ -211,7 +211,7 @@ describe("User Controller", function() {
         name: "Ana",
         email: "ana@email.com",
         phone: "6112341234",
-        monthly_income: "1000",
+        monthlyIncome: "1000",
         id: req.params.id,
         updatedAt: Math.floor(new Date().getTime() / 1000),
         createdAt: Math.floor(new Date().getTime() / 1000)
@@ -225,7 +225,7 @@ describe("User Controller", function() {
           name: "Ana",
           email: "ana@email.com",
           phone: "6112341234",
-          monthly_income: "1000"
+          monthlyIncome: "1000"
         },
         params: {
           id: 1
@@ -256,7 +256,7 @@ describe("User Controller", function() {
           name: "Ana",
           email: "ana@email.com",
           phone: "6112341234",
-          monthly_income: "1000"
+          monthlyIncome: "1000"
         },
         params: {
           id: 1
@@ -285,7 +285,7 @@ describe("User Controller", function() {
           name: "Ana",
           email: "ana@email.com",
           phone: "6112341234",
-          monthly_income: "1000"
+          monthlyIncome: "1000"
         },
         params: {
           id: 1
