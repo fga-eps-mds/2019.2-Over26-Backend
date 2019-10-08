@@ -33,7 +33,7 @@ describe("OverdraftDebts Controller", function () {
                             entryDate: Math.floor(entry.setDate(entry.getDate() + 26) / 1000),
                             amount: 10,
                             rate: 0.15,
-                            wasDivided: false
+                            isDivided: false
                         });
                     }
                 })
@@ -48,7 +48,7 @@ describe("OverdraftDebts Controller", function () {
                 })
             );
             jest
-                .spyOn(overdraftController, "usabilityCheck")
+                .spyOn(overdraftController, "checkUsability")
                 .mockImplementation(cpf => Promise.resolve(false));
 
             await overdraftDebtController.create(req, res);
@@ -58,7 +58,7 @@ describe("OverdraftDebts Controller", function () {
                 entryDate: Math.floor(entry.setDate(entry.getDate() + 26) / 1000),
                 amount: 10,
                 rate: 0.15,
-                wasDivided: false,
+                isDivided: false,
             };
             expect(status).toHaveBeenCalledWith(201);
             expect(send).toHaveBeenCalledWith(overdraft);
@@ -123,7 +123,7 @@ describe("OverdraftDebts Controller", function () {
                 entryDate: Math.floor(new Date().getTime() / 1000),
                 amount: 0,
                 rate: 0.1,
-                wasDivided: false,
+                isDivided: false,
                 createdAt: Math.floor(new Date().getTime() / 1000),
                 updatedAt: Math.floor(new Date().getTime() / 1000),
                 id: 1

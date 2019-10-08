@@ -75,7 +75,8 @@ describe("Overdrafts Controller", function () {
             await overdraftController.create(req, res);
             let overdraft = {
                 userId: 1,
-                status: false,
+                isActive: false,
+                isBlocked: false,
                 limit: 200,
                 limitMax: 200,
                 limitUsed: 0,
@@ -147,7 +148,8 @@ describe("Overdrafts Controller", function () {
             };
             let overdraft = {
                 userId: 1,
-                status: false,
+                isBlocked: false,
+                isActive:false,
                 limit: 200,
                 limitMax: 200,
                 limitUsed: 0,
