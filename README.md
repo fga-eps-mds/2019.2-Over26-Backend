@@ -13,3 +13,11 @@
     O repositório FrontEnd do projeto encontra-se <a href="https://github.com/fga-eps-mds/2019.2-Over26"><strong> aqui</strong></a>
 </p>
 
+## Para rodar a aplicação
+```
+docker-compose up
+```
+## Para rodar os testes
+```
+docker-compose run --rm api npm run test
+```
