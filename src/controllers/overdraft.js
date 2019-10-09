@@ -63,7 +63,8 @@ module.exports = {
 
                 return overdraft
                     .update({
-                        status: req.body.status,
+                        isActive: req.body.isActive,
+                        isBlocked:req.body.isBlocked,
                         limit: req.body.limit,
                         limitMax: req.body.limitMax,
                         limitUsed: req.body.limitUsed,
@@ -106,7 +107,7 @@ module.exports = {
                     }
                     overdraft
                         .update({
-                            status: true
+                            isActive: true
                         })
                         .then(overdraft => res.status(200).send(overdraft))
                         .catch(error => res.status(400).send(error));
@@ -142,7 +143,7 @@ module.exports = {
                 }
                 return overdraft
                     .update({
-                        status: false
+                        isBlocked: true
                     })
                     .then(() => res.status(200).send(overdraft))
                     .catch(error => res.status(400).send(error));
