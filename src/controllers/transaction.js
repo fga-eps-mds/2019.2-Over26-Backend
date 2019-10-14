@@ -13,8 +13,8 @@ module.exports = {
 
     // Create a new transaction
     makeTransaction(req, res) {
-        const { type, description, value, name } = req.body
-        return Account.findByPk(req.params.accountNumber)
+        const { type, description, value, name, date } = req.body
+        return Account.findByPk(req.body.accountId  )
             .then(account => {
                 if (!account) {
                     return res.status(404).send({
@@ -40,7 +40,9 @@ module.exports = {
                                             type: type,
                                             description: description,
                                             value: value,
-                                            name: name
+                                            name: name,
+                                            date: date,
+                                            accountId: accountId
                                         })
                                         .then(transaction => {
                                             return account
@@ -73,9 +75,12 @@ module.exports = {
                             return account
                                 .createTransaction({
                                     date: new Date(),
+                                    name: name,
                                     type: type,
                                     description: description,
-                                    value: value
+                                    value: value,
+                                    date: date,
+                                    accountId: accountId
                                 })
                                 .then(transaction => {
                                     return account
@@ -87,13 +92,16 @@ module.exports = {
                                 });
                         }
                     }
-
+                    console.log("----------------trasaction")
                     return account                 //Caso para o cash-in
                         .createTransaction({
                             date: new Date(),
                             type: type,
+                            name: name,
                             description: description,
-                            value: value
+                            value: value,
+                            date: date,
+                            //accountId: accountId
                         })
                         .then(transaction => {
                             return account

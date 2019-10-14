@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     OverdraftDebt.associate = function (models) {
         OverdraftDebt.hasMany(models.Instalment, {
             foreignKey: "id",
-            as: "overdraftDebtId"
+            as: "instalment"
         })
         OverdraftDebt.belongsTo(models.User, {
             foreignKey: "id",

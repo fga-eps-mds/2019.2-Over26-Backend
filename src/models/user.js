@@ -9,15 +9,15 @@ module.exports = (sequelize, DataTypes) => {
     });
     User.associate = function (models) {
         User.hasOne(models.Account, {
-            foreignKey: "id",
+            foreignKey: "userId",
             as: "account"
         });
         User.hasOne(models.Overdraft, {
-            foreignKey: "id",
+            foreignKey: "userId",
             as: "overdraft"
         });
         User.hasMany(models.OverdraftDebt, {
-            foreignKey: "id",
+            foreignKey: "userId",
             as: "overdraftDebt"
         });
     };
