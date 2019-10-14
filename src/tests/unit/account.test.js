@@ -1,6 +1,6 @@
 const accountController = require("../../controllers").account;
 const Account = require("../../models").Account;
-
+const User = require("../../models").User;
 describe("Account Controller", function () {
     describe("Account create", () => {
         afterEach(() => {
@@ -10,7 +10,6 @@ describe("Account Controller", function () {
         it("returns account create on sucess", async () => {
             let req = {
                 body: {
-                    userId: 1,
                     agency: 1,
                     number: 12345,
                     balance: 100
@@ -21,16 +20,22 @@ describe("Account Controller", function () {
             const res = {
                 status
             };
-
-            jest.spyOn(Account, "create").mockImplementation(data => {
-                if (data.userId == null) {
-                    return Promise.reject("Erro")
-                }
-                data.id = 1;
-                data.updatedAt = Math.floor(new Date().getTime() / 1000);
-                data.createdAt = Math.floor(new Date().getTime() / 1000);
-                return Promise.resolve(data);
-            });
+            jest.spyOn(User, "findByPk").mockImplementation(id =>
+                Promise.resolve({
+                    id: 1,
+                    createAccount: data => {
+                        let entry = new Date();
+                        return Promise.resolve({
+                            balance:req.body.balance,
+                            id:1,
+                            agency:req.body.agency,
+                            number:req.body.number,
+                            createdAt:Math.floor(new Date().getTime() / 1000),
+                            updatedAt:Math.floor(new Date().getTime() / 1000),
+                        });
+                    }
+                })
+            );
 
             await accountController.create(req, res);
 
@@ -45,8 +50,7 @@ describe("Account Controller", function () {
         it("returns an error when fails", async () => {
             let req = {
                 body: {
-                    userId: 1,
-                    agency: 1,
+                    id:1,
                     number: 12345,
                     balance: 100
                 }
@@ -57,9 +61,15 @@ describe("Account Controller", function () {
                 status
             };
 
-            jest
-                .spyOn(Account, "create")
-                .mockImplementation(data => Promise.reject("error"));
+          jest.spyOn(User, "findByPk").mockImplementation(id =>
+                Promise.resolve({
+                    id: 1,
+                    createAccount: data => {
+                        let entry = new Date();
+                        return Promise.reject("error")
+                    }
+                })
+            );
 
             await accountController.create(req, res);
 

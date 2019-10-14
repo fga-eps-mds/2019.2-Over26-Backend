@@ -14,7 +14,7 @@ module.exports = {
     // Create a new transaction
     makeTransaction(req, res) {
         const { type, description, value, name, date } = req.body
-        return Account.findByPk(req.body.accountId  )
+        return Account.findByPk(req.body.accountId)
             .then(account => {
                 if (!account) {
                     return res.status(404).send({

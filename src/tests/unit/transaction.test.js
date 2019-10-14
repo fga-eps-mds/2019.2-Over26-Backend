@@ -57,7 +57,7 @@ describe("Transactions Controller", function () {
                 status
             };
             let transaction = {
-                userID: 1,
+                userId: 1,
                 status: false,
                 limit: 200,
                 limitMax: 200,
