@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     });
     Transaction.associate = function (models) {
         Transaction.belongsTo(models.Account, {
-            foreignKey: "accountId",
+            foreignKey: "id",
+            //as: "account"
         });
     };
     return Transaction;

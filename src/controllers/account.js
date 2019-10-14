@@ -17,7 +17,7 @@ module.exports = {
     },
     // Get a account by primary key
     getByPk(req, res) {
-        return Account.findByPk(req.params.accountNumber)
+        return Account.findByPk(req.params.id)
             .then(account => {
                 if (!account) {
                     return res.status(404).send({

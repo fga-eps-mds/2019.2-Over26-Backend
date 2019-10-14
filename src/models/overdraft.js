@@ -8,10 +8,11 @@ module.exports = (sequelize, DataTypes) => {
         limitUsed: DataTypes.DECIMAL(10, 2),
         firstUseDate: DataTypes.DATE
     });
-    Overdraft.associate = function (models) {
-        Overdraft.belongsTo(models.User, {
-            foreignKey: "userId",
-        })
-    };
-    return Overdraft;
+  Overdraft.associate = function(models) {
+    Overdraft.belongsTo(models.User,{ 
+      foreignKey: "id",
+      as: "userId"
+    })
+  };
+  return Overdraft;
 };
