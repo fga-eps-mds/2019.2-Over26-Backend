@@ -13,6 +13,9 @@ module.exports = {
     create(req, res) {
         return User.findByPk(req.params.id)
             .then(user => {
+                if(!user){
+                    return res.status(404).send({"message":"User not found"});
+                }
                 const userId = user.id;
                 const isActive = false;
                 const isBlocked = false;
@@ -30,6 +33,7 @@ module.exports = {
                         firstUseDate: firstUseDate
                     })
                     .then(overdraft => res.status(201).send(overdraft))
+                
                     .catch(error => res.status(400).send(error));
             })
             .catch(error => res.status(400).send(error));

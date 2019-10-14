@@ -6,13 +6,18 @@ module.exports = {
 
     // Create a new account
     create(req, res) {
-        return Account.create({
-            userId: req.body.userId,
-            agency: req.body.agency,
-            number: req.body.number,
-            balance: req.body.balance,
-        })
-            .then(account => res.status(201).send(account))
+        return User.findByPk(req.body.userId)
+            .then(user => {
+                if(!user){
+                    return res.status(404).send({"message":"User not found"})
+                }
+                return user.createAccount({
+                    agency: req.body.agency,
+                    number: req.body.number,
+                    balance: req.body.balance,
+                })
+                    .then(account => res.status(201).send(account))
+            })
             .catch(error => res.status(400).send(error));
     },
     // Get a account by primary key
