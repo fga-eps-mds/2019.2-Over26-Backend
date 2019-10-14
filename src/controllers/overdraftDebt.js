@@ -37,7 +37,6 @@ module.exports = {
 
                             const isDivided = false;
                             const userId = user.id;
-                            console.log("aaaaaaaaaaaaaa")
                             return user.createOverdraftDebt({
                                 userId: userId,
                                 entryDate: entryDate,

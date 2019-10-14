@@ -1,4 +1,6 @@
 const overdraftDebtController = require("../../controllers").overdraftDebt;
+const overdraftUtils = require("../../utils/overdraftUtils");
+
 const overdraftController = require("../../controllers").overdraft;
 
 const OverdraftDebt = require("../../models").OverdraftDebt;
@@ -29,7 +31,7 @@ describe("OverdraftDebts Controller", function () {
                     createOverdraftDebt: data => {
                         let entry = new Date();
                         return Promise.resolve({
-                            userID: 1,
+                            userId: 1,
                             entryDate: Math.floor(entry.setDate(entry.getDate() + 26) / 1000),
                             amount: 10,
                             rate: 0.15,
@@ -48,20 +50,20 @@ describe("OverdraftDebts Controller", function () {
                 })
             );
             jest
-                .spyOn(overdraftController, "checkUsability")
-                .mockImplementation(cpf => Promise.resolve(false));
+                .spyOn(overdraftUtils, "usabilityCheck")
+                .mockImplementation(id => Promise.resolve(false));
 
             await overdraftDebtController.create(req, res);
             let entry = new Date();
             let overdraft = {
-                userID: 1,
+                userId: 1,
                 entryDate: Math.floor(entry.setDate(entry.getDate() + 26) / 1000),
                 amount: 10,
                 rate: 0.15,
                 isDivided: false,
             };
-            expect(status).toHaveBeenCalledWith(201);
             expect(send).toHaveBeenCalledWith(overdraft);
+            expect(status).toHaveBeenCalledWith(201);
         });
         it("returns 400 on fails on find user", async () => {
             let req = {
@@ -119,7 +121,7 @@ describe("OverdraftDebts Controller", function () {
                 status
             };
             let overdraftDebt = {
-                userID: 1,
+                userId: 1,
                 entryDate: Math.floor(new Date().getTime() / 1000),
                 amount: 0,
                 rate: 0.1,
