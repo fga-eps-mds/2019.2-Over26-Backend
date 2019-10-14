@@ -41,8 +41,7 @@ module.exports = {
                                             description: description,
                                             value: value,
                                             name: name,
-                                            date: date,
-                                            accountId: accountId
+                                            date: date
                                         })
                                         .then(transaction => {
                                             return account
@@ -79,8 +78,7 @@ module.exports = {
                                     type: type,
                                     description: description,
                                     value: value,
-                                    date: date,
-                                    accountId: accountId
+                                    date: date
                                 })
                                 .then(transaction => {
                                     return account
@@ -92,7 +90,6 @@ module.exports = {
                                 });
                         }
                     }
-                    console.log("----------------trasaction")
                     return account                 //Caso para o cash-in
                         .createTransaction({
                             date: new Date(),
@@ -100,8 +97,7 @@ module.exports = {
                             name: name,
                             description: description,
                             value: value,
-                            date: date,
-                            //accountId: accountId
+                            date: date
                         })
                         .then(transaction => {
                             return account

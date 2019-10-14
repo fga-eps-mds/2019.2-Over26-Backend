@@ -17,7 +17,7 @@ module.exports = {
                 const limit = 200;
                 const limitMax = 200;
                 const limitUsed = 0;
-                const firstUseDate = new Date();
+                const firstUseDate = null;
 
                 return user
                     .createOverdraft({
