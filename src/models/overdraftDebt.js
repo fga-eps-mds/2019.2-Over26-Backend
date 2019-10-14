@@ -9,13 +9,13 @@ module.exports = (sequelize, DataTypes) => {
         quantityInstalment: DataTypes.INTEGER,
     });
     OverdraftDebt.associate = function (models) {
-        OverdraftDebt.hasMany(models.Installment, {
+        OverdraftDebt.hasMany(models.Instalment, {
             foreignKey: "id",
-            as: "Installments"
+            as: "overdraftDebtId"
         })
         OverdraftDebt.belongsTo(models.User, {
             foreignKey: "id",
-            as: "UserId"
+            as: "userId"
         })
     };
     return OverdraftDebt;

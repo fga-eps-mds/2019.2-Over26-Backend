@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         });
         Account.hasMany(models.Transaction, {
             foreignKey: "id",
-            as: "Transactions"
+            as: "transaction"
         });
     };
     return Account;

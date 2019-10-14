@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
   Overdraft.associate = function(models) {
     Overdraft.belongsTo(models.User,{ 
       foreignKey: "id",
-      as: "UserId"
+      as: "userId"
     })
   };
   return Overdraft;
