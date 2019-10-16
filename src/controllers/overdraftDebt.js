@@ -99,7 +99,6 @@ module.exports = {
             order: [['createdAt', 'DESC']]
         })
             .then(async overdraftDebt => {
-                console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
                 if (!overdraftDebt) {
                     return res.status(404).send({
                         message: "OverdraftDebt Not Found"
@@ -133,21 +132,17 @@ module.exports = {
                 }
                 const instalmentValue = await OverdraftDebtUtils.returnInstalmentValue(req.body.quantityInstalment, overdraftDebt.userId);
                 const dateOptionsForInstalments = await OverdraftDebtUtils.returnInstalmentDates(req.body.day, req.body.quantityInstalment, overdraftDebt.userId);
-                //console.log(dateOptionsForInstalments)
                 var instalments = new Array();
                 const dueDay = req.body.day;//due day on each month for the instalments
                 const quantityInstalment = req.body.quantityInstalment;
                 var counter = 0;
                 const counterMax = parseInt(quantityInstalment, 10);
-                console.log(instalmentValue)
                 while (counter < counterMax) {
                     console.log(counter)
                     instalments.push(await InstalmentUtils.creatInstalment(instalmentValue, dateOptionsForInstalments[counter], overdraftDebt.id));
-
                     counter++;
 
                 }
-
                 await overdraftDebt.update({
                     isDivided: true,
                     dueDay: parseInt(dueDay, 10),

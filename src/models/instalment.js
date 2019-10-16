@@ -6,9 +6,9 @@ module.exports = (sequelize, DataTypes) => {
     dueDate: DataTypes.DATE
   });
   Instalment.associate = function (models) {
+
     Instalment.belongsTo(models.OverdraftDebt, {
       foreignKey: "id",
-      as: "overdraftDebtId"
     })
   };
   return Instalment;

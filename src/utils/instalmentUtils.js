@@ -3,14 +3,16 @@ const Instalment = require("../models").Instalment;
 
 module.exports = {
     creatInstalment(value, dueDate, overdraftDebtId) {
-        return Instalment.create({
-            isPaid: false,
-            value: value,
-            dueDate: dueDate,
-            overdraftDebtId: overdraftDebtId
-        })
-            .then(instalment => {
-                return instalment
+        
+                return Instalment.create({
+                    overdraftDebtId:overdraftDebtId,
+                    isPaid: false,
+                    value: value,
+                    dueDate: dueDate,
+                })
+                    .then(instalment => {
+                        return instalment
+                   
             }).catch(error => error)
     }
 
