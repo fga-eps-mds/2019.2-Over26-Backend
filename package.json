@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./src/bin/www",
-    "dev": "nodemon ./src/bin/www",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "sequelize db:migrate && node ./src/bin/www",
+    "dev": "sequelize db:migrate && sequelize db:seed:all && nodemon ./src/bin/www",
+    "test": "export NODE_ENV=test && sequelize db:drop || true && sequelize db:create && sequelize db:migrate &&  jest  ./src/tests --forceExit",
+    "test:coverage": "export NODE_ENV=test && sequelize db:drop || true && sequelize db:create && sequelize db:migrate &&  jest  ./src/tests --forceExit --coverage && codecov -t a3a183a9-02b0-4328-9f31-6fa485bb7adf",
+    "test:watch": "export NODE_ENV=test && sequelize db:drop || true && sequelize db:create && sequelize db:migrate &&  jest  ./src/tests --forceExit --coverage --watch"
   },
   "keywords": [],
   "author": "",
@@ -19,10 +21,13 @@
     "morgan": "^1.9.1",
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^5.19.0"
+    "sequelize": "^5.19.4"
   },
   "devDependencies": {
+    "codecov": "^3.6.1",
+    "jest": "^24.9.0",
     "nodemon": "^1.19.2",
-    "sequelize-cli": "^5.5.1"
+    "sequelize-cli": "^5.5.1",
+    "supertest": "^4.0.2"
   }
 }

@@ -13,6 +13,7 @@
     O repositório FrontEnd do projeto encontra-se <a href="https://github.com/fga-eps-mds/2019.2-Over26"><strong> aqui</strong></a>
 </p>
 
+<<<<<<< HEAD
 ## Para rodar a aplicação
 ```
 docker-compose up
@@ -21,3 +22,6 @@ docker-compose up
 ```
 docker-compose run --rm api npm run test
 ```
+=======
+[![codecov](https://codecov.io/gh/fga-eps-mds/2019.2-Over26-Backend/branch/devel/graph/badge.svg)](https://codecov.io/gh/fga-eps-mds/2019.2-Over26-Backend)
+>>>>>>> origin/devel
