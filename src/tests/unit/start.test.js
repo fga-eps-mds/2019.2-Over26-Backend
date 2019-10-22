@@ -38,9 +38,9 @@ describe("Start Controller", function () {
             expect(status).toHaveBeenCalledWith(200);
             let user = {
                 name: "Ana",
-                cpf: "12345678914",
-                email: "ana3@SpeechGrammarList.com",
-                phone: "61912345678",
+                cpf: "12345678900",
+                email: "example@example.com",
+                phone: "12345678900",
                 monthlyIncome: 3000,
                 id: 1,
                 updatedAt: date,
