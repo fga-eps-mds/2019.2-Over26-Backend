@@ -33,33 +33,40 @@ module.exports = {
                         if (account.balance - value < 0) {          //Checa se o valor final após cash-out será negativo
                             if (overdraft != null && overdraft.status != false) {     //Checa se o usuário tem um Overdraft e se ele está ativo
                                 const overdraftBalance = overdraft.limit - overdraft.limitUsed   // Constante para saldo do Overdraft
-                                if (parseFloat(account.balance <= 0 ? 0 : account.balance) + parseFloat(overdraftBalance) - value >= 0) {   //Checa se o saldo da conta somado ao saldo do Overdraft é suficente para o pagamento
-                                    return account
-                                        .createTransaction({
-                                            date: new Date(),
-                                            type: type,
-                                            description: description,
-                                            value: value,
-                                            name: name
-                                        })
-                                        .then(transaction => {
-                                            return account
-                                                .update({
-                                                    balance:
-                                                        account.balance - value
-                                                })
-                                                .then(() => {
-                                                    return overdraft.update({
-                                                        limitUsed: Math.abs(account.balance) + parseFloat(overdraft.limitUsed),
-                                                        firstUseDate: overdraft.firstUseDate ? overdraft.firstUseDate : new Date()
+                                if (transaction.description == "Compra com cartão"){    //Checa se e compra com cartao
+                                    if (parseFloat(account.balance <= 0 ? 0 : account.balance) + parseFloat(overdraftBalance) - value >= 0) {   //Checa se o saldo da conta somado ao saldo do Overdraft é suficente para o pagamento
+                                        return account
+                                            .createTransaction({
+                                                date: new Date(),
+                                                type: type,
+                                                description: description,
+                                                value: value,
+                                                name: name
+                                            })
+                                            .then(transaction => {
+                                                return account
+                                                    .update({
+                                                        balance:
+                                                            account.balance - value
                                                     })
-                                                        .then(transaction => res.status(201).send(transaction))
-                                                })
-                                        });
+                                                    .then(() => {
+                                                        return overdraft.update({
+                                                            limitUsed: Math.abs(account.balance) + parseFloat(overdraft.limitUsed),
+                                                            firstUseDate: overdraft.firstUseDate ? overdraft.firstUseDate : new Date()
+                                                        })
+                                                            .then(transaction => res.status(201).send(transaction))
+                                                    })
+                                            });
+                                    }
+                                    else {                                        //Caso em que o saldo é insuficiente mesmo tendo Overdraft
+                                            return res.status(400).send({
+                                                message: "Insufficient overdraft limit"
+                                            });
+                                        }
                                 }
-                                else {                                        //Caso em que o saldo é insuficiente mesmo tendo Overdraft
+                                else { //Caso em que nao e compra com cartao
                                     return res.status(400).send({
-                                        message: "Insufficient overdraft limit"
+                                        message: "Cash out allowed for card purchase only"
                                     });
                                 }
                             }
