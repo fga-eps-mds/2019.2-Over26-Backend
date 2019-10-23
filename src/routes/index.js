@@ -7,6 +7,7 @@ const overdraftController = require('../controllers').overdraft;
 const overdraftDebtController = require('../controllers').overdraftDebt;
 const transactionController = require('../controllers').transaction;
 const instalmentController = require('../controllers').instalment;
+const startController = require('../controllers').start;
 
 /* GET Home */
 router.get('/', function (req, res, next) {
@@ -52,5 +53,8 @@ router.get('/api/transactions/:id', transactionController.getByPk);
 
 /* Instalments Router */
 router.post('/api/instalments/:id', overdraftDebtController.createInstalments);
+
+/* Start Router */
+router.post('/api/start', startController.startApp);
 
 module.exports = router;
