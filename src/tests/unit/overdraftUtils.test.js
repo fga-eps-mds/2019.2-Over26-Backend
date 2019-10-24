@@ -47,7 +47,7 @@ describe("OverdraftUtils", function () {
         it("returns false for firstUseDate!=null and 26 days or more have passed", async () => {
             let id = 1;
             let date = new Date;
-            date.setDate(date.getDate()-26);
+            date.setDate(date.getDate()-26.1);
 
             jest.spyOn(Overdraft, "findOne").mockImplementation(query =>
                 Promise.resolve({
@@ -64,6 +64,28 @@ describe("OverdraftUtils", function () {
             await overdraftUtils.usabilityCheck(id);
 
             expect(await overdraftUtils.usabilityCheck(id)).toBe(false);
+
+        })
+        it("returns true overdraft not found", async () => {
+            let id = 1;
+            let date = new Date;
+            date.setDate(date.getDate()-26.3);
+
+           /* jest.spyOn(Overdraft, "findOne").mockImplementation(query =>
+                Promise.resolve({
+                    status: true,
+                    limit: 200,
+                    limitMax: 200,
+                    limitUsed: 10,
+                    firstUseDate: date,
+                })
+            );*/
+            
+            
+
+            await overdraftUtils.usabilityCheck(id);
+
+            expect(await overdraftUtils.usabilityCheck(id)).toBe(true);
 
         })
     })

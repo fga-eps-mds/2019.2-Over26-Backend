@@ -19,8 +19,8 @@ module.exports = {
                 if (dateDiffDays > 26) {
                     return false;
                 } else {
-                    console.log("")
-                    
+                    //console.log("")
+
                     return true;
                 }
             } else {
