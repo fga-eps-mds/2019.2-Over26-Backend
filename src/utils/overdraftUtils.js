@@ -17,12 +17,14 @@ module.exports = {
                 const dateDiffDays = dateDiff / 86400000;
 
                 if (dateDiffDays > 26) {
-
                     return false;
                 } else {
+                    console.log("")
+                    
                     return true;
                 }
             } else {
+
                 return true;
             }
         });
