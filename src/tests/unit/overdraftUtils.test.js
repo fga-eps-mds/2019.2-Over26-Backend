@@ -47,7 +47,7 @@ describe("OverdraftUtils", function () {
         it("returns false for firstUseDate!=null and 26 days or more have passed", async () => {
             let id = 1;
             let date = new Date;
-            date = date + 26;
+            date.setDate(date+26);
 
             jest.spyOn(Overdraft, "findOne").mockImplementation(query =>
                 Promise.resolve({
@@ -58,9 +58,8 @@ describe("OverdraftUtils", function () {
                     firstUseDate: date,
                 })
             );
-            /*jest.spyOn(Overdraft.firstUseDate, "getTime").mockImplementation(query =>
-                Promise.resolve(2246400000)
-            );*/
+            
+            
 
             await overdraftUtils.usabilityCheck(id);
 
