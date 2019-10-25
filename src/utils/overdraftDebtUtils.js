@@ -2,7 +2,6 @@ const OverdraftDebt = require("../models").OverdraftDebt;
 
 module.exports = {
     returnInstalmentValue(quantityInstalment, id) {
-console.log("AAAAAAAAAAAAAAAAA")
         return OverdraftDebt.findOne({
             where: { userId: id },
             order: [['createdAt', 'DESC']],
@@ -11,28 +10,32 @@ console.log("AAAAAAAAAAAAAAAAA")
                 if (!overdraftDebt) {
                     return false;
                 }
-                console.log("BBBBBBBBBBBBBBBBBBBBB")
-
+                console.log("overdraftDebt")
+                console.log(overdraftDebt)
+                
                 const currentDate = new Date();
-                console.log("CCCCCCCCCCCCCCCCCCCCCC")
+                console.log("currentDate:")
+                console.log(currentDate)
 
                 const dateDiff = currentDate.getTime() - overdraftDebt.entryDate.getTime();
-                console.log("DDDDDDDDDDDDDDDDDDDDDD")
+                console.log("dateDiff:")
+                console.log(dateDiff)
 
                 const dateDiffDays = dateDiff / 86400000;
-                console.log("EEEEEEEEEEEEEEEEEEEEEEE")
+                console.log("dateDiffDays:")
+                console.log(dateDiffDays)
 
                 const dateDiffDaysRound = ((dateDiffDays).toFixed(0));
-                console.log("FFFFFFFFFFFFFFFFFFFFFF")
+                console.log("dateDiffDaysRound:")
+                console.log(dateDiffDaysRound)
 
 
                 const totalAmount = overdraftDebt.amount * Math.pow(1 + overdraftDebt.rate, dateDiffDaysRound)
-                console.log("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG")
+                console.log("totalAmount:")
+                console.log(totalAmount)
 
                 const instalmentValue = totalAmount / quantityInstalment;//is the value of each instalment
-                console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
-
-
+                console.log("instalmentValue:")
                 console.log(instalmentValue)
 
 

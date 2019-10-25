@@ -23,7 +23,7 @@ module.exports = {
                 })
                     .then(async overdraft => {
                         if (!(await OverdraftUtils.usabilityCheck(overdraft.userId))) {
-                            const rate = 0.15;
+                            const rate = 0.003182;
 
                             const firstUseDate = overdraft.firstUseDate;
 
