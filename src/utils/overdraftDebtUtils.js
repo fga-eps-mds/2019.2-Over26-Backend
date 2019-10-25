@@ -10,34 +10,17 @@ module.exports = {
                 if (!overdraftDebt) {
                     return false;
                 }
-                console.log("overdraftDebt")
-                console.log(overdraftDebt)
-                
+
                 const currentDate = new Date();
-                console.log("currentDate:")
-                console.log(currentDate)
 
                 const dateDiff = currentDate.getTime() - overdraftDebt.entryDate.getTime();
-                console.log("dateDiff:")
-                console.log(dateDiff)
-
                 const dateDiffDays = dateDiff / 86400000;
-                console.log("dateDiffDays:")
-                console.log(dateDiffDays)
-
                 const dateDiffDaysRound = ((dateDiffDays).toFixed(0));
-                console.log("dateDiffDaysRound:")
-                console.log(dateDiffDaysRound)
-
 
                 const totalAmount = overdraftDebt.amount * Math.pow(1 + overdraftDebt.rate, dateDiffDaysRound)
-                console.log("totalAmount:")
-                console.log(totalAmount)
-
+                
                 const instalmentValue = totalAmount / quantityInstalment;//is the value of each instalment
-                console.log("instalmentValue:")
-                console.log(instalmentValue)
-
+              
 
                 return instalmentValue;
 
