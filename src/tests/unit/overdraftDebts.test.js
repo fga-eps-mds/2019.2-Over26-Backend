@@ -1,6 +1,5 @@
 const overdraftDebtController = require("../../controllers").overdraftDebt;
-const overdraftController = require("../../controllers").overdraft;
-
+const overdraftUtils = require("../../utils/overdraftUtils");
 const OverdraftDebt = require("../../models").OverdraftDebt;
 const Overdraft = require("../../models").Overdraft;
 const User = require("../../models").User;
@@ -25,15 +24,15 @@ describe("OverdraftDebts Controller", function () {
 
             jest.spyOn(User, "findByPk").mockImplementation(id =>
                 Promise.resolve({
-                    cpf: 1234,
+                    id: 1,
                     createOverdraftDebt: data => {
                         let entry = new Date();
                         return Promise.resolve({
-                            userCPF: 1234,
+                            userId: 1,
                             entryDate: Math.floor(entry.setDate(entry.getDate() + 26) / 1000),
                             amount: 10,
                             rate: 0.15,
-                            wasDivided: false
+                            isDivided: false
                         });
                     }
                 })
@@ -48,20 +47,20 @@ describe("OverdraftDebts Controller", function () {
                 })
             );
             jest
-                .spyOn(overdraftController, "usabilityCheck")
-                .mockImplementation(cpf => Promise.resolve(false));
+                .spyOn(overdraftUtils, "usabilityCheck")
+                .mockImplementation(id => Promise.resolve(false));
 
             await overdraftDebtController.create(req, res);
             let entry = new Date();
             let overdraft = {
-                userCPF: 1234,
+                userId: 1,
                 entryDate: Math.floor(entry.setDate(entry.getDate() + 26) / 1000),
                 amount: 10,
                 rate: 0.15,
-                wasDivided: false,
+                isDivided: false,
             };
-            expect(status).toHaveBeenCalledWith(201);
             expect(send).toHaveBeenCalledWith(overdraft);
+            expect(status).toHaveBeenCalledWith(201);
         });
         it("returns 400 on fails on find user", async () => {
             let req = {
@@ -119,11 +118,11 @@ describe("OverdraftDebts Controller", function () {
                 status
             };
             let overdraftDebt = {
-                userCPF: 1234,
+                userId: 1,
                 entryDate: Math.floor(new Date().getTime() / 1000),
                 amount: 0,
                 rate: 0.1,
-                wasDivided: false,
+                isDivided: false,
                 createdAt: Math.floor(new Date().getTime() / 1000),
                 updatedAt: Math.floor(new Date().getTime() / 1000),
                 id: 1

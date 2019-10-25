@@ -1,10 +1,10 @@
 const OverdraftDebt = require("../models").OverdraftDebt;
 
 module.exports = {
-    returnInstalmentValue(quantityInstalment, cpf) {
+    returnInstalmentValue(quantityInstalment, id) {
 
         return OverdraftDebt.findOne({
-            where: { userCPF: cpf },
+            where: { userId: id },
             order: [['createdAt', 'DESC']],
         })
             .then(overdraftDebt => {
@@ -26,10 +26,10 @@ module.exports = {
 
     },
 
-    returnInstalmentDates(day, quantityInstalment, cpf) {
+    returnInstalmentDates(day, quantityInstalment, id) {
 
         return OverdraftDebt.findOne({
-            where: { userCPF: cpf },
+            where: { userId: id },
             order: [['createdAt', 'DESC']],
         })
             .then(overdraftDebt => {

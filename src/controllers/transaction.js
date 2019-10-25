@@ -13,8 +13,8 @@ module.exports = {
 
     // Create a new transaction
     makeTransaction(req, res) {
-        const { type, description, value, name } = req.body
-        return Account.findByPk(req.params.accountNumber)
+        const { type, description, value, name, date } = req.body
+        return Account.findByPk(req.body.accountId)
             .then(account => {
                 if (!account) {
                     return res.status(404).send({
@@ -24,7 +24,7 @@ module.exports = {
 
                 return Overdraft.findOne({
                     where: {
-                        userCPF: account.userCPF
+                        userId: account.userId
                     }
                 }).then(overdraft => {
 
@@ -33,6 +33,7 @@ module.exports = {
                         if (account.balance - value < 0) {          //Checa se o valor final após cash-out será negativo
                             if (overdraft != null && overdraft.status != false) {     //Checa se o usuário tem um Overdraft e se ele está ativo
                                 const overdraftBalance = overdraft.limit - overdraft.limitUsed   // Constante para saldo do Overdraft
+<<<<<<< HEAD
                                 if (transaction.description == "Compra com cartão"){    //Checa se e compra com cartao
                                     if (parseFloat(account.balance <= 0 ? 0 : account.balance) + parseFloat(overdraftBalance) - value >= 0) {   //Checa se o saldo da conta somado ao saldo do Overdraft é suficente para o pagamento
                                         return account
@@ -48,6 +49,28 @@ module.exports = {
                                                     .update({
                                                         balance:
                                                             account.balance - value
+=======
+                                if (parseFloat(account.balance <= 0 ? 0 : account.balance) + parseFloat(overdraftBalance) - value >= 0) {   //Checa se o saldo da conta somado ao saldo do Overdraft é suficente para o pagamento
+                                    return account
+                                        .createTransaction({
+                                            date: new Date(),
+                                            type: type,
+                                            description: description,
+                                            value: value,
+                                            name: name,
+                                            date: date
+                                        })
+                                        .then(transaction => {
+                                            return account
+                                                .update({
+                                                    balance:
+                                                        account.balance - value
+                                                })
+                                                .then(() => {
+                                                    return overdraft.update({
+                                                        limitUsed: Math.abs(account.balance) + parseFloat(overdraft.limitUsed),
+                                                        firstUseDate: overdraft.firstUseDate ? overdraft.firstUseDate : new Date()
+>>>>>>> dd15ab953721f3799a98f96a8f26fadc5c1809e9
                                                     })
                                                     .then(() => {
                                                         return overdraft.update({
@@ -80,9 +103,11 @@ module.exports = {
                             return account
                                 .createTransaction({
                                     date: new Date(),
+                                    name: name,
                                     type: type,
                                     description: description,
-                                    value: value
+                                    value: value,
+                                    date: date
                                 })
                                 .then(transaction => {
                                     return account
@@ -94,13 +119,14 @@ module.exports = {
                                 });
                         }
                     }
-
                     return account                 //Caso para o cash-in
                         .createTransaction({
                             date: new Date(),
                             type: type,
+                            name: name,
                             description: description,
-                            value: value
+                            value: value,
+                            date: date
                         })
                         .then(transaction => {
                             return account

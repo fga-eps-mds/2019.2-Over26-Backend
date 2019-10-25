@@ -13,23 +13,27 @@ module.exports = {
     create(req, res) {
         return User.findByPk(req.params.id)
             .then(user => {
-                const status = false;
-                const userCPF = user.cpf;
+                if(!user){
+                    return res.status(404).send({"message":"User not found"});
+                }
+                const userId = user.id;
+                const isActive = false;
+                const isBlocked = false;
                 const limit = 200;
                 const limitMax = 200;
                 const limitUsed = 0;
                 const firstUseDate = null;
-
-                return user
-                    .createOverdraft({
-                        userCPF: userCPF,
-                        status: status,
+                return user.createOverdraft({
+                        userId: userId,
+                        isActive: isActive,
+                        isBlocked: isBlocked,
                         limit: limit,
                         limitMax: limitMax,
                         limitUsed: limitUsed,
                         firstUseDate: firstUseDate
                     })
                     .then(overdraft => res.status(201).send(overdraft))
+                
                     .catch(error => res.status(400).send(error));
             })
             .catch(error => res.status(400).send(error));
@@ -63,7 +67,8 @@ module.exports = {
 
                 return overdraft
                     .update({
-                        status: req.body.status,
+                        isActive: req.body.isActive,
+                        isBlocked:req.body.isBlocked,
                         limit: req.body.limit,
                         limitMax: req.body.limitMax,
                         limitUsed: req.body.limitUsed,
@@ -106,7 +111,7 @@ module.exports = {
                     }
                     overdraft
                         .update({
-                            status: true
+                            isActive: true
                         })
                         .then(overdraft => res.status(200).send(overdraft))
                         .catch(error => res.status(400).send(error));
@@ -118,7 +123,7 @@ module.exports = {
     checkUsability(req, res) {
         return Overdraft.findOne({
             where: {
-                userCPF: req.params.cpf
+                userId: req.params.id
             }
         }).then(async overdraft => {
             if (!overdraft) {
@@ -126,7 +131,7 @@ module.exports = {
                     message: "Overdraft Not Found"
                 });
             } else {
-                return res.status(200).send(await OverdraftUtils.usabilityCheck(req.params.cpf));
+                return res.status(200).send(await OverdraftUtils.usabilityCheck(req.params.id));
             }
 
         });
@@ -142,7 +147,7 @@ module.exports = {
                 }
                 return overdraft
                     .update({
-                        status: false
+                        isBlocked: true
                     })
                     .then(() => res.status(200).send(overdraft))
                     .catch(error => res.status(400).send(error));

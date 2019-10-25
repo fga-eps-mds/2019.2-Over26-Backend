@@ -62,7 +62,7 @@ describe("Overdrafts Controller", function () {
 
             jest.spyOn(User, "findByPk").mockImplementation(id =>
                 Promise.resolve({
-                    cpf: 1234,
+                    id: 1,
                     createOverdraft: data => {
                         data["id"] = 1;
                         data["updatedAt"] = Math.floor(new Date().getTime() / 1000);
@@ -74,8 +74,9 @@ describe("Overdrafts Controller", function () {
 
             await overdraftController.create(req, res);
             let overdraft = {
-                userCPF: 1234,
-                status: false,
+                userId: 1,
+                isActive: false,
+                isBlocked: false,
                 limit: 200,
                 limitMax: 200,
                 limitUsed: 0,
@@ -122,7 +123,7 @@ describe("Overdrafts Controller", function () {
 
             jest.spyOn(User, "findByPk").mockImplementation(id =>
                 Promise.resolve({
-                    cpf: 1234,
+                    id: 1,
                     createOverdraft: data => Promise.reject("error")
                 })
             );
@@ -146,8 +147,9 @@ describe("Overdrafts Controller", function () {
                 status
             };
             let overdraft = {
-                userCPF: 1234,
-                status: false,
+                userId: 1,
+                isBlocked: false,
+                isActive:false,
                 limit: 200,
                 limitMax: 200,
                 limitUsed: 0,

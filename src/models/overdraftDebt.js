@@ -1,22 +1,22 @@
-'use strict';
+"use strict";
 module.exports = (sequelize, DataTypes) => {
-    const OverdraftDebt = sequelize.define('OverdraftDebt', {
+    const OverdraftDebt = sequelize.define("OverdraftDebt", {
         entryDate: DataTypes.DATE,
         amount: DataTypes.FLOAT,
         rate: DataTypes.FLOAT,
-        wasDivided: DataTypes.BOOLEAN,
+        isDivided: DataTypes.BOOLEAN,
         dueDay: DataTypes.INTEGER,
         quantityInstalment: DataTypes.INTEGER,
-
-
-    }, {});
+    });
     OverdraftDebt.associate = function (models) {
-        // associations can be defined here
+
         OverdraftDebt.hasMany(models.Instalment, {
-            foreignKey: 'id'
+            foreignKey: "overdraftDebtId",
+            as:"OverdraftDebt"
         })
         OverdraftDebt.belongsTo(models.User, {
-            foreignKey: 'userCPF',
+            foreignKey: "id",
+            as: "userId"
         })
     };
     return OverdraftDebt;

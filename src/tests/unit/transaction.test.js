@@ -57,7 +57,7 @@ describe("Transactions Controller", function () {
                 status
             };
             let transaction = {
-                userCPF: 1234,
+                userId: 1,
                 status: false,
                 limit: 200,
                 limitMax: 200,
@@ -105,12 +105,12 @@ describe("Transactions Controller", function () {
 
             jest
                 .spyOn(Transaction, "findByPk")
-                .mockImplementation(() => Promise.reject("eeror"));
+                .mockImplementation(() => Promise.reject("error"));
 
             await transactionController.getByPk(req, res);
 
             expect(status).toHaveBeenCalledWith(400);
             expect(send).toHaveBeenCalledWith("error");
         });
-    });
+    })
 });
