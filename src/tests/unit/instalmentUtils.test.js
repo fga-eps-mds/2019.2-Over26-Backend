@@ -1,4 +1,7 @@
 const InstalmentUtils = require("../../utils/instalmentUtils");
+const OverdraftDebt = require("../../models").OverdraftDebt;
+const Instalment = require("../../models").Instalment;
+
 
 describe("InstalmentUtils", function () {
 
@@ -11,17 +14,41 @@ describe("InstalmentUtils", function () {
     it("returns created instalment", async () => {
         let value = 100;
         let dueDate = new Date;
-//dueDate.setMonth(dueDate.getMonth + 1);
+        dueDate.setDate(dueDate.getDate()-1);
+        let OverdraftDebtId=1
+
+       
+
+        jest.spyOn(OverdraftDebt, "findOne").mockImplementation(query =>
+            Promise.resolve({
+                 id:1
+                
+            })
+
+
+
+        );
+        
         let instalment = {
             isPaid: false,
-            value: value,
             dueDate: dueDate,
-            overdraftId: 1,
+            overdraftDebtId: OverdraftDebtId,
+            value:value,
         }
+    /*    jest.spyOn(Instalment, "create").mockImplementation(query =>{
+            Promise.resolve({
+                isPaid: false,
+            dueDate: dueDate,
+            overdraftDebtId: OverdraftDebtId,
+            value:value,
+           })
 
-        await InstalmentUtils.creatInstalment(value,dueDate,1);
 
-        expect(await InstalmentUtils.creatInstalment(value,dueDate,1) ).toBe(instalment);
+        })*/
+
+        await InstalmentUtils.creatInstalment(value,dueDate,OverdraftDebtId);
+
+        expect(await InstalmentUtils.creatInstalment(value,dueDate,OverdraftDebtId) ).toBe(instalment);
 
 
 

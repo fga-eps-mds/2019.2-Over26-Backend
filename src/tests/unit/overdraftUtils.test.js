@@ -3,11 +3,14 @@ const Overdraft = require("../../models").Overdraft;
 
 
 describe("OverdraftUtils", function () {
+
     describe("OverdraftUtils usabilityCheck", () => {
+
         afterEach(() => {
             jest.restoreAllMocks();
             jest.resetAllMocks();
         });
+
         it("returns true for firstUseDate==null", async () => {
             let id = 1;
 
@@ -16,7 +19,7 @@ describe("OverdraftUtils", function () {
                     status: true,
                     limit: 200,
                     limitMax: 200,
-                    limitUsed: 10,
+                    limitUsed: 0,
                     firstUseDate: null,
                 })
             );
@@ -44,7 +47,7 @@ describe("OverdraftUtils", function () {
 
         })
 
-        it("returns false for firstUseDate!=null and 26 days or more have passed", async () => {
+        it("returns false for firstUseDate!=null and more than 26 days have passed", async () => {
             let id = 1;
             let date = new Date;
             date.setDate(date.getDate()-26.1);
@@ -66,7 +69,7 @@ describe("OverdraftUtils", function () {
             expect(await overdraftUtils.usabilityCheck(id)).toBe(false);
 
         })
-        it("returns true overdraft not found", async () => {
+        it("returns true for overdraft not found", async () => {
             let id = 1;
             let date = new Date;
             date.setDate(date.getDate()-26.3);
