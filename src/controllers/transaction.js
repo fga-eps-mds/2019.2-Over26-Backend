@@ -30,8 +30,9 @@ module.exports = {
 
 
                     if (type != "in") {                           //Checa para saber se é um cash-out
-                        if (account.balance - value < 0) {          //Checa se o valor final após cash-out será negativo
-                            if (overdraft != null && overdraft.status != false) {     //Checa se o usuário tem um Overdraft e se ele está ativo
+                        if (account.balance - value < 0) {
+                            //Checa se o valor final após cash-out será negativo
+                            if (overdraft != null && overdraft.isActive && !overdraft.isBlocked) {     //Checa se o usuário tem um Overdraft e se ele está ativo
                                 const overdraftBalance = overdraft.limit - overdraft.limitUsed   // Constante para saldo do Overdraft
                                 if (parseFloat(account.balance <= 0 ? 0 : account.balance) + parseFloat(overdraftBalance) - value >= 0) {   //Checa se o saldo da conta somado ao saldo do Overdraft é suficente para o pagamento
                                     return account
@@ -66,7 +67,7 @@ module.exports = {
                             }
                             else {                                          //Caso em que o saldo não é suficiente e o usuário não tem Overdraft ativo.
                                 return res.status(400).send({
-                                    message: "Doesn't have active overdraft"
+                                    message: "Overdraft is not activated or is blocked"
                                 })
                             }
                         }
@@ -99,22 +100,28 @@ module.exports = {
                             value: value,
                             date: date
                         })
-                        .then(transaction => {
-                            return account
-                                .update({
+                        .then(async transaction => {
+
+                            if (overdraft != null && !overdraft.isBlocked && overdraft.limitUsed > 0) {        //Checa se o usuário tem overdraft e se o limite usado é superior a zero
+                                await account.update({
                                     balance:
                                         parseFloat(account.balance) +
-                                        parseFloat(transaction.value)
+                                        (overdraft.limitUsed - value < 0 ? parseFloat(transaction.value) - parseFloat(overdraft.limitUsed) : 0)
                                 })
-                                .then(() => {
-                                    if (overdraft != null && overdraft.status != false && overdraft.limitUsed > 0) {        //Checa se o usuário tem overdraft e se o limite usado é superior a zero
-                                        return overdraft.update({
-                                            limitUsed: overdraft.limitUsed - value < 0 ? 0 : overdraft.limitUsed - value,      //Subtrai o valor inserido do limite usado, iguala a zero se o resultado for negativo.
-                                            firstUseDate: overdraft.limitUsed - value <= 0 ? null : overdraft.firstUseDate     //Caso valor abata dívida, a data de início do uso do Overdraft é nulificada.
-                                        })
-                                    }
+                                await overdraft.update({
+                                    limitUsed: overdraft.limitUsed - value < 0 ? 0 : overdraft.limitUsed - value,      //Subtrai o valor inserido do limite usado, iguala a zero se o resultado for negativo.
+                                    firstUseDate: overdraft.limitUsed - value <= 0 ? null : overdraft.firstUseDate     //Caso valor abata dívida, a data de início do uso do Overdraft é nulificada.
                                 })
-                                .then(() => res.status(201).send(transaction));
+                            } else {
+                                await account
+                                    .update({
+                                        balance:
+                                            parseFloat(account.balance) +
+                                            parseFloat(transaction.value)
+                                    })
+                            }
+
+                            return res.status(201).send(transaction);
                         });
                 })
             })

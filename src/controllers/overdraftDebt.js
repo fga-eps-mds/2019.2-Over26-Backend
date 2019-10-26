@@ -4,10 +4,10 @@ const User = require("../models").User;
 const Overdraft = require("../models").Overdraft;
 const Instalment = require("../models").Instalment;
 const overdraftController = require('./overdraft');
-const instalmentController = require('./instalment');
 const OverdraftUtils = require("../utils/overdraftUtils");
 const OverdraftDebtUtils = require("../utils/overdraftDebtUtils");
 const InstalmentUtils = require("../utils/instalmentUtils");
+
 
 
 
@@ -18,7 +18,8 @@ module.exports = {
             .then(user => {
                 return Overdraft.findOne({
                     where: {
-                        userId: user.id
+                        userId: user.id,
+                        isBlocked:false
                     }
                 })
                     .then(async overdraft => {
@@ -43,7 +44,13 @@ module.exports = {
                                 amount: amount,
                                 rate: rate,
                                 isDivided: isDivided
-                            }).then(overdraftDebt => res.status(201).send(overdraftDebt));
+                            }).then(async overdraftDebt => {
+                                await overdraft.update({
+                                    isBlocked: true,
+                                    limitUsed:0
+                                })
+                                return res.status(201).send(overdraftDebt)
+                            });
                         } else {
                             return res.status(400).send({
                                 message: "overdraft still haven't reached it's deadline or wasn't used"
@@ -147,7 +154,14 @@ module.exports = {
                     dueDay: parseInt(dueDay, 10),
                     quantityInstalment: parseInt(quantityInstalment, 10),
                 })
-                return res.status(200).send(instalments)
+                return Overdraft.findByPk(overdraftDebt.userId)
+                    .then(overdraft => {
+                        overdraft.update({
+                            isBlocked: false
+                        })
+
+                        return res.status(200).send(instalments)
+                    })
 
             })
             .catch(error => res.status(400).send({ "message": "couldn't create instalments" }));
