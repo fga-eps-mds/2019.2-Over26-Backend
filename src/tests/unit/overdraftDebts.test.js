@@ -39,11 +39,19 @@ describe("OverdraftDebts Controller", function () {
             );
             jest.spyOn(Overdraft, "findOne").mockImplementation(query =>
                 Promise.resolve({
-                    status: true,
+                    id: 1,
+                    isActive: true,
+                    isBlocked: false,
                     limit: 200,
                     limitMax: 200,
                     limitUsed: 10,
-                    firstUseDate: new Date()
+                    firstUseDate: new Date(),
+                    update: data => {
+                        return Promise.resolve({
+                            
+                        });
+                    }
+                    
                 })
             );
             jest
