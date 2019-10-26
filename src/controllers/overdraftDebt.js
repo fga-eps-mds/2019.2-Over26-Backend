@@ -138,7 +138,6 @@ module.exports = {
                 var counter = 0;
                 const counterMax = parseInt(quantityInstalment, 10);
                 while (counter < counterMax) {
-                    console.log(counter)
                     instalments.push(await InstalmentUtils.creatInstalment(instalmentValue, dateOptionsForInstalments[counter], overdraftDebt.id));
                     counter++;
 

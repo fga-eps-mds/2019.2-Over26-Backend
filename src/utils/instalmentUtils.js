@@ -5,7 +5,6 @@ module.exports = {
     creatInstalment(value, dueDate, overdraftDebtId) {
         return OverdraftDebt.findByPk(overdraftDebtId)
         .then(overdraftDebt=>{
-            console.log(overdraftDebt.id)
                 return Instalment.create({
                     overdraftDebtId:overdraftDebt.id,
                     isPaid: false,
@@ -13,7 +12,6 @@ module.exports = {
                     dueDate: dueDate,
                 })
                     .then(instalment => {
-                        console.log(instalment)
                         return instalment
                    
             })
