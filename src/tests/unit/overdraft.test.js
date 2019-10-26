@@ -48,6 +48,29 @@ describe("Overdrafts Controller", function () {
             jest.restoreAllMocks();
             jest.resetAllMocks();
         });
+        it("returns user not found", async () => {
+            let req = {
+                params: {
+                    id: 1
+                }
+            };
+            
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(code => ({ send }));
+
+            const res = {
+                status
+            };
+
+            await overdraftController.create(req, res);
+
+            
+
+            expect(status).toHaveBeenCalledWith(404);
+            expect(send).toHaveBeenCalledWith({ "message": "User not found" });
+
+        })
+
         it("returns the Overdraft object created", async () => {
             let req = {
                 params: {
@@ -149,7 +172,7 @@ describe("Overdrafts Controller", function () {
             let overdraft = {
                 userId: 1,
                 isBlocked: false,
-                isActive:false,
+                isActive: false,
                 limit: 200,
                 limitMax: 200,
                 limitUsed: 0,
