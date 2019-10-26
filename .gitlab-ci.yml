@@ -14,5 +14,11 @@ stages:
 
 tests:
   stage: tests
+  before_script:
+    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    - chmod +x ./cc-test-reporter
+    - ./cc-test-reporter before-build
   script:
     - docker-compose run --rm api npm run test:coverage
+  after_script:
+  - ./cc-test-reporter after-build --exit-code $CODECLIMATE_ID
