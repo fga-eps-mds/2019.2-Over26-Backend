@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "sequelize db:migrate && node ./src/bin/www",
-    "dev": "sequelize db:migrate && sequelize db:seed:all && nodemon ./src/bin/www",
+    "dev": "sequelize db:migrate && nodemon ./src/bin/www",
     "test": "export NODE_ENV=test && sequelize db:drop || true && sequelize db:create && sequelize db:migrate &&  jest  ./src/tests --forceExit",
     "test:coverage": "export NODE_ENV=test && sequelize db:drop || true && sequelize db:create && sequelize db:migrate &&  jest  ./src/tests --forceExit --coverage && codecov -t a3a183a9-02b0-4328-9f31-6fa485bb7adf",
     "test:watch": "export NODE_ENV=test && sequelize db:drop || true && sequelize db:create && sequelize db:migrate &&  jest  ./src/tests --forceExit --coverage --watch"

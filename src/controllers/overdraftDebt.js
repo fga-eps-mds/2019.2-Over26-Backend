@@ -47,6 +47,7 @@ module.exports = {
                             }).then(async overdraftDebt => {
                                 await overdraft.update({
                                     isBlocked: true,
+                                    limitUsed:0
                                 })
                                 return res.status(201).send(overdraftDebt)
                             });
