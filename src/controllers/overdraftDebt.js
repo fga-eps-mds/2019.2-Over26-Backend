@@ -23,7 +23,7 @@ module.exports = {
                 })
                     .then(async overdraft => {
                         if (!(await OverdraftUtils.usabilityCheck(overdraft.userId))) {
-                            const rate = 0.15;
+                            const rate = 0.003182;
 
                             const firstUseDate = overdraft.firstUseDate;
 
@@ -138,7 +138,6 @@ module.exports = {
                 var counter = 0;
                 const counterMax = parseInt(quantityInstalment, 10);
                 while (counter < counterMax) {
-                    console.log(counter)
                     instalments.push(await InstalmentUtils.creatInstalment(instalmentValue, dateOptionsForInstalments[counter], overdraftDebt.id));
                     counter++;
 
