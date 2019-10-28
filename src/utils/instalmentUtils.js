@@ -3,9 +3,10 @@ const Instalment = require("../models").Instalment;
 
 module.exports = {
     creatInstalment(value, dueDate, overdraftDebtId) {
-        
+        return OverdraftDebt.findByPk(overdraftDebtId)
+        .then(overdraftDebt=>{
                 return Instalment.create({
-                    overdraftDebtId:overdraftDebtId,
+                    overdraftDebtId:overdraftDebt.id,
                     isPaid: false,
                     value: value,
                     dueDate: dueDate,
@@ -13,7 +14,9 @@ module.exports = {
                     .then(instalment => {
                         return instalment
                    
-            }).catch(error => error)
+            })
+
+        }).catch(error => error)
     }
 
 };

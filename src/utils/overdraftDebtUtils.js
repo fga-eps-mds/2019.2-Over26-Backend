@@ -2,7 +2,6 @@ const OverdraftDebt = require("../models").OverdraftDebt;
 
 module.exports = {
     returnInstalmentValue(quantityInstalment, id) {
-
         return OverdraftDebt.findOne({
             where: { userId: id },
             order: [['createdAt', 'DESC']],
@@ -11,13 +10,17 @@ module.exports = {
                 if (!overdraftDebt) {
                     return false;
                 }
+
                 const currentDate = new Date();
+
                 const dateDiff = currentDate.getTime() - overdraftDebt.entryDate.getTime();
                 const dateDiffDays = dateDiff / 86400000;
                 const dateDiffDaysRound = ((dateDiffDays).toFixed(0));
 
                 const totalAmount = overdraftDebt.amount * Math.pow(1 + overdraftDebt.rate, dateDiffDaysRound)
+                
                 const instalmentValue = totalAmount / quantityInstalment;//is the value of each instalment
+              
 
                 return instalmentValue;
 

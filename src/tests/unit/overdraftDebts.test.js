@@ -39,11 +39,19 @@ describe("OverdraftDebts Controller", function () {
             );
             jest.spyOn(Overdraft, "findOne").mockImplementation(query =>
                 Promise.resolve({
-                    status: true,
+                    id: 1,
+                    isActive: true,
+                    isBlocked: false,
                     limit: 200,
                     limitMax: 200,
                     limitUsed: 10,
-                    firstUseDate: new Date()
+                    firstUseDate: new Date(),
+                    update: data => {
+                        return Promise.resolve({
+                            
+                        });
+                    }
+                    
                 })
             );
             jest
@@ -62,6 +70,54 @@ describe("OverdraftDebts Controller", function () {
             expect(send).toHaveBeenCalledWith(overdraft);
             expect(status).toHaveBeenCalledWith(201);
         });
+        it("Returns overdraft still haven't reached it's deadline or wasn't used", async () => {
+
+            let req = {
+                params: {
+                    id: 1
+                }
+            };
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(code => ({ send }));
+            const res = {
+                status
+            };
+
+            jest.spyOn(User, "findByPk").mockImplementation(id =>
+                Promise.resolve({
+                    id: 1,
+                    createOverdraftDebt: data => {
+                        let entry = new Date();
+                        return Promise.resolve({
+                            userId: 1,
+                            entryDate: Math.floor(entry.setDate(entry.getDate()) / 1000),
+                            amount: 10,
+                            rate: 0.15,
+                            isDivided: false
+                        });
+                    }
+                })
+            );
+            jest.spyOn(Overdraft, "findOne").mockImplementation(query =>
+                Promise.resolve({
+                    status: true,
+                    limit: 200,
+                    limitMax: 200,
+                    limitUsed: 10,
+                    firstUseDate: new Date()
+                })
+            );
+            jest
+                .spyOn(overdraftUtils, "usabilityCheck")
+                .mockImplementation(id => Promise.resolve(true));
+
+                await overdraftDebtController.create(req, res);
+
+            expect(status).toHaveBeenCalledWith(400);
+            expect(send).toHaveBeenCalledWith({"message": "overdraft still haven't reached it's deadline or wasn't used"});
+
+
+        })
         it("returns 400 on fails on find user", async () => {
             let req = {
                 params: {
