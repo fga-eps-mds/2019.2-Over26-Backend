@@ -7,15 +7,16 @@ module.exports = {
     listByDebt(req, res) {
         return Instalment.findAll({
             where: {
-                OverdraftDebtId: req.params.OverdraftDebtId
+                overdraftDebtId: req.params.overdraftDebtId
             }
         })
         .then(instalments=>{
-            if(!instalments){
+            if(instalments==""){
                 return res.status(404).send({"message":"instalments not found"});
             }
             return res.status(200).send(instalments)
         })
+        .catch(error=>res.status(400).send(error));
     }
 
 
