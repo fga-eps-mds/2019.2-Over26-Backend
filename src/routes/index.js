@@ -54,6 +54,8 @@ router.get('/api/transactions/:id', transactionController.getByPk);
 /* Instalments Router */
 router.post('/api/instalments/:id', overdraftDebtController.createInstalments);
 router.get("/api/overdraftDebt/:overdraftDebtId/listInstalments",instalmentController.listByDebt);
+router.put('/api/payinstalments/:id', instalmentController.payInstalment);
+
 /* Start Router */
 router.post('/api/start', startController.startApp);
 
