@@ -169,6 +169,17 @@ module.exports = {
                         message: "No debts found"
                     })
                 }
+                else 
+                {
+                const currentDate = new Date()
+                return overdraft
+                .update({
+                    
+                    firstUseDate = new Date(currentDate.getTime() - (27 * 24 * 60 * 60 * 1000) )
+                })
+                .then(() => res.status(200).send(overdraft))
+                .catch(error => res.status(400).send(error));
+            }
             })
 
             .catch(error => res.status(400).send(error));
