@@ -153,5 +153,24 @@ module.exports = {
                     .catch(error => res.status(400).send(error));
             })
             .catch(error => res.status(400).send(error));
+    },
+
+    createDebt(req, res) {
+        return Overdraft.findByPk(req.params.id)
+            .then(overdraft => {
+                if (!overdraft) {
+                    return res.status(404).send({
+                        message: "Overdraft Not Found"
+                    });
+                }
+                if ((overdraft.isActive = false) || (overdraft.isBlocked = false) || (overdraft.limitUsed == 0))
+                {
+                    return res.status(400).send({
+                        message: "No debts found"
+                    })
+                }
+            })
+
+            .catch(error => res.status(400).send(error));
     }
 };
