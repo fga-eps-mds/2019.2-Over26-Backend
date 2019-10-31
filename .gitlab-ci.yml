@@ -10,9 +10,21 @@ before_script:
 
 stages:
   - tests
+  - deploy
 
 
 tests:
   stage: tests
   script:
     - docker-compose run --rm api npm run test:coverage
+
+
+deploy-production:
+  stage: deploy
+  only:
+    - continuous-deployment
+  tags:
+    - prod
+  script:
+    - sudo docker-compose build --no-cache api
+    - sudo docker-compose up -d --force-recreate --remove-orphans api
