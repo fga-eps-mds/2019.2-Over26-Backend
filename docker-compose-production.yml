@@ -1,20 +1,28 @@
 version: "3.5"
 
 services:
+  nginx:
+    image: nginx:1.15-alpine
+    depends_on:
+        - api
+    restart: unless-stopped
+    volumes:
+      - ./nginx-conf:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+      - "443:443"
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    networks:
+      - backend
+
   api:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: $CONTAINER_RELEASE_IMAGE
     depends_on:
       - postgresql
     command: npm run dev
     ports:
        - "3000:3000"
-    volumes:
-      - .:/home/node/app:z
-      - /home/node/app/node_modules
     env_file: .env
-    restart: on-failure
     networks:
       - backend
 

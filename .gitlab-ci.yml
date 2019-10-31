@@ -1,27 +1,107 @@
-image: tmaier/docker-compose:latest
+image: docker
 
 services:
   - docker:dind
 
-
 stages:
-  - tests
+  - build
+  - test
+  - release
   - deploy
 
+variables:
+  DOCKER_HOST: tcp://docker:2376
+  DOCKER_TLS_CERTDIR: "/certs"
+  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+  CONTAINER_RELEASE_DEV_IMAGE: $CI_REGISTRY_IMAGE:dev
 
-tests:
-  stage: tests
+
+
+build:
+  stage: build
+  before_script:
+  ## Login registry
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker-compose build --no-cache api
-    - docker-compose run --rm api npm run test:coverage
+    - docker build --pull -t $CONTAINER_TEST_IMAGE .
+    - docker push $CONTAINER_TEST_IMAGE
 
+unit-test:
+  stage: test
+  before_script:
+    ## Login registry
+    - apk add --no-cache py-pip python-dev libffi-dev openssl-dev gcc libc-dev make git
+    - pip install docker-compose 
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - apk update && apk add curl curl-dev
+    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    - chmod +x ./cc-test-reporter
+    - ./cc-test-reporter before-build
+  script:
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker-compose -f docker-compose-ci.yml run --rm api npm run test:coverage
+  after_script:
+    - ./cc-test-reporter after-build -t lcov --prefix /home/node/app --debug --exit-code $?
+
+
+# lint:
+#   stage: test
+#   before_script:
+#   ## Login registry
+#   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#   script:
+#     - docker pull $CONTAINER_TEST_IMAGE
+#     - docker run $CONTAINER_TEST_IMAGE npm run test:lint
+
+release-image-staging:
+  stage: release
+  before_script:
+  ## Login registry
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_DEV_IMAGE
+    - docker push $CONTAINER_RELEASE_DEV_IMAGE
+  only:
+    - continuous-deployment
+
+deploy-staging:
+  stage: deploy
+  environment:
+      name: staging
+      url: http://staging.over26.tk
+  script:
+    - apk add --update --no-cache openssh sshpass
+    - sshpass -V
+    - echo "CONTAINER_RELEASE_IMAGE=${CONTAINER_RELEASE_DEV_IMAGE}" >> .env
+    - sshpass -p $PROD_SERVER_PASS scp  -o StrictHostKeyChecking=no -o PreferredAuthentications=password -o PubkeyAuthentication=no -r ./docker-compose-production.yml ./.env ./nginx-conf/ root@159.65.222.74:/home/app
+    - sshpass -p $PROD_SERVER_PASS ssh -o StrictHostKeyChecking=no -o PreferredAuthentications=password -o PubkeyAuthentication=no root@159.65.222.74 "echo ${PROD_SERVER_PASS} | sudo -S ls && docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY};cd /home/app; docker-compose -f docker-compose-production.yml pull api; docker-compose -f docker-compose-production.yml up -d --force-recreate; exit"
+  only:
+    - continuous-deployment
+
+release-image-production:
+  stage: release
+  before_script:
+  ## Login registry
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
+    - docker push $CONTAINER_RELEASE_IMAGE
+  only:
+    - continuous-deployment
 
 deploy-production:
   stage: deploy
+  environment:
+      name: production
+      url: http://over26.tk
+  script:
+    - apk add --update --no-cache openssh sshpass
+    - sshpass -V
+    - echo "CONTAINER_RELEASE_IMAGE=${CONTAINER_RELEASE_IMAGE}" >> .env
+    - sshpass -p $PROD_SERVER_PASS scp  -o StrictHostKeyChecking=no -o PreferredAuthentications=password -o PubkeyAuthentication=no -r ./docker-compose-production.yml ./.env ./nginx-conf/ root@157.245.95.245:/home/app
+    - sshpass -p $PROD_SERVER_PASS ssh -o StrictHostKeyChecking=no -o PreferredAuthentications=password -o PubkeyAuthentication=no root@157.245.95.245 "echo ${PROD_SERVER_PASS} | sudo -S ls && docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY};cd /home/app; docker-compose -f docker-compose-production.yml pull api; docker-compose -f docker-compose-production.yml up -d --force-recreate; exit"
   only:
     - continuous-deployment
-  tags:
-    - prod
-  script:
-    - sudo docker-compose build --no-cache api
-    - sudo docker-compose up -d --force-recreate --remove-orphans api
