@@ -1,6 +1,7 @@
 const Overdraft = require("../models").Overdraft;
 const User = require("../models").User;
 const OverdraftUtils = require("../utils/overdraftUtils");
+const OverdrafDebttUtils = require("../utils/overdraftDebtUtils")
 
 module.exports = {
     list(req, res) {
@@ -172,12 +173,16 @@ module.exports = {
                 else 
                 {
                 const currentDate = new Date()
+                var Debt 
+                const newfirstUseDate = new Date(currentDate.getTime() - (27 * 24 * 60 * 60 * 1000) )
+                Debt = OverdrafDebttUtils.create(Overdraft.userId);
                 return overdraft
-                .update({
+                    .update({
                     
-                    firstUseDate = new Date(currentDate.getTime() - (27 * 24 * 60 * 60 * 1000) )
+                    firstUseDate = newfirstUseDate
                 })
-                .then(() => res.status(200).send(overdraft))
+                
+                .then(() => res.status(200).send(Debt))
                 .catch(error => res.status(400).send(error));
             }
             })

@@ -61,4 +61,55 @@ module.exports = {
 
             );
     },
+
+    create(req, res) {
+        return User.findByPk(req.params.id)
+            .then(user => {
+                return Overdraft.findOne({
+                    where: {
+                        userId: user.id,
+                        isBlocked:false
+                    }
+                })
+                    .then(async overdraft => {
+                        if (!(await OverdraftUtils.usabilityCheck(overdraft.userId))) {
+                            const rate = 0.003182;
+
+                            const firstUseDate = overdraft.firstUseDate;
+
+                            const entryDate = firstUseDate;
+                            entryDate.setDate(entryDate.getDate() + 26);
+                            //sets entryDate of overdraftDebt to firtUsedDate of overdraft+26days
+
+
+                            const amount = overdraft.limitUsed;
+                            //is the amount of money due in the moment of the debt start
+
+                            const isDivided = false;
+                            const userId = user.id;
+                            return user.createOverdraftDebt({
+                                userId: userId,
+                                entryDate: entryDate,
+                                amount: amount,
+                                rate: rate,
+                                isDivided: isDivided
+                            }).then(async overdraftDebt => {
+                                await overdraft.update({
+                                    isBlocked: true,
+                                    limitUsed:0
+                                })
+                                return res.status(201).send(overdraftDebt)
+                            });
+                        } else {
+                            return res.status(400).send({
+                                message: "overdraft still haven't reached it's deadline or wasn't used"
+                            });
+                        }
+                    })
+
+                    .catch(error => res.status(400).send('error'));
+            })
+            .catch(error => res.status(400).send('error'));
+
+    },
 }
