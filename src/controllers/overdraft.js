@@ -157,35 +157,35 @@ module.exports = {
     },
 
     createDebt(req, res) {
-        return Overdraft.findByPk(req.params.id)
-            .then(overdraft => {
-                if (!overdraft) {
-                    return res.status(404).send({
-                        message: "Overdraft Not Found"
-                    });
+        return Overdraft.findOne({
+            where: {
+                userId: req.params.id
+            }
+        }).then(async overdraft => {
+            if (!overdraft) {
+                return res.status(404).send({
+                    message: "Overdraft Not Found"
+                });
                 }
-                if ((overdraft.isActive = false) || (overdraft.isBlocked = false) || (overdraft.limitUsed == 0))
-                {
-                    return res.status(400).send({
-                        message: "No debts found"
-                    })
-                }
-                else 
-                {
+                
                 const currentDate = new Date()
+               
                 var Debt 
-                const newfirstUseDate = new Date(currentDate.getTime() - (27 * 24 * 60 * 60 * 1000) )
-                Debt = OverdrafDebttUtils.create(Overdraft.userId);
+                firstUseDate = new Date(currentDate.getTime() - (27 * 24 * 60 * 60 * 1000) )
+                console.log(firstUseDate)
+                id = req.body.id
+                console.log(idUser)
+               // Debt = await OverdrafDebttUtils.create(id);
                 return overdraft
                     .update({
                     
-                    firstUseDate = newfirstUseDate
+                    firstUseDate : new Date(currentDate.getTime() - (27 * 24 * 60 * 60 * 1000) )
                 })
                 
-                .then(() => res.status(200).send(Debt))
+                .then(() => res.status(200).send(firstUseDate))
                 .catch(error => res.status(400).send(error));
             }
-            })
+            )
 
             .catch(error => res.status(400).send(error));
     }

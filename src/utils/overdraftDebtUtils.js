@@ -1,4 +1,6 @@
 const OverdraftDebt = require("../models").OverdraftDebt;
+const Overdraf = require("../models").Overdraft;
+const OverdraftUtils = require("../utils/overdraftUtils");
 
 module.exports = {
     returnInstalmentValue(quantityInstalment, id) {
@@ -62,18 +64,19 @@ module.exports = {
             );
     },
 
-    create(req, res) {
-        return User.findByPk(req.params.id)
-            .then(user => {
-                return Overdraft.findOne({
-                    where: {
-                        userId: user.id,
-                        isBlocked:false
-                    }
-                })
+    create(id) {
+        console.log("Aqui")
+        return Overdraft.findByPk(id)
+            .then(overdraft => {
+                if (!overdraft) {
+                    return res.status(404).send({
+                        message: "Overdraft Not Found"
+                    })
                     .then(async overdraft => {
                         if (!(await OverdraftUtils.usabilityCheck(overdraft.userId))) {
                             const rate = 0.003182;
+
+                            console.log("Aqui2")
 
                             const firstUseDate = overdraft.firstUseDate;
 
@@ -87,6 +90,8 @@ module.exports = {
 
                             const isDivided = false;
                             const userId = user.id;
+
+                            
                             return user.createOverdraftDebt({
                                 userId: userId,
                                 entryDate: entryDate,
@@ -108,7 +113,7 @@ module.exports = {
                     })
 
                     .catch(error => res.status(400).send('error'));
-            })
+            }})
             .catch(error => res.status(400).send('error'));
 
     },
