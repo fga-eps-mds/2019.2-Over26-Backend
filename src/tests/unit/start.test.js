@@ -1,32 +1,32 @@
-const startController = require("../../controllers").start;
-const Account = require("../../models").Account;
-const User = require("../../models").User;
+const startController = require('../../controllers').start;
+const Account = require('../../models').Account;
+const User = require('../../models').User;
 
-describe("Start Controller", function () {
-    describe("Start App", () => {
+describe('Start Controller', function () {
+    describe('Start App', () => {
         afterEach(() => {
             jest.restoreAllMocks();
             jest.resetAllMocks();
         });
-        it("returns user and account on sucess", async () => {
+        it('returns user and account on sucess', async () => {
             let req = {body: {
-                name: "Ana"}
+                name: 'Ana'}
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
-            let date = new Date()
-            jest.spyOn(User, "create").mockImplementation(data => {
+            let date = new Date();
+            jest.spyOn(User, 'create').mockImplementation(data => {
                 data.id = 1;
                 data.updatedAt = date;
                 data.createdAt = date;
                 return Promise.resolve(data);
             });
 
-            jest.spyOn(Account, "create").mockImplementation(data => {
+            jest.spyOn(Account, 'create').mockImplementation(data => {
                 data.id = 1;
                 data.updatedAt = date;
                 data.createdAt = date;
@@ -37,10 +37,10 @@ describe("Start Controller", function () {
 
             expect(status).toHaveBeenCalledWith(200);
             let user = {
-                name: "Ana",
-                cpf: "12345678900",
-                email: "example@example.com",
-                phone: "12345678900",
+                name: 'Ana',
+                cpf: '12345678900',
+                email: 'example@example.com',
+                phone: '12345678900',
                 monthlyIncome: 3000,
                 id: 1,
                 updatedAt: date,
@@ -57,51 +57,51 @@ describe("Start Controller", function () {
             };
             expect(send).toHaveBeenCalledWith({user, account});
         });
-        it("returns an error when user create fail", async () => {
+        it('returns an error when user create fail', async () => {
             let req = {body: {
-                name: "Ana"}
+                name: 'Ana'}
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
-            jest.spyOn(User, "create").mockImplementation(data => 
-                Promise.reject("error"));
+            jest.spyOn(User, 'create').mockImplementation(() => 
+                Promise.reject('error'));
 
             await startController.startApp(req, res);
 
             expect(status).toHaveBeenCalledWith(400);
             expect(send).toHaveBeenCalledWith({
-                message: "Error creating user"
+                message: 'Error creating user'
             });
         });
-        it("returns an error when account create fail", async () => {
+        it('returns an error when account create fail', async () => {
             let req = {body: {
-                name: "Ana"}
+                name: 'Ana'}
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
-            let date = new Date()
-            jest.spyOn(User, "create").mockImplementation(data => {
+            let date = new Date();
+            jest.spyOn(User, 'create').mockImplementation(data => {
                 data.id = 1;
                 data.updatedAt = date;
                 data.createdAt = date;
                 return Promise.resolve(data);
             });
 
-            jest.spyOn(Account, "create").mockImplementation(data =>
-                Promise.reject("error"));
+            jest.spyOn(Account, 'create').mockImplementation(() =>
+                Promise.reject('error'));
 
             await startController.startApp(req, res);
 
             expect(status).toHaveBeenCalledWith(400);
-            expect(send).toHaveBeenCalledWith({message: "Error creating account"});
+            expect(send).toHaveBeenCalledWith({message: 'Error creating account'});
         });
     });
 });

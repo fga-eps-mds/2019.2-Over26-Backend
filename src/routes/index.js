@@ -10,8 +10,8 @@ const instalmentController = require('../controllers').instalment;
 const startController = require('../controllers').start;
 
 
-router.get("/transaction", function (req, res) {
-    res.sendFile("/app/src/views/index.html");
+router.get('/transaction', function (req, res) {
+    res.sendFile('/app/src/views/index.html');
 });
 
 /* Overdraft Router */
@@ -22,7 +22,7 @@ router.put('/api/users/:id/overdrafts/activate', overdraftController.activateCre
 router.put('/api/users/:id/overdrafts/cancel', overdraftController.cancelCredit);
 router.put('/api/users/:id/overdrafts', overdraftController.updateCreditLimit);
 router.delete('/api/users/:id/overdrafts', overdraftController.delete);
-router.get('/api/users/:id/overdrafts/usability', overdraftController.checkUsability)
+router.get('/api/users/:id/overdrafts/usability', overdraftController.checkUsability);
 
 /* Account Router */
 router.get('/api/accounts/:id', accountController.getByPk);
@@ -49,7 +49,7 @@ router.get('/api/transactions/:id', transactionController.getByPk);
 
 /* Instalments Router */
 router.post('/api/instalments/:id', overdraftDebtController.createInstalments);
-router.get("/api/overdraftDebt/:overdraftDebtId/listInstalments",instalmentController.listByDebt);
+router.get('/api/overdraftDebt/:overdraftDebtId/listInstalments',instalmentController.listByDebt);
 router.put('/api/payinstalments/:id', instalmentController.payInstalment);
 
 /* Start Router */

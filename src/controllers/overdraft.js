@@ -1,6 +1,6 @@
-const Overdraft = require("../models").Overdraft;
-const User = require("../models").User;
-const OverdraftUtils = require("../utils/overdraftUtils");
+const Overdraft = require('../models').Overdraft;
+const User = require('../models').User;
+const OverdraftUtils = require('../utils/overdraftUtils');
 
 module.exports = {
     list(req, res) {
@@ -14,7 +14,7 @@ module.exports = {
         return User.findByPk(req.params.id)
             .then(user => {
                 if(!user){
-                    return res.status(404).send({"message":"User not found"});
+                    return res.status(404).send({'message':'User not found'});
                 }
                 const userId = user.id;
                 const isActive = false;
@@ -24,14 +24,14 @@ module.exports = {
                 const limitUsed = 0;
                 const firstUseDate = null;
                 return user.createOverdraft({
-                        userId: userId,
-                        isActive: isActive,
-                        isBlocked: isBlocked,
-                        limit: limit,
-                        limitMax: limitMax,
-                        limitUsed: limitUsed,
-                        firstUseDate: firstUseDate
-                    })
+                    userId: userId,
+                    isActive: isActive,
+                    isBlocked: isBlocked,
+                    limit: limit,
+                    limitMax: limitMax,
+                    limitUsed: limitUsed,
+                    firstUseDate: firstUseDate
+                })
                     .then(overdraft => res.status(201).send(overdraft))
                 
                     .catch(error => res.status(400).send(error));
@@ -43,12 +43,12 @@ module.exports = {
             .then(overdraft => {
                 if (!overdraft) {
                     return res.status(404).send({
-                        message: "Overdraft Not Found"
+                        message: 'Overdraft Not Found'
                     });
                 }
                 return res.status(200).send(overdraft);
             })
-            .catch(error => res.status(400).send("error"));
+            .catch(() => res.status(400).send('error'));
     },
     updateCreditLimit(req, res) {
         const { limit } = req.body;
@@ -56,12 +56,12 @@ module.exports = {
             .then(overdraft => {
                 if (!overdraft) {
                     return res.status(404).send({
-                        message: "Overdraft Not Found"
+                        message: 'Overdraft Not Found'
                     });
                 }
                 if (limit - overdraft.limitUsed < 0 || limit - overdraft.limitMax > 0) {
                     return res.status(400).send({
-                        message: "Limit Used exceeds choosen limit"
+                        message: 'Limit Used exceeds choosen limit'
                     });
                 }
 
@@ -85,7 +85,7 @@ module.exports = {
             .then(Overdraft => {
                 if (!Overdraft) {
                     return res.status(404).send({
-                        message: "Overdraft Not Found"
+                        message: 'Overdraft Not Found'
                     });
                 }
                 return Overdraft.destroy()
@@ -100,13 +100,13 @@ module.exports = {
             .then(user => {
                 if (!user) {
                     return res.status(404).send({
-                        message: "User Not Found"
+                        message: 'User Not Found'
                     });
                 }
                 return user.getOverdraft().then(overdraft => {
                     if (!overdraft) {
                         return res.status(404).send({
-                            message: "Overdraft Not Found"
+                            message: 'Overdraft Not Found'
                         });
                     }
                     overdraft
@@ -128,7 +128,7 @@ module.exports = {
         }).then(async overdraft => {
             if (!overdraft) {
                 return res.status(404).send({
-                    message: "Overdraft Not Found"
+                    message: 'Overdraft Not Found'
                 });
             } else {
                 return res.status(200).send(await OverdraftUtils.usabilityCheck(req.params.id));
@@ -142,7 +142,7 @@ module.exports = {
             .then(overdraft => {
                 if (!overdraft) {
                     return res.status(404).send({
-                        message: "Overdraft Not Found"
+                        message: 'Overdraft Not Found'
                     });
                 }
                 return overdraft

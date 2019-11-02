@@ -1,13 +1,13 @@
-const accountController = require("../../controllers").account;
-const Account = require("../../models").Account;
-const User = require("../../models").User;
-describe("Account Controller", function () {
-    describe("Account create", () => {
+const accountController = require('../../controllers').account;
+const Account = require('../../models').Account;
+const User = require('../../models').User;
+describe('Account Controller', function () {
+    describe('Account create', () => {
         afterEach(() => {
             jest.restoreAllMocks();
             jest.resetAllMocks();
         });
-        it("returns account create on sucess", async () => {
+        it('returns account create on sucess', async () => {
             let req = {
                 body: {
                     agency: 1,
@@ -16,15 +16,14 @@ describe("Account Controller", function () {
                 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
-            jest.spyOn(User, "findByPk").mockImplementation(id =>
+            jest.spyOn(User, 'findByPk').mockImplementation(() =>
                 Promise.resolve({
                     id: 1,
-                    createAccount: data => {
-                        let entry = new Date();
+                    createAccount: () => {
                         return Promise.resolve({
                             balance:req.body.balance,
                             id:1,
@@ -47,7 +46,7 @@ describe("Account Controller", function () {
             });
             expect(send).toHaveBeenCalledWith(account);
         });
-        it("returns an error when fails", async () => {
+        it('returns an error when fails', async () => {
             let req = {
                 body: {
                     id:1,
@@ -56,17 +55,16 @@ describe("Account Controller", function () {
                 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
-          jest.spyOn(User, "findByPk").mockImplementation(id =>
+            jest.spyOn(User, 'findByPk').mockImplementation(() =>
                 Promise.resolve({
                     id: 1,
-                    createAccount: data => {
-                        let entry = new Date();
-                        return Promise.reject("error")
+                    createAccount: () => {
+                        return Promise.reject('error');
                     }
                 })
             );
@@ -75,55 +73,55 @@ describe("Account Controller", function () {
 
             expect(status).toHaveBeenCalledWith(400);
 
-            expect(send).toHaveBeenCalledWith("error");
+            expect(send).toHaveBeenCalledWith('error');
         });
     });
-    describe("Account get by primary key", () => {
+    describe('Account get by primary key', () => {
         afterEach(() => {
             jest.restoreAllMocks();
             jest.resetAllMocks();
         });
-        it("returns 404 when account not found", async () => {
+        it('returns 404 when account not found', async () => {
             let req = {
                 params: { id: 1 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
             jest
-                .spyOn(Account, "findByPk")
-                .mockImplementation(pk => Promise.resolve(null));
+                .spyOn(Account, 'findByPk')
+                .mockImplementation(() => Promise.resolve(null));
 
             await accountController.getByPk(req, res);
 
             expect(status).toHaveBeenCalledWith(404);
             expect(send).toHaveBeenCalledWith({
-                message: "Account Not Found"
+                message: 'Account Not Found'
             });
         });
-        it("returns 400 when error", async () => {
+        it('returns 400 when error', async () => {
             let req = {
                 params: { id: 1 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
             jest
-                .spyOn(Account, "findByPk")
-                .mockImplementation(pk => Promise.reject("error"));
+                .spyOn(Account, 'findByPk')
+                .mockImplementation(() => Promise.reject('error'));
 
             await accountController.getByPk(req, res);
 
             expect(status).toHaveBeenCalledWith(400);
-            expect(send).toHaveBeenCalledWith("error");
+            expect(send).toHaveBeenCalledWith('error');
         });
-        it("returns a Account object", async () => {
+        it('returns a Account object', async () => {
             let req = {
                 params: { id: 1 },
                 body: {
@@ -134,12 +132,12 @@ describe("Account Controller", function () {
                 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
-            jest.spyOn(Account, "findByPk").mockImplementation(pk =>
+            jest.spyOn(Account, 'findByPk').mockImplementation(() =>
                 Promise.resolve({
                     userId: req.body.userId,
                     agency: req.body.agency,
@@ -159,12 +157,12 @@ describe("Account Controller", function () {
             expect(send).toHaveBeenCalledWith(account);
         });
     });
-    describe("Account update", () => {
+    describe('Account update', () => {
         afterEach(() => {
             jest.restoreAllMocks();
             jest.resetAllMocks();
         });
-        it("returns account update on sucess", async () => {
+        it('returns account update on sucess', async () => {
             let req = {
                 body: {
                     userId: 1,
@@ -177,12 +175,12 @@ describe("Account Controller", function () {
                 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
-            jest.spyOn(Account, "findByPk").mockImplementation(pk =>
+            jest.spyOn(Account, 'findByPk').mockImplementation(() =>
                 Promise.resolve({
                     userId: req.body.userId,
                     agency: req.body.agency,
@@ -190,7 +188,7 @@ describe("Account Controller", function () {
                     balance: req.body.balance,
                     updatedAt: Math.floor(new Date().getTime() / 1000),
                     createdAt: Math.floor(new Date().getTime() / 1000),
-                    update: data =>
+                    update: () =>
                         Promise.resolve({
                             userId: req.body.userId,
                             agency: req.body.agency,
@@ -215,7 +213,7 @@ describe("Account Controller", function () {
             };
             expect(send).toHaveBeenCalledWith(account);
         });
-        it("returns error 404 when account not found", async () => {
+        it('returns error 404 when account not found', async () => {
             let req = {
                 body: {
                     userId: 1,
@@ -228,24 +226,24 @@ describe("Account Controller", function () {
                 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
             jest
-                .spyOn(Account, "findByPk")
-                .mockImplementation(pk => Promise.resolve(null));
+                .spyOn(Account, 'findByPk')
+                .mockImplementation(() => Promise.resolve(null));
 
             await accountController.update(req, res);
 
             expect(status).toHaveBeenCalledWith(404);
 
             expect(send).toHaveBeenCalledWith({
-                message: "Account Not Found"
+                message: 'Account Not Found'
             });
         });
-        it("returns error 400 when error on find account by pk", async () => {
+        it('returns error 400 when error on find account by pk', async () => {
             let req = {
                 body: {
                     userId: 1,
@@ -258,22 +256,22 @@ describe("Account Controller", function () {
                 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
             jest
-                .spyOn(Account, "findByPk")
-                .mockImplementation(pk => Promise.reject("error"));
+                .spyOn(Account, 'findByPk')
+                .mockImplementation(() => Promise.reject('error'));
 
             await accountController.update(req, res);
 
             expect(status).toHaveBeenCalledWith(400);
 
-            expect(send).toHaveBeenCalledWith("error");
+            expect(send).toHaveBeenCalledWith('error');
         });
-        it("returns error 400 when error on update account", async () => {
+        it('returns error 400 when error on update account', async () => {
             let req = {
                 body: {
                     userId: 1,
@@ -286,14 +284,14 @@ describe("Account Controller", function () {
                 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
-            jest.spyOn(Account, "findByPk").mockImplementation(pk =>
+            jest.spyOn(Account, 'findByPk').mockImplementation(() =>
                 Promise.resolve({
-                    update: data => Promise.reject("error")
+                    update: () => Promise.reject('error')
                 })
             );
 
@@ -301,7 +299,7 @@ describe("Account Controller", function () {
 
             expect(status).toHaveBeenCalledWith(400);
 
-            expect(send).toHaveBeenCalledWith("error");
+            expect(send).toHaveBeenCalledWith('error');
         });
     });
 });

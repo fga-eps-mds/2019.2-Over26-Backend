@@ -1,31 +1,31 @@
-const overdraftDebtController = require("../../controllers").overdraftDebt;
-const overdraftUtils = require("../../utils/overdraftUtils");
-const OverdraftDebt = require("../../models").OverdraftDebt;
-const Overdraft = require("../../models").Overdraft;
-const User = require("../../models").User;
+const overdraftDebtController = require('../../controllers').overdraftDebt;
+const overdraftUtils = require('../../utils/overdraftUtils');
+const OverdraftDebt = require('../../models').OverdraftDebt;
+const Overdraft = require('../../models').Overdraft;
+const User = require('../../models').User;
 
-describe("OverdraftDebts Controller", function () {
-    describe("OverdraftDebt create", () => {
+describe('OverdraftDebts Controller', function () {
+    describe('OverdraftDebt create', () => {
         afterEach(() => {
             jest.restoreAllMocks();
             jest.resetAllMocks();
         });
-        it("returns the OverdraftDebt object created", async () => {
+        it('returns the OverdraftDebt object created', async () => {
             let req = {
                 params: {
                     id: 1
                 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
-            jest.spyOn(User, "findByPk").mockImplementation(id =>
+            jest.spyOn(User, 'findByPk').mockImplementation(() =>
                 Promise.resolve({
                     id: 1,
-                    createOverdraftDebt: data => {
+                    createOverdraftDebt: () => {
                         let entry = new Date();
                         return Promise.resolve({
                             userId: 1,
@@ -37,7 +37,7 @@ describe("OverdraftDebts Controller", function () {
                     }
                 })
             );
-            jest.spyOn(Overdraft, "findOne").mockImplementation(query =>
+            jest.spyOn(Overdraft, 'findOne').mockImplementation(() =>
                 Promise.resolve({
                     id: 1,
                     isActive: true,
@@ -46,7 +46,7 @@ describe("OverdraftDebts Controller", function () {
                     limitMax: 200,
                     limitUsed: 10,
                     firstUseDate: new Date(),
-                    update: data => {
+                    update: () => {
                         return Promise.resolve({
                             
                         });
@@ -55,8 +55,8 @@ describe("OverdraftDebts Controller", function () {
                 })
             );
             jest
-                .spyOn(overdraftUtils, "usabilityCheck")
-                .mockImplementation(id => Promise.resolve(false));
+                .spyOn(overdraftUtils, 'usabilityCheck')
+                .mockImplementation(() => Promise.resolve(false));
 
             await overdraftDebtController.create(req, res);
             let entry = new Date();
@@ -70,7 +70,7 @@ describe("OverdraftDebts Controller", function () {
             expect(send).toHaveBeenCalledWith(overdraft);
             expect(status).toHaveBeenCalledWith(201);
         });
-        it("Returns overdraft still haven't reached it's deadline or wasn't used", async () => {
+        it('Returns overdraft still haven\'t reached it\'s deadline or wasn\'t used', async () => {
 
             let req = {
                 params: {
@@ -78,15 +78,15 @@ describe("OverdraftDebts Controller", function () {
                 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
-            jest.spyOn(User, "findByPk").mockImplementation(id =>
+            jest.spyOn(User, 'findByPk').mockImplementation(() =>
                 Promise.resolve({
                     id: 1,
-                    createOverdraftDebt: data => {
+                    createOverdraftDebt: () => {
                         let entry = new Date();
                         return Promise.resolve({
                             userId: 1,
@@ -98,7 +98,7 @@ describe("OverdraftDebts Controller", function () {
                     }
                 })
             );
-            jest.spyOn(Overdraft, "findOne").mockImplementation(query =>
+            jest.spyOn(Overdraft, 'findOne').mockImplementation(() =>
                 Promise.resolve({
                     status: true,
                     limit: 200,
@@ -108,68 +108,68 @@ describe("OverdraftDebts Controller", function () {
                 })
             );
             jest
-                .spyOn(overdraftUtils, "usabilityCheck")
-                .mockImplementation(id => Promise.resolve(true));
+                .spyOn(overdraftUtils, 'usabilityCheck')
+                .mockImplementation(() => Promise.resolve(true));
 
-                await overdraftDebtController.create(req, res);
+            await overdraftDebtController.create(req, res);
 
             expect(status).toHaveBeenCalledWith(400);
-            expect(send).toHaveBeenCalledWith({"message": "overdraft still haven't reached it's deadline or wasn't used"});
+            expect(send).toHaveBeenCalledWith({'message': 'overdraft still haven\'t reached it\'s deadline or wasn\'t used'});
 
 
-        })
-        it("returns 400 on fails on find user", async () => {
+        });
+        it('returns 400 on fails on find user', async () => {
             let req = {
                 params: {
                     id: 1
                 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
             jest
-                .spyOn(User, "findByPk")
-                .mockImplementation(id => Promise.reject("error"));
+                .spyOn(User, 'findByPk')
+                .mockImplementation(() => Promise.reject('error'));
 
             await overdraftDebtController.create(req, res);
 
             expect(status).toHaveBeenCalledWith(400);
-            expect(send).toHaveBeenCalledWith("error");
+            expect(send).toHaveBeenCalledWith('error');
         });
-        it("returns 400 on fails on create overdraft", async () => {
+        it('returns 400 on fails on create overdraft', async () => {
             let req = {
                 params: {
                     id: 1
                 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
-            jest.spyOn(User, "findByPk").mockImplementation(id =>
-                Promise.reject("error")
+            jest.spyOn(User, 'findByPk').mockImplementation(() =>
+                Promise.reject('error')
             );
 
             await overdraftDebtController.create(req, res);
 
             expect(status).toHaveBeenCalledWith(400);
-            expect(send).toHaveBeenCalledWith("error");
+            expect(send).toHaveBeenCalledWith('error');
         });
     });
-    describe("OverdraftDebt getByPk", () => {
+    describe('OverdraftDebt getByPk', () => {
         afterEach(() => {
             jest.restoreAllMocks();
             jest.resetAllMocks();
         });
-        it("returns OverdraftDebt object on success", async () => {
+        it('returns OverdraftDebt object on success', async () => {
             let req = { params: { id: 1 } };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
@@ -184,7 +184,7 @@ describe("OverdraftDebts Controller", function () {
                 id: 1
             };
             jest
-                .spyOn(OverdraftDebt, "findByPk")
+                .spyOn(OverdraftDebt, 'findByPk')
                 .mockImplementation(() => Promise.resolve(overdraftDebt));
 
             await overdraftDebtController.getByPk(req, res);
@@ -192,41 +192,41 @@ describe("OverdraftDebts Controller", function () {
             expect(status).toHaveBeenCalledWith(200);
             expect(send).toHaveBeenCalledWith(overdraftDebt);
         });
-        it("returns 404 if overdraft not found", async () => {
+        it('returns 404 if overdraft not found', async () => {
             let req = { params: { id: 1 } };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
             jest
-                .spyOn(OverdraftDebt, "findByPk")
+                .spyOn(OverdraftDebt, 'findByPk')
                 .mockImplementation(() => Promise.resolve(null));
 
             await overdraftDebtController.getByPk(req, res);
 
             expect(status).toHaveBeenCalledWith(404);
             expect(send).toHaveBeenCalledWith({
-                message: "OverdraftDebt Not Found"
+                message: 'OverdraftDebt Not Found'
             });
         });
-        it("returns 400 on error", async () => {
+        it('returns 400 on error', async () => {
             let req = { params: { id: 1 } };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
             jest
-                .spyOn(OverdraftDebt, "findByPk")
-                .mockImplementation(() => Promise.reject("eeror"));
+                .spyOn(OverdraftDebt, 'findByPk')
+                .mockImplementation(() => Promise.reject('eeror'));
 
             await overdraftDebtController.getByPk(req, res);
 
             expect(status).toHaveBeenCalledWith(400);
-            expect(send).toHaveBeenCalledWith("error");
+            expect(send).toHaveBeenCalledWith('error');
         });
     });
 });
