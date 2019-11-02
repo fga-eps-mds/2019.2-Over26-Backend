@@ -1,4 +1,5 @@
 const Overdraft = require("../models").Overdraft;
+const OverdraftDebt = require("../models").OverdraftDebt;
 const User = require("../models").User;
 const OverdraftUtils = require("../utils/overdraftUtils");
 const OverdrafDebttUtils = require("../utils/overdraftDebtUtils")
@@ -170,20 +171,26 @@ module.exports = {
                 
                 const currentDate = new Date()
                
-                var Debt 
                 firstUseDate = new Date(currentDate.getTime() - (27 * 24 * 60 * 60 * 1000) )
                 console.log(firstUseDate)
                 id = req.body.id
-                console.log(idUser)
-               // Debt = await OverdrafDebttUtils.create(id);
-                return overdraft
-                    .update({
-                    
-                    firstUseDate : new Date(currentDate.getTime() - (27 * 24 * 60 * 60 * 1000) )
-                })
-                
-                .then(() => res.status(200).send(firstUseDate))
-                .catch(error => res.status(400).send(error));
+
+             await overdraft.update({
+                 firstUseDate:firstUseDate
+             })
+
+             console.log("passo2")
+
+              const  debt = await OverdrafDebttUtils.create(id);
+
+                if(debt)
+                {
+                    return res.status(201).send(debt);
+                }
+                else
+                {
+                    return res.status(400).send({message: "It was not possoble to create the debt"});
+                }
             }
             )
 

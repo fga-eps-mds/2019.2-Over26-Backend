@@ -1,6 +1,7 @@
 const OverdraftDebt = require("../models").OverdraftDebt;
-const Overdraf = require("../models").Overdraft;
+const Overdraft = require("../models").Overdraft;
 const OverdraftUtils = require("../utils/overdraftUtils");
+const User = require("../models").User
 
 module.exports = {
     returnInstalmentValue(quantityInstalment, id) {
@@ -65,19 +66,21 @@ module.exports = {
     },
 
     create(id) {
-        console.log("Aqui")
-        return Overdraft.findByPk(id)
-            .then(overdraft => {
-                if (!overdraft) {
-                    return res.status(404).send({
-                        message: "Overdraft Not Found"
-                    })
+        console.log("passo3")
+        return User.findByPk(id)
+            .then(user => {
+                console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                return Overdraft.findOne({
+                    where: {
+                        userId: user.id,
+                        isBlocked:false
+                    }
+                })
                     .then(async overdraft => {
                         if (!(await OverdraftUtils.usabilityCheck(overdraft.userId))) {
                             const rate = 0.003182;
-
-                            console.log("Aqui2")
-
+console.log("Overdraft.id:");
+console.log(overdraft.id);
                             const firstUseDate = overdraft.firstUseDate;
 
                             const entryDate = firstUseDate;
@@ -90,8 +93,6 @@ module.exports = {
 
                             const isDivided = false;
                             const userId = user.id;
-
-                            
                             return user.createOverdraftDebt({
                                 userId: userId,
                                 entryDate: entryDate,
@@ -99,22 +100,24 @@ module.exports = {
                                 rate: rate,
                                 isDivided: isDivided
                             }).then(async overdraftDebt => {
+                                console.log("overdraftDebt:")
+                                console.log(overdraftDebt)
                                 await overdraft.update({
                                     isBlocked: true,
                                     limitUsed:0
                                 })
-                                return res.status(201).send(overdraftDebt)
+                                console.log("overdraftDebt segundaVez:")
+                                console.log(overdraftDebt)
+                                return overdraftDebt;
                             });
                         } else {
-                            return res.status(400).send({
-                                message: "overdraft still haven't reached it's deadline or wasn't used"
-                            });
+                            return null;
                         }
                     })
 
-                    .catch(error => res.status(400).send('error'));
-            }})
-            .catch(error => res.status(400).send('error'));
+                    .catch(error => {return null});
+                })
+            .catch(error => {return null});
 
     },
 }
