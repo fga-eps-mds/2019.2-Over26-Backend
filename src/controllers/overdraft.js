@@ -147,7 +147,7 @@ module.exports = {
                 }
                 return overdraft
                     .update({
-                        isBlocked: true
+                        isActive: false
                     })
                     .then(() => res.status(200).send(overdraft))
                     .catch(error => res.status(400).send(error));
