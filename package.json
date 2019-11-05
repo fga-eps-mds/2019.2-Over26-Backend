@@ -5,10 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start": "sequelize db:migrate && node ./src/bin/www",
-    "dev": "sequelize db:migrate && nodemon ./src/bin/www",
+    "dev": "sequelize-cli db:migrate && nodemon ./src/bin/www",
     "test": "export NODE_ENV=test && sequelize db:drop || true && sequelize db:create && sequelize db:migrate &&  jest  ./src/tests --forceExit",
-    "test:coverage": "export NODE_ENV=test && sequelize db:drop || true && sequelize db:create && sequelize db:migrate &&  jest  ./src/tests --forceExit --coverage && codecov -t a3a183a9-02b0-4328-9f31-6fa485bb7adf",
-    "test:watch": "export NODE_ENV=test && sequelize db:drop || true && sequelize db:create && sequelize db:migrate &&  jest  ./src/tests --forceExit --coverage --watch"
+    "test:coverage": "export NODE_ENV=test && sequelize db:drop || true && sequelize db:create && sequelize db:migrate &&  jest  ./src/tests --forceExit --coverage",
+    "test:watch": "export NODE_ENV=test && sequelize db:drop || true && sequelize db:create && sequelize db:migrate &&  jest  ./src/tests --forceExit --coverage --watch",
+    "lint": "./node_modules/.bin/eslint . --fix",
+    "test:lint": "./node_modules/.bin/eslint ."
   },
   "keywords": [],
   "author": "",
@@ -25,6 +27,7 @@
   },
   "devDependencies": {
     "codecov": "^3.6.1",
+    "eslint": "^6.6.0",
     "jest": "^24.9.0",
     "nodemon": "^1.19.2",
     "sequelize-cli": "^5.5.1",

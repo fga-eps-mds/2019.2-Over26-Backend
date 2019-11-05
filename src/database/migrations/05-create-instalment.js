@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 module.exports = {
     up: (queryInterface, Sequelize) => {
-        return queryInterface.createTable("Instalments", {
+        return queryInterface.createTable('Instalments', {
             id: {
                 type: Sequelize.BIGINT,
                 primaryKey: true,
@@ -23,12 +23,12 @@ module.exports = {
             },
             overdraftDebtId: {
                 type: Sequelize.INTEGER,
-                onDelete: "CASCADE",
+                onDelete: 'CASCADE',
                 allowNull: false,
                 references: {
-                    model: "OverdraftDebts",
-                    key: "id",
-                    as: "overdraftDebtId"
+                    model: 'OverdraftDebts',
+                    key: 'id',
+                    as: 'overdraftDebtId'
                 }
             },
             createdAt: {
@@ -42,6 +42,6 @@ module.exports = {
         });
     },
     down: (queryInterface, Sequelize) => {
-        return queryInterface.dropTable("Instalments");
+        return queryInterface.dropTable('Instalments');
     }
 };

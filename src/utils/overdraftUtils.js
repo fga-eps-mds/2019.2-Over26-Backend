@@ -1,4 +1,4 @@
-const Overdraft = require("../models").Overdraft;
+const Overdraft = require('../models').Overdraft;
 
 module.exports = {
     usabilityCheck(id) {
@@ -33,4 +33,4 @@ module.exports = {
 
 
 
-}
+};

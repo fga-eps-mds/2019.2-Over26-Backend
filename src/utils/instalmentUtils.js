@@ -1,10 +1,10 @@
-const OverdraftDebt = require("../models").OverdraftDebt;
-const Instalment = require("../models").Instalment;
+const OverdraftDebt = require('../models').OverdraftDebt;
+const Instalment = require('../models').Instalment;
 
 module.exports = {
     creatInstalment(value, dueDate, overdraftDebtId) {
         return OverdraftDebt.findByPk(overdraftDebtId)
-        .then(overdraftDebt=>{
+            .then(overdraftDebt=>{
                 return Instalment.create({
                     overdraftDebtId:overdraftDebt.id,
                     isPaid: false,
@@ -12,11 +12,11 @@ module.exports = {
                     dueDate: dueDate,
                 })
                     .then(instalment => {
-                        return instalment
+                        return instalment;
                    
-            })
+                    });
 
-        }).catch(error => error)
+            }).catch(error => error);
     }
 
 };

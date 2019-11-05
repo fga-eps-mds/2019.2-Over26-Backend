@@ -1,15 +1,10 @@
 
-const OverdraftDebt = require("../models").OverdraftDebt;
-const User = require("../models").User;
-const Overdraft = require("../models").Overdraft;
-const Instalment = require("../models").Instalment;
-const overdraftController = require('./overdraft');
-const OverdraftUtils = require("../utils/overdraftUtils");
-const OverdraftDebtUtils = require("../utils/overdraftDebtUtils");
-const InstalmentUtils = require("../utils/instalmentUtils");
-
-
-
+const OverdraftDebt = require('../models').OverdraftDebt;
+const User = require('../models').User;
+const Overdraft = require('../models').Overdraft;
+const OverdraftUtils = require('../utils/overdraftUtils');
+const OverdraftDebtUtils = require('../utils/overdraftDebtUtils');
+const InstalmentUtils = require('../utils/instalmentUtils');
 
 
 module.exports = {
@@ -48,19 +43,19 @@ module.exports = {
                                 await overdraft.update({
                                     isBlocked: true,
                                     limitUsed:0
-                                })
-                                return res.status(201).send(overdraftDebt)
+                                });
+                                return res.status(201).send(overdraftDebt);
                             });
                         } else {
                             return res.status(400).send({
-                                message: "overdraft still haven't reached it's deadline or wasn't used"
+                                message: 'overdraft still haven\'t reached it\'s deadline or wasn\'t used'
                             });
                         }
                     })
 
-                    .catch(error => res.status(400).send('error'));
+                    .catch(() => res.status(400).send('error'));
             })
-            .catch(error => res.status(400).send('error'));
+            .catch(() => res.status(400).send('error'));
 
     },
     getByPk(req, res) {
@@ -68,12 +63,12 @@ module.exports = {
             .then(overdraftDebt => {
                 if (!overdraftDebt) {
                     return res.status(404).send({
-                        message: "OverdraftDebt Not Found"
+                        message: 'OverdraftDebt Not Found'
                     });
                 }
                 return res.status(200).send(overdraftDebt);
             })
-            .catch(error => res.status(400).send("error"));
+            .catch(() => res.status(400).send('error'));
     },
     getInstalmentsOptions(req, res) {
 
@@ -85,7 +80,7 @@ module.exports = {
 
                 if (!overdraftDebt) {
                     return res.status(404).send({
-                        message: "OverdraftDebt Not Found"
+                        message: 'OverdraftDebt Not Found'
                     });
                 }
                 const instalmentValue = await OverdraftDebtUtils.returnInstalmentValue(req.body.quantityInstalment, overdraftDebt.userId);
@@ -93,12 +88,12 @@ module.exports = {
                 const dateOptionsForInstalments = await OverdraftDebtUtils.returnInstalmentDates(req.body.day, req.body.quantityInstalment, overdraftDebt.userId);
 
                 return res.status(200).send({
-                    "valueOfIndividualInstalment": instalmentValue,
-                    "dateOptionsForInstalments": dateOptionsForInstalments,
+                    'valueOfIndividualInstalment': instalmentValue,
+                    'dateOptionsForInstalments': dateOptionsForInstalments,
 
-                })
+                });
             })
-            .catch(error => res.status(400).send("error"));
+            .catch(() => res.status(400).send('error'));
     },
     checkAmount(req, res) {
         return OverdraftDebt.findOne({
@@ -108,18 +103,18 @@ module.exports = {
             .then(async overdraftDebt => {
                 if (!overdraftDebt) {
                     return res.status(404).send({
-                        message: "OverdraftDebt Not Found"
+                        message: 'OverdraftDebt Not Found'
                     });
                 }
 
                 const totalAmount = await OverdraftDebtUtils.returnInstalmentValue(1, overdraftDebt.userId);
 
                 return res.status(200).send({
-                    "totalAmount": totalAmount,
+                    'totalAmount': totalAmount,
                 });
 
             })
-            .catch(error => res.status(400).send("error"));
+            .catch(() => res.status(400).send('error'));
     },
     createInstalments(req, res) {
         return OverdraftDebt.findOne({
@@ -134,7 +129,7 @@ module.exports = {
             .then(async overdraftDebt => {
                 if (!overdraftDebt) {
                     return res.status(404).send({
-                        message: "Non divided OverdraftDebt Not Found"
+                        message: 'Non divided OverdraftDebt Not Found'
                     });
                 }
                 const instalmentValue = await OverdraftDebtUtils.returnInstalmentValue(req.body.quantityInstalment, overdraftDebt.userId);
@@ -153,17 +148,17 @@ module.exports = {
                     isDivided: true,
                     dueDay: parseInt(dueDay, 10),
                     quantityInstalment: parseInt(quantityInstalment, 10),
-                })
+                });
                 return Overdraft.findByPk(overdraftDebt.userId)
                     .then(overdraft => {
                         overdraft.update({
                             isBlocked: false
-                        })
+                        });
 
-                        return res.status(200).send(instalments)
-                    })
+                        return res.status(200).send(instalments);
+                    });
 
             })
-            .catch(error => res.status(400).send({ "message": "couldn't create instalments" }));
+            .catch(() => res.status(400).send({ 'message': 'couldn\'t create instalments' }));
     },
 };

@@ -1,23 +1,22 @@
-const transactionController = require("../../controllers").transaction;
-const Transaction = require("../../models").Transaction;
-const User = require("../../models").User;
+const transactionController = require('../../controllers').transaction;
+const Transaction = require('../../models').Transaction;
 
-describe("Transactions Controller", function () {
-    describe("Transaction list", () => {
+describe('Transactions Controller', function () {
+    describe('Transaction list', () => {
         afterEach(() => {
             jest.restoreAllMocks();
             jest.resetAllMocks();
         });
-        it("returns empty list if there is no transaction", async () => {
+        it('returns empty list if there is no transaction', async () => {
             let req = {};
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
             jest
-                .spyOn(Transaction, "findAll")
+                .spyOn(Transaction, 'findAll')
                 .mockImplementation(() => Promise.resolve([]));
 
             await transactionController.list(req, res);
@@ -25,34 +24,34 @@ describe("Transactions Controller", function () {
             expect(status).toHaveBeenCalledWith(200);
             expect(send).toHaveBeenCalledWith([]);
         });
-        it("returns 400 on error", async () => {
+        it('returns 400 on error', async () => {
             let req = {};
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
             jest
-                .spyOn(Transaction, "findAll")
-                .mockImplementation(() => Promise.reject("error"));
+                .spyOn(Transaction, 'findAll')
+                .mockImplementation(() => Promise.reject('error'));
 
             await transactionController.list(req, res);
 
             expect(status).toHaveBeenCalledWith(400);
-            expect(send).toHaveBeenCalledWith("error");
+            expect(send).toHaveBeenCalledWith('error');
         });
     });
 
-    describe("Transaction getByPk", () => {
+    describe('Transaction getByPk', () => {
         afterEach(() => {
             jest.restoreAllMocks();
             jest.resetAllMocks();
         });
-        it("returns Transaction object on success", async () => {
+        it('returns Transaction object on success', async () => {
             let req = { params: { id: 1 } };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
@@ -68,7 +67,7 @@ describe("Transactions Controller", function () {
                 id: 1
             };
             jest
-                .spyOn(Transaction, "findByPk")
+                .spyOn(Transaction, 'findByPk')
                 .mockImplementation(() => Promise.resolve(transaction));
 
             await transactionController.getByPk(req, res);
@@ -76,41 +75,41 @@ describe("Transactions Controller", function () {
             expect(status).toHaveBeenCalledWith(200);
             expect(send).toHaveBeenCalledWith(transaction);
         });
-        it("returns 404 if transaction not found", async () => {
+        it('returns 404 if transaction not found', async () => {
             let req = { params: { id: 1 } };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
             jest
-                .spyOn(Transaction, "findByPk")
+                .spyOn(Transaction, 'findByPk')
                 .mockImplementation(() => Promise.resolve(null));
 
             await transactionController.getByPk(req, res);
 
             expect(status).toHaveBeenCalledWith(404);
             expect(send).toHaveBeenCalledWith({
-                message: "Transaction Not Found"
+                message: 'Transaction Not Found'
             });
         });
-        it("returns 400 on error", async () => {
+        it('returns 400 on error', async () => {
             let req = { params: { id: 1 } };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
             jest
-                .spyOn(Transaction, "findByPk")
-                .mockImplementation(() => Promise.reject("error"));
+                .spyOn(Transaction, 'findByPk')
+                .mockImplementation(() => Promise.reject('error'));
 
             await transactionController.getByPk(req, res);
 
             expect(status).toHaveBeenCalledWith(400);
-            expect(send).toHaveBeenCalledWith("error");
+            expect(send).toHaveBeenCalledWith('error');
         });
-    })
+    });
 });
