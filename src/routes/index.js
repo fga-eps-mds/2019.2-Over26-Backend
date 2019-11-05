@@ -9,13 +9,9 @@ const transactionController = require('../controllers').transaction;
 const instalmentController = require('../controllers').instalment;
 const startController = require('../controllers').start;
 
-/* GET Home */
-router.get('/', function (req, res, next) {
-    res.send('respond witsh a resource');
-});
 
-router.get("/transaction", function (req, res) {
-    res.sendFile("/app/src/views/index.html");
+router.get('/transaction', function (req, res) {
+    res.sendFile('/app/src/views/index.html');
 });
 
 /* Overdraft Router */
@@ -27,7 +23,7 @@ router.put('/api/users/:id/overdrafts/activate', overdraftController.activateCre
 router.put('/api/users/:id/overdrafts/cancel', overdraftController.cancelCredit);
 router.put('/api/users/:id/overdrafts', overdraftController.updateCreditLimit);
 router.delete('/api/users/:id/overdrafts', overdraftController.delete);
-router.get('/api/users/:id/overdrafts/usability', overdraftController.checkUsability)
+router.get('/api/users/:id/overdrafts/usability', overdraftController.checkUsability);
 
 /* Account Router */
 router.get('/api/accounts/:id', accountController.getByPk);
@@ -54,10 +50,27 @@ router.get('/api/transactions/:id', transactionController.getByPk);
 
 /* Instalments Router */
 router.post('/api/instalments/:id', overdraftDebtController.createInstalments);
-router.get("/api/overdraftDebt/:overdraftDebtId/listInstalments",instalmentController.listByDebt);
+router.get('/api/overdraftDebt/:overdraftDebtId/listInstalments',instalmentController.listByDebt);
 router.put('/api/payinstalments/:id', instalmentController.payInstalment);
 
 /* Start Router */
 router.post('/api/start', startController.startApp);
+
+/* GET properties listing. */
+// router.get("/", function(req, res, next) {
+//     res.send(routeList.join("</br>"));
+//   });
+//   let routeList = router.stack.map(r => {
+//     if (r.route && r.route.path) {
+//       return (
+//         r.route.path +
+//         " : " +
+//         Object.keys(r.route.methods)
+//           .map(m => (r.route.methods[m] ? `${m}` : ``))
+//           .join(",")
+//       );
+//     }
+//   });
+  
 
 module.exports = router;

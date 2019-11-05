@@ -20,14 +20,14 @@ module.exports = {
                 const dateDiffDays = dateDiff / 86400000;
                 const dateDiffDaysRound = ((dateDiffDays).toFixed(0));
 
-                const totalAmount = overdraftDebt.amount * Math.pow(1 + overdraftDebt.rate, dateDiffDaysRound)
+                const totalAmount = overdraftDebt.amount * Math.pow(1 + overdraftDebt.rate, dateDiffDaysRound);
                 
                 const instalmentValue = totalAmount / quantityInstalment;//is the value of each instalment
               
 
                 return instalmentValue;
 
-            })
+            });
 
 
     },

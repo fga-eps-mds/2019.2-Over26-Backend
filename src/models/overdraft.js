@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 module.exports = (sequelize, DataTypes) => {
-    const Overdraft = sequelize.define("Overdraft", {
+    const Overdraft = sequelize.define('Overdraft', {
         isActive: DataTypes.BOOLEAN,
         isBlocked: DataTypes.BOOLEAN,
         limit: DataTypes.DECIMAL(10, 2),
@@ -8,11 +8,11 @@ module.exports = (sequelize, DataTypes) => {
         limitUsed: DataTypes.DECIMAL(10, 2),
         firstUseDate: DataTypes.DATE
     });
-  Overdraft.associate = function(models) {
-    Overdraft.belongsTo(models.User,{ 
-      foreignKey: "id",
-      as: "userId"
-    })
-  };
-  return Overdraft;
+    Overdraft.associate = function(models) {
+        Overdraft.belongsTo(models.User,{ 
+            foreignKey: 'id',
+            as: 'userId'
+        });
+    };
+    return Overdraft;
 };

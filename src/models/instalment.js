@@ -1,15 +1,15 @@
-"use strict";
+'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Instalment = sequelize.define("Instalment", {
-    isPaid: DataTypes.BOOLEAN,
-    value: DataTypes.FLOAT,
-    dueDate: DataTypes.DATE
-  });
-  Instalment.associate = function (models) {
+    const Instalment = sequelize.define('Instalment', {
+        isPaid: DataTypes.BOOLEAN,
+        value: DataTypes.FLOAT,
+        dueDate: DataTypes.DATE
+    });
+    Instalment.associate = function (models) {
 
-    Instalment.belongsTo(models.OverdraftDebt, {
-      foreignKey: "id",
-    })
-  };
-  return Instalment;
+        Instalment.belongsTo(models.OverdraftDebt, {
+            foreignKey: 'id',
+        });
+    };
+    return Instalment;
 };

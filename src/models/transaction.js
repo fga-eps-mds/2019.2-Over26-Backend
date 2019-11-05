@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 module.exports = (sequelize, DataTypes) => {
-    const Transaction = sequelize.define("Transaction", {
+    const Transaction = sequelize.define('Transaction', {
 
         name: DataTypes.STRING(30),
         date: DataTypes.DATE,
@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     });
     Transaction.associate = function (models) {
         Transaction.belongsTo(models.Account, {
-            foreignKey: "id",
+            foreignKey: 'id',
             //as: "account"
         });
     };

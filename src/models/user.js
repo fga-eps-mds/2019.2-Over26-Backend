@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 module.exports = (sequelize, DataTypes) => {
-    const User = sequelize.define("User", {
+    const User = sequelize.define('User', {
         cpf: DataTypes.BIGINT,
         name: DataTypes.STRING,
         email: DataTypes.STRING,
@@ -9,16 +9,16 @@ module.exports = (sequelize, DataTypes) => {
     });
     User.associate = function (models) {
         User.hasOne(models.Account, {
-            foreignKey: "userId",
-            as: "account"
+            foreignKey: 'userId',
+            as: 'account'
         });
         User.hasOne(models.Overdraft, {
-            foreignKey: "userId",
-            as: "overdraft"
+            foreignKey: 'userId',
+            as: 'overdraft'
         });
         User.hasMany(models.OverdraftDebt, {
-            foreignKey: "userId",
-            as: "overdraftDebt"
+            foreignKey: 'userId',
+            as: 'overdraftDebt'
         });
     };
     return User;

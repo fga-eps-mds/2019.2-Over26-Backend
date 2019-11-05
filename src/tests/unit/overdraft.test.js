@@ -1,23 +1,23 @@
-const overdraftController = require("../../controllers").overdraft;
-const Overdraft = require("../../models").Overdraft;
-const User = require("../../models").User;
+const overdraftController = require('../../controllers').overdraft;
+const Overdraft = require('../../models').Overdraft;
+const User = require('../../models').User;
 
-describe("Overdrafts Controller", function () {
-    describe("Overdraft list", () => {
+describe('Overdrafts Controller', function () {
+    describe('Overdraft list', () => {
         afterEach(() => {
             jest.restoreAllMocks();
             jest.resetAllMocks();
         });
-        it("returns empty list if there is no overdraft", async () => {
+        it('returns empty list if there is no overdraft', async () => {
             let req = {};
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
             jest
-                .spyOn(Overdraft, "findAll")
+                .spyOn(Overdraft, 'findAll')
                 .mockImplementation(() => Promise.resolve([]));
 
             await overdraftController.list(req, res);
@@ -25,30 +25,30 @@ describe("Overdrafts Controller", function () {
             expect(status).toHaveBeenCalledWith(200);
             expect(send).toHaveBeenCalledWith([]);
         });
-        it("returns 400 on error", async () => {
+        it('returns 400 on error', async () => {
             let req = {};
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
             jest
-                .spyOn(Overdraft, "findAll")
-                .mockImplementation(() => Promise.reject("error"));
+                .spyOn(Overdraft, 'findAll')
+                .mockImplementation(() => Promise.reject('error'));
 
             await overdraftController.list(req, res);
 
             expect(status).toHaveBeenCalledWith(400);
-            expect(send).toHaveBeenCalledWith("error");
+            expect(send).toHaveBeenCalledWith('error');
         });
     });
-    describe("Overdraft create", () => {
+    describe('Overdraft create', () => {
         afterEach(() => {
             jest.restoreAllMocks();
             jest.resetAllMocks();
         });
-        it("returns user not found", async () => {
+        it('returns user not found', async () => {
             let req = {
                 params: {
                     id: 1
@@ -56,7 +56,7 @@ describe("Overdrafts Controller", function () {
             };
             
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
 
             const res = {
                 status
@@ -67,29 +67,29 @@ describe("Overdrafts Controller", function () {
             
 
             expect(status).toHaveBeenCalledWith(404);
-            expect(send).toHaveBeenCalledWith({ "message": "User not found" });
+            expect(send).toHaveBeenCalledWith({ 'message': 'User not found' });
 
-        })
+        });
 
-        it("returns the Overdraft object created", async () => {
+        it('returns the Overdraft object created', async () => {
             let req = {
                 params: {
                     id: 1
                 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
-            jest.spyOn(User, "findByPk").mockImplementation(id =>
+            jest.spyOn(User, 'findByPk').mockImplementation(() =>
                 Promise.resolve({
                     id: 1,
                     createOverdraft: data => {
-                        data["id"] = 1;
-                        data["updatedAt"] = Math.floor(new Date().getTime() / 1000);
-                        data["createdAt"] = Math.floor(new Date().getTime() / 1000);
+                        data['id'] = 1;
+                        data['updatedAt'] = Math.floor(new Date().getTime() / 1000);
+                        data['createdAt'] = Math.floor(new Date().getTime() / 1000);
                         return Promise.resolve(data);
                     }
                 })
@@ -111,61 +111,61 @@ describe("Overdrafts Controller", function () {
             expect(status).toHaveBeenCalledWith(201);
             expect(send).toHaveBeenCalledWith(overdraft);
         });
-        it("returns 400 on fails on find user", async () => {
+        it('returns 400 on fails on find user', async () => {
             let req = {
                 params: {
                     id: 1
                 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
             jest
-                .spyOn(User, "findByPk")
-                .mockImplementation(id => Promise.reject("error"));
+                .spyOn(User, 'findByPk')
+                .mockImplementation(() => Promise.reject('error'));
 
             await overdraftController.create(req, res);
 
             expect(status).toHaveBeenCalledWith(400);
-            expect(send).toHaveBeenCalledWith("error");
+            expect(send).toHaveBeenCalledWith('error');
         });
-        it("returns 400 on fails on create overdraft", async () => {
+        it('returns 400 on fails on create overdraft', async () => {
             let req = {
                 params: {
                     id: 1
                 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
-            jest.spyOn(User, "findByPk").mockImplementation(id =>
+            jest.spyOn(User, 'findByPk').mockImplementation(() =>
                 Promise.resolve({
                     id: 1,
-                    createOverdraft: data => Promise.reject("error")
+                    createOverdraft: () => Promise.reject('error')
                 })
             );
 
             await overdraftController.create(req, res);
 
             expect(status).toHaveBeenCalledWith(400);
-            expect(send).toHaveBeenCalledWith("error");
+            expect(send).toHaveBeenCalledWith('error');
         });
     });
-    describe("Overdraft getByPk", () => {
+    describe('Overdraft getByPk', () => {
         afterEach(() => {
             jest.restoreAllMocks();
             jest.resetAllMocks();
         });
-        it("returns Overdraft object on success", async () => {
+        it('returns Overdraft object on success', async () => {
             let req = { params: { id: 1 } };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
@@ -182,7 +182,7 @@ describe("Overdrafts Controller", function () {
                 id: 1
             };
             jest
-                .spyOn(Overdraft, "findByPk")
+                .spyOn(Overdraft, 'findByPk')
                 .mockImplementation(() => Promise.resolve(overdraft));
 
             await overdraftController.getByPk(req, res);
@@ -190,61 +190,61 @@ describe("Overdrafts Controller", function () {
             expect(status).toHaveBeenCalledWith(200);
             expect(send).toHaveBeenCalledWith(overdraft);
         });
-        it("returns 404 if overdraft not found", async () => {
+        it('returns 404 if overdraft not found', async () => {
             let req = { params: { id: 1 } };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
             jest
-                .spyOn(Overdraft, "findByPk")
+                .spyOn(Overdraft, 'findByPk')
                 .mockImplementation(() => Promise.resolve(null));
 
             await overdraftController.getByPk(req, res);
 
             expect(status).toHaveBeenCalledWith(404);
             expect(send).toHaveBeenCalledWith({
-                message: "Overdraft Not Found"
+                message: 'Overdraft Not Found'
             });
         });
-        it("returns 400 on error", async () => {
+        it('returns 400 on error', async () => {
             let req = { params: { id: 1 } };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
             jest
-                .spyOn(Overdraft, "findByPk")
-                .mockImplementation(() => Promise.reject("eeror"));
+                .spyOn(Overdraft, 'findByPk')
+                .mockImplementation(() => Promise.reject('eeror'));
 
             await overdraftController.getByPk(req, res);
 
             expect(status).toHaveBeenCalledWith(400);
-            expect(send).toHaveBeenCalledWith("error");
+            expect(send).toHaveBeenCalledWith('error');
         });
     });
-    describe("Overdraft delete", () => {
+    describe('Overdraft delete', () => {
         afterEach(() => {
             jest.restoreAllMocks();
             jest.resetAllMocks();
         });
-        it("returns 204 on sucess", async () => {
+        it('returns 204 on sucess', async () => {
             let req = {
                 params: {
                     id: 1
                 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
-            jest.spyOn(Overdraft, "findByPk").mockImplementation(pk =>
+            jest.spyOn(Overdraft, 'findByPk').mockImplementation(() =>
                 Promise.resolve({
                     destroy: () => Promise.resolve()
                 })
@@ -255,72 +255,72 @@ describe("Overdrafts Controller", function () {
             expect(status).toHaveBeenCalledWith(204);
             expect(send).toHaveBeenCalledWith();
         });
-        it("returns 404 when overdraft not found", async () => {
+        it('returns 404 when overdraft not found', async () => {
             let req = {
                 params: {
                     id: 1
                 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
             jest
-                .spyOn(Overdraft, "findByPk")
-                .mockImplementation(pk => Promise.resolve(null));
+                .spyOn(Overdraft, 'findByPk')
+                .mockImplementation(() => Promise.resolve(null));
 
             await overdraftController.delete(req, res);
 
             expect(status).toHaveBeenCalledWith(404);
             expect(send).toHaveBeenCalledWith({
-                message: "Overdraft Not Found"
+                message: 'Overdraft Not Found'
             });
         });
-        it("returns 400 when error on find overdraft", async () => {
+        it('returns 400 when error on find overdraft', async () => {
             let req = {
                 params: {
                     id: 1
                 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
             jest
-                .spyOn(Overdraft, "findByPk")
-                .mockImplementation(pk => Promise.reject("error"));
+                .spyOn(Overdraft, 'findByPk')
+                .mockImplementation(() => Promise.reject('error'));
 
             await overdraftController.delete(req, res);
 
             expect(status).toHaveBeenCalledWith(400);
-            expect(send).toHaveBeenCalledWith("error");
+            expect(send).toHaveBeenCalledWith('error');
         });
-        it("returns 400 when error on destoy overdraft", async () => {
+        it('returns 400 when error on destoy overdraft', async () => {
             let req = {
                 params: {
                     id: 1
                 }
             };
             let send = jest.fn(data => ({ data }));
-            let status = jest.fn(code => ({ send }));
+            let status = jest.fn(() => ({ send }));
             const res = {
                 status
             };
 
-            jest.spyOn(Overdraft, "findByPk").mockImplementation(pk =>
+            jest.spyOn(Overdraft, 'findByPk').mockImplementation(() =>
                 Promise.resolve({
-                    destroy: () => Promise.reject("error")
+                    destroy: () => Promise.reject('error')
                 })
             );
 
             await overdraftController.delete(req, res);
 
             expect(status).toHaveBeenCalledWith(400);
-            expect(send).toHaveBeenCalledWith("error");
+            expect(send).toHaveBeenCalledWith('error');
         });
     });
 });
