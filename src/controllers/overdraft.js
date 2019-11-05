@@ -179,8 +179,6 @@ module.exports = {
                  firstUseDate:firstUseDate
              })
 
-             console.log("passo2")
-
               const  debt = await OverdrafDebttUtils.create(id);
 
                 if(debt)
@@ -189,7 +187,7 @@ module.exports = {
                 }
                 else
                 {
-                    return res.status(400).send({message: "It was not possoble to create the debt"});
+                    return res.status(400).send({message: "It was not possible to create the debt"});
                 }
             }
             )
