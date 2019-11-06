@@ -229,4 +229,75 @@ describe('OverdraftDebts Controller', function () {
             expect(send).toHaveBeenCalledWith('error');
         });
     });
+
+    describe('overdraftDebt debtsList', () => {
+
+        it('returns \'not found\' message', async () => {
+            let req = {
+                params: {
+                    userId: 1
+                }
+            };
+
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+
+            const res = {
+                status
+            };
+
+            jest
+                .spyOn(OverdraftDebt, 'findAll')
+                .mockImplementation(() => Promise.resolve(
+                    []
+                ));
+
+            await overdraftDebtController.debtsList(req, res);
+
+            expect(status).toHaveBeenCalledWith(404);
+            expect(send).toHaveBeenCalledWith({ 'message': 'Debts not found' });
+
+
+        });
+        it('returns debt array', async () => {
+            let req = {
+                params: {
+                    userId: 1
+                }
+            };
+
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+
+            const res = {
+                status
+            };
+            let date = new Date();
+
+            let overdraftDebt = {
+                entryDate: date,
+                amount: 100,
+                rate: 5,
+                isDivided: true,
+                dueDay: 5,
+                quantityInstalment: 10,
+
+            };
+
+            jest
+                .spyOn(OverdraftDebt, 'findAll')
+                .mockImplementation(() => Promise.resolve(
+                    [overdraftDebt]
+                ));
+
+            await overdraftDebtController.debtsList(req, res);
+
+            expect(status).toHaveBeenCalledWith(200);
+            expect(send).toHaveBeenCalledWith([overdraftDebt]);
+
+
+        });
+
+    });
+
 });

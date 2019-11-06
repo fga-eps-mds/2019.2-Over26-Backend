@@ -165,7 +165,7 @@ module.exports = {
     debtsList(req, res) {
         return OverdraftDebt.findAll({
             where: {
-                id: req.params.id
+                userId: req.params.id
             }
         })
             .then(overdraftDebts=>{
