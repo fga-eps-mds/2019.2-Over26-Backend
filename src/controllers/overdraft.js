@@ -1,8 +1,8 @@
-const Overdraft = require("../models").Overdraft;
-const OverdraftDebt = require("../models").OverdraftDebt;
-const User = require("../models").User;
-const OverdraftUtils = require("../utils/overdraftUtils");
-const OverdrafDebttUtils = require("../utils/overdraftDebtUtils")
+const Overdraft = require('../models').Overdraft;
+const OverdraftDebt = require('../models').OverdraftDebt;
+const User = require('../models').User;
+const OverdraftUtils = require('../utils/overdraftUtils');
+const OverdrafDebttUtils = require('../utils/overdraftDebtUtils');
 
 module.exports = {
     list(req, res) {
@@ -165,32 +165,32 @@ module.exports = {
         }).then(async overdraft => {
             if (!overdraft) {
                 return res.status(404).send({
-                    message: "Overdraft Not Found"
+                    message: 'Overdraft Not Found'
                 });
-                }
-                
-                const currentDate = new Date()
-               
-                firstUseDate = new Date(currentDate.getTime() - (27 * 24 * 60 * 60 * 1000) )
-                console.log(firstUseDate)
-                id = req.body.id
-
-             await overdraft.update({
-                 firstUseDate:firstUseDate
-             })
-
-              const  debt = await OverdrafDebttUtils.create(id);
-
-                if(debt)
-                {
-                    return res.status(201).send(debt);
-                }
-                else
-                {
-                    return res.status(400).send({message: "It was not possible to create the debt"});
-                }
             }
-            )
+                
+            const currentDate = new Date();
+               
+            firstUseDate = new Date(currentDate.getTime() - (27 * 24 * 60 * 60 * 1000) );
+            console.log(firstUseDate);
+            id = req.body.id;
+
+            await overdraft.update({
+                firstUseDate:firstUseDate
+            });
+
+            const  debt = await OverdrafDebttUtils.create(id);
+
+            if(debt)
+            {
+                return res.status(201).send(debt);
+            }
+            else
+            {
+                return res.status(400).send({message: 'It was not possible to create the debt'});
+            }
+        }
+        )
 
             .catch(error => res.status(400).send(error));
     }

@@ -1,7 +1,7 @@
-const OverdraftDebt = require("../models").OverdraftDebt;
-const Overdraft = require("../models").Overdraft;
-const OverdraftUtils = require("../utils/overdraftUtils");
-const User = require("../models").User
+const OverdraftDebt = require('../models').OverdraftDebt;
+const Overdraft = require('../models').Overdraft;
+const OverdraftUtils = require('../utils/overdraftUtils');
+const User = require('../models').User;
 
 module.exports = {
     returnInstalmentValue(quantityInstalment, id) {
@@ -100,7 +100,7 @@ module.exports = {
                                 await overdraft.update({
                                     isBlocked: true,
                                     limitUsed:0
-                                })
+                                });
                                 return overdraftDebt;
                             });
                         } else {
@@ -108,9 +108,9 @@ module.exports = {
                         }
                     })
 
-                    .catch(error => {return null});
-                })
-            .catch(error => {return null});
+                    .catch(error => {return null;});
+            })
+            .catch(error => {return null;});
 
     },
-}
+};
