@@ -45,7 +45,7 @@ describe('Transactions Controller', function () {
         });
     });
 
-    describe('Make transaction', () => {
+    describe('Make transaction with success', () => {
 
         let transaction = {
             id: 1,
@@ -142,7 +142,7 @@ describe('Transactions Controller', function () {
             expect(send).toHaveBeenCalledWith(transaction);
         });
 
-        it ('returns Transaction object on cash out sucess', async ()=>{
+        it ('returns Transaction object on cash out sucess', async () => {
             let req = { 
                 body: { 
                     type: 'out',
@@ -164,7 +164,67 @@ describe('Transactions Controller', function () {
             expect(send).toHaveBeenCalledWith(transaction);
         })
     })
+    describe('Make Transaction with error', () => {
 
+        beforeEach(() => {
+            let account = {
+                id: 1,
+                agency: 123456,
+                number: 123456,
+                balance: 90.00,
+                createdAt: Math.floor(new Date().getTime() / 1000),
+                updatedAt: Math.floor(new Date().getTime() / 1000),
+                userId: 1,
+                createTransaction: () => {
+                    return Promise.resolve(null);
+                }
+            };
+
+            jest
+                .spyOn(Account, 'findByPk')
+                .mockImplementation(() => Promise.resolve(account));
+
+            let overdraft = {
+                id: 1,
+                isActive: true,
+                isBlocked: false,
+                limit: 200.00,
+                limitMax: 200.00,
+                limitUsed: 0.00,
+                firstUseDate: null,
+                createdAt: Math.floor(new Date().getTime() / 1000),
+                updatedAt: Math.floor(new Date().getTime() / 1000),
+                userId: 1
+            };
+            jest
+                .spyOn(Overdraft, 'findOne')
+                .mockImplementation(() => Promise.resolve(overdraft));
+        });
+        afterEach(() => {
+            jest.restoreAllMocks();
+            jest.resetAllMocks();
+        });
+        it('returns null when cash in with error', async () => {
+            let req = { 
+                body: { 
+                    type: 'in',
+                    description: 'test',
+                    value: 10,
+                    name: 'test',
+                    accountId: 1, 
+                } 
+            };
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+            const res = {
+                status
+            };
+
+            await transactionController.makeTransaction(req, res);
+
+            expect(status).toHaveBeenCalledWith(400);
+        })
+    })
     describe('Transaction getByPk', () => {
         afterEach(() => {
             jest.restoreAllMocks();
