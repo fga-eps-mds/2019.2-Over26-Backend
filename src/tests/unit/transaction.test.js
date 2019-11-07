@@ -141,6 +141,28 @@ describe('Transactions Controller', function () {
             expect(status).toHaveBeenCalledWith(201);
             expect(send).toHaveBeenCalledWith(transaction);
         });
+
+        it ('returns Transaction object on cash out sucess', async ()=>{
+            let req = { 
+                body: { 
+                    type: 'out',
+                    description: 'test',
+                    value: 10,
+                    name: 'test',
+                    accountId: 1, 
+                } 
+            };
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+            const res = {
+                status
+            };
+
+            await transactionController.makeTransaction(req, res);
+
+            expect(status).toHaveBeenCalledWith(201);
+            expect(send).toHaveBeenCalledWith(transaction);
+        })
     })
 
     describe('Transaction getByPk', () => {
