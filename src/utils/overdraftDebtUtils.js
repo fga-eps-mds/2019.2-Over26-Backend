@@ -28,8 +28,6 @@ module.exports = {
                 return instalmentValue;
 
             });
-
-
     },
 
     returnInstalmentDates(day, quantityInstalment, id) {
@@ -53,15 +51,9 @@ module.exports = {
 
                     dateOptionsForInstalments.push(new Date(currentDate.getFullYear(), (currentDate.getMonth() + counter), dueDay, 23, 59, 59, 999));
                     counter++;
-
                 }
-
-
                 return dateOptionsForInstalments;
-
-
             }
-
             );
     },
 
@@ -108,9 +100,9 @@ module.exports = {
                         }
                     })
 
-                    .catch(error => {return null;});
+                    .catch(() => {return null;});
             })
-            .catch(error => {return null;});
+            .catch(() => {return null;});
 
     },
 };

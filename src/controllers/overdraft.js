@@ -1,5 +1,4 @@
 const Overdraft = require('../models').Overdraft;
-const OverdraftDebt = require('../models').OverdraftDebt;
 const User = require('../models').User;
 const OverdraftUtils = require('../utils/overdraftUtils');
 const OverdrafDebttUtils = require('../utils/overdraftDebtUtils');
@@ -171,12 +170,11 @@ module.exports = {
                 
             const currentDate = new Date();
                
-            firstUseDate = new Date(currentDate.getTime() - (27 * 24 * 60 * 60 * 1000) );
-            console.log(firstUseDate);
-            id = req.body.id;
+            const firstUseDate = new Date(currentDate.getTime() - (27 * 24 * 60 * 60 * 1000) );
+            const id = req.body.id;
 
             await overdraft.update({
-                firstUseDate:firstUseDate
+                firstUseDate: firstUseDate
             });
 
             const  debt = await OverdrafDebttUtils.create(id);
