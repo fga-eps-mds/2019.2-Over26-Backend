@@ -98,7 +98,7 @@ module.exports = {
     },
     checkAmount(req, res) {
         return OverdraftDebt.findOne({
-            where: { id : req.params.id },
+            where: { id: req.params.id },
             //order: [['createdAt', 'DESC']]
         })
             .then(async overdraftDebt => {
@@ -107,8 +107,6 @@ module.exports = {
                         message: 'OverdraftDebt Not Found'
                     });
                 }
-                console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-                console.log(overdraftDebt.id)
                 if (!overdraftDebt.isDivided) {
                     const totalAmount = await OverdraftDebtUtils.returnInstalmentValue(1, overdraftDebt.userId);
                     return res.status(200).send({
@@ -132,7 +130,6 @@ module.exports = {
 
 
             })
-            .catch(() => res.status(400).send('error'));
     },
     createInstalments(req, res) {
         return OverdraftDebt.findOne({
