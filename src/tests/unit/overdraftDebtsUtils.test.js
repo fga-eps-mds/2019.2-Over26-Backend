@@ -99,7 +99,6 @@ describe('OverdraftDebtsUtils', function () {
             const res = {
                 status
             };
-
             jest.spyOn(User, 'findByPk').mockImplementation(() =>
                 Promise.resolve({
                     id: 1,
@@ -125,11 +124,9 @@ describe('OverdraftDebtsUtils', function () {
                     limitUsed: 10,
                     firstUseDate: new Date(),
                     update: () => {
-                        return Promise.resolve({
-                            
+                        return Promise.resolve({       
                         });
                     }
-                    
                 })
             );
             jest
@@ -149,7 +146,6 @@ describe('OverdraftDebtsUtils', function () {
             expect(status).toHaveBeenCalledWith(201);
         });
         it('Returns overdraft still haven\'t reached it\'s deadline or wasn\'t used', async () => {
-
             let req = {
                 params: {
                     id: 1
@@ -160,7 +156,6 @@ describe('OverdraftDebtsUtils', function () {
             const res = {
                 status
             };
-
             jest.spyOn(User, 'findByPk').mockImplementation(() =>
                 Promise.resolve({
                     id: 1,
@@ -190,10 +185,7 @@ describe('OverdraftDebtsUtils', function () {
                 .mockImplementation(() => Promise.resolve(true));
 
             await overdraftDebtUtils.create(req, res);
-
-
         });
-
     });
 
 });

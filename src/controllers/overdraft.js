@@ -168,8 +168,7 @@ module.exports = {
                 });
             }
                 
-            const currentDate = new Date();
-               
+            const currentDate = new Date();             
             const firstUseDate = new Date(currentDate.getTime() - (27 * 24 * 60 * 60 * 1000) );
             const id = req.body.id;
 
@@ -187,9 +186,7 @@ module.exports = {
             {
                 return res.status(400).send({message: 'It was not possible to create the debt'});
             }
-        }
-        )
-
+        })
             .catch(error => res.status(400).send(error));
     }
 };
