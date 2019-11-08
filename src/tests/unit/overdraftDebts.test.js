@@ -332,7 +332,7 @@ describe('OverdraftDebts Controller', function () {
             expect(send).toHaveBeenCalledWith({
                 message: 'OverdraftDebt Not Found'
             });
-        })
+        });
         it('returns totalAmount for non divided overdraftDebt', async () => {
             let send = jest.fn(data => ({ data }));
             let status = jest.fn(() => ({ send }));
@@ -366,10 +366,10 @@ describe('OverdraftDebts Controller', function () {
 
             expect(status).toHaveBeenCalledWith(200);
             expect(send).toHaveBeenCalledWith({
-                "totalAmount": 100
+                'totalAmount': 100
             });
 
-        })
+        });
         it('returns totalAmount for non divided overdraftDebt', async () => {
             let send = jest.fn(data => ({ data }));
             let status = jest.fn(() => ({ send }));
@@ -393,7 +393,7 @@ describe('OverdraftDebts Controller', function () {
                     }
                 ));
 
-                jest
+            jest
                 .spyOn(Instalment, 'findOne')
                 .mockImplementation(() => Promise.resolve(
                     {
@@ -405,12 +405,12 @@ describe('OverdraftDebts Controller', function () {
 
             expect(status).toHaveBeenCalledWith(200);
             expect(send).toHaveBeenCalledWith({
-                "totalAmount": 100
+                'totalAmount': 100
             });
 
-        })
+        });
 
 
 
-    })
+    });
 });

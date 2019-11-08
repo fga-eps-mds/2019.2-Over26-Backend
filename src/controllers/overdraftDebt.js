@@ -124,12 +124,12 @@ module.exports = {
                                 'totalAmount': totalAmount,
                             });
 
-                        })
+                        });
 
                 }
 
 
-            })
+            });
     },
     createInstalments(req, res) {
         return OverdraftDebt.findOne({
