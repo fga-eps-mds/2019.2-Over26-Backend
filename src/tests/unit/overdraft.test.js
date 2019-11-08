@@ -376,7 +376,7 @@ describe('First use date update', () => {
         
 
 
-        data =>
+        () =>
             Promise.resolve({
                 userId: 1,
                 isBlocked: false,
@@ -392,18 +392,6 @@ describe('First use date update', () => {
         await overdraftController.createDebt(req, res);
 
         expect(status).toHaveBeenCalledWith(400);
-        let overdraft = {
-            userId: 1,
-            isActive: true,
-            isBlocked: false,
-            limit: 200,
-            limitMax: 200,
-            limitUsed: 100,
-            firstUseDate: Math.floor((new Date().getTime() / 1000) -27),
-            createdAt: Math.floor(new Date().getTime() / 1000),
-            updatedAt: Math.floor(new Date().getTime() / 1000),
-            id: 1
-        };
         // expect(send).toHaveBeenCalledWith(User);
     });
 
@@ -464,7 +452,7 @@ describe('First use date update', () => {
             .spyOn(overdraftUtils, 'usabilityCheck')
             .mockImplementation(() => Promise.resolve(false));
 
-         jest
+        jest
             .spyOn(overdraftDebtUtils, 'create')
             .mockImplementation(() => Promise.resolve(false));
 
