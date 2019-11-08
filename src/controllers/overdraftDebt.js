@@ -99,7 +99,6 @@ module.exports = {
     checkAmount(req, res) {
         return OverdraftDebt.findOne({
             where: { id: req.params.id },
-            //order: [['createdAt', 'DESC']]
         })
             .then(async overdraftDebt => {
                 if (!overdraftDebt) {
@@ -123,12 +122,8 @@ module.exports = {
                             return res.status(200).send({
                                 'totalAmount': totalAmount,
                             });
-
                         });
-
                 }
-
-
             });
     },
     createInstalments(req, res) {
