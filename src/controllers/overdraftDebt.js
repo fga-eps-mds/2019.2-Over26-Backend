@@ -1,5 +1,6 @@
 
 const OverdraftDebt = require('../models').OverdraftDebt;
+const Instalment = require('../models').Instalment;
 const User = require('../models').User;
 const Overdraft = require('../models').Overdraft;
 const OverdraftUtils = require('../utils/overdraftUtils');
@@ -14,7 +15,7 @@ module.exports = {
                 return Overdraft.findOne({
                     where: {
                         userId: user.id,
-                        isBlocked:false
+                        isBlocked: false
                     }
                 })
                     .then(async overdraft => {
@@ -42,7 +43,7 @@ module.exports = {
                             }).then(async overdraftDebt => {
                                 await overdraft.update({
                                     isBlocked: true,
-                                    limitUsed:0
+                                    limitUsed: 0
                                 });
                                 return res.status(201).send(overdraftDebt);
                             });
@@ -97,8 +98,8 @@ module.exports = {
     },
     checkAmount(req, res) {
         return OverdraftDebt.findOne({
-            where: { userId: req.params.id },
-            order: [['createdAt', 'DESC']]
+            where: { id : req.params.id },
+            //order: [['createdAt', 'DESC']]
         })
             .then(async overdraftDebt => {
                 if (!overdraftDebt) {
@@ -106,12 +107,29 @@ module.exports = {
                         message: 'OverdraftDebt Not Found'
                     });
                 }
+                console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+                console.log(overdraftDebt.id)
+                if (!overdraftDebt.isDivided) {
+                    const totalAmount = await OverdraftDebtUtils.returnInstalmentValue(1, overdraftDebt.userId);
+                    return res.status(200).send({
+                        'totalAmount': totalAmount,
+                    });
+                } else {
+                    return Instalment.findOne({
+                        where: {
+                            overdraftDebtId: overdraftDebt.id
+                        }
+                    })
+                        .then(instalment => {
+                            const totalAmount = instalment.value * overdraftDebt.quantityInstalment;
+                            return res.status(200).send({
+                                'totalAmount': totalAmount,
+                            });
 
-                const totalAmount = await OverdraftDebtUtils.returnInstalmentValue(1, overdraftDebt.userId);
+                        })
 
-                return res.status(200).send({
-                    'totalAmount': totalAmount,
-                });
+                }
+
 
             })
             .catch(() => res.status(400).send('error'));
@@ -168,9 +186,9 @@ module.exports = {
                 userId: req.params.id
             }
         })
-            .then(overdraftDebts=>{
-                if(overdraftDebts==''){
-                    return res.status(404).send({'message':'Debts not found'});
+            .then(overdraftDebts => {
+                if (overdraftDebts == '') {
+                    return res.status(404).send({ 'message': 'Debts not found' });
                 }
                 return res.status(200).send(overdraftDebts);
             });
