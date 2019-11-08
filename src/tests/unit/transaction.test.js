@@ -56,7 +56,7 @@ describe('Transactions Controller', function () {
             date: Math.floor(new Date().getTime() / 1000),
             createdAt: Math.floor(new Date().getTime() / 1000),
             updatedAt: Math.floor(new Date().getTime() / 1000)
-        }
+        };
 
         beforeEach(() => {
             let account = {
@@ -68,7 +68,7 @@ describe('Transactions Controller', function () {
                 updatedAt: Math.floor(new Date().getTime() / 1000),
                 userId: 1,
                 createTransaction: () => {
-                    return Promise.resolve(transaction)
+                    return Promise.resolve(transaction);
                 },
                 update: () => {
                     return Promise.resolve({
@@ -79,7 +79,7 @@ describe('Transactions Controller', function () {
                         createdAt: Math.floor(new Date().getTime() / 1000),
                         updatedAt: Math.floor(new Date().getTime() / 1000),
                         userId: 1,
-                    })
+                    });
                 }
             };
             jest
@@ -109,7 +109,7 @@ describe('Transactions Controller', function () {
                         createdAt: Math.floor(new Date().getTime() / 1000),
                         updatedAt: Math.floor(new Date().getTime() / 1000),
                         userId: 1, 
-                    })
+                    });
                 }
             };
             jest
@@ -230,7 +230,7 @@ describe('Transactions Controller', function () {
             await transactionController.makeTransaction(req, res);
 
             expect(status).toHaveBeenCalledWith(400);
-        })
+        });
         it('returns status 400 when cash out when overdraft insuficient limit', async () => {
             let req = { 
                 body: { 

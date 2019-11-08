@@ -50,9 +50,9 @@ module.exports = {
                                                         account.balance - value
                                                 })
                                                 .then(() => {
-                                                    var newLimitUsed = 0.0
+                                                    var newLimitUsed = 0.0;
                                                     if(account.balance < 0){
-                                                        newLimitUsed = Math.abs(account.balance)
+                                                        newLimitUsed = Math.abs(account.balance);
                                                     }
                                                     return overdraft.update({
                                                         limitUsed: newLimitUsed,
