@@ -71,7 +71,7 @@ describe('Transactions Controller', function () {
                     return Promise.resolve(transaction)
                 },
                 update: () => {
-                    Promise.resolve({
+                    return Promise.resolve({
                         id: 1,
                         agency: 123456,
                         number: 123456,
@@ -98,7 +98,7 @@ describe('Transactions Controller', function () {
                 updatedAt: Math.floor(new Date().getTime() / 1000),
                 userId: 1,
                 update: () => {
-                    Promise.resolve({
+                    return Promise.resolve({
                         id: 1,
                         isActive: true,
                         isBlocked: false,
@@ -162,8 +162,31 @@ describe('Transactions Controller', function () {
 
             expect(status).toHaveBeenCalledWith(201);
             expect(send).toHaveBeenCalledWith(transaction);
-        })
-    })
+        });
+
+        it ('returns Transaction object on cash out sucess, using overdraft limit', async () => {
+            let req = { 
+                body: { 
+                    type: 'out',
+                    description: 'test',
+                    value: 110,
+                    name: 'test',
+                    accountId: 1, 
+                } 
+            };
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+            const res = {
+                status
+            };
+
+            await transactionController.makeTransaction(req, res);
+
+            expect(status).toHaveBeenCalledWith(201);
+            expect(send).toHaveBeenCalledWith(transaction);
+        });
+    });
+
     describe('Make Transaction with error', () => {
 
         beforeEach(() => {
@@ -268,8 +291,8 @@ describe('Transactions Controller', function () {
             expect(status).toHaveBeenCalledWith(400);
         
         });
-        })
-    })
+    });
+
     describe('Transaction getByPk', () => {
         afterEach(() => {
             jest.restoreAllMocks();
