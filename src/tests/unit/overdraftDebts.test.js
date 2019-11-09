@@ -1,8 +1,12 @@
 const overdraftDebtController = require('../../controllers').overdraftDebt;
 const overdraftUtils = require('../../utils/overdraftUtils');
+const OverdraftDebtUtils = require('../../utils/overdraftDebtUtils');
 const OverdraftDebt = require('../../models').OverdraftDebt;
 const Overdraft = require('../../models').Overdraft;
 const User = require('../../models').User;
+const Instalment = require('../../models').Instalment;
+
+
 
 describe('OverdraftDebts Controller', function () {
     describe('OverdraftDebt create', () => {
@@ -48,10 +52,10 @@ describe('OverdraftDebts Controller', function () {
                     firstUseDate: new Date(),
                     update: () => {
                         return Promise.resolve({
-                            
+
                         });
                     }
-                    
+
                 })
             );
             jest
@@ -114,7 +118,7 @@ describe('OverdraftDebts Controller', function () {
             await overdraftDebtController.create(req, res);
 
             expect(status).toHaveBeenCalledWith(400);
-            expect(send).toHaveBeenCalledWith({'message': 'overdraft still haven\'t reached it\'s deadline or wasn\'t used'});
+            expect(send).toHaveBeenCalledWith({ 'message': 'overdraft still haven\'t reached it\'s deadline or wasn\'t used' });
 
 
         });
@@ -300,4 +304,113 @@ describe('OverdraftDebts Controller', function () {
 
     });
 
+    describe('OverdraftDebt checkAmount', () => {
+        afterEach(() => {
+            jest.restoreAllMocks();
+            jest.resetAllMocks();
+        });
+        it('returns OverdraftDebt not found', async () => {
+
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+
+            let req = {
+                params: {
+                    userId: 1
+                }
+            };
+            const res = {
+                status
+            };
+            jest
+                .spyOn(OverdraftDebt, 'findOne')
+                .mockImplementation(() => Promise.resolve(
+                ));
+            await overdraftDebtController.checkAmount(req, res);
+
+            expect(status).toHaveBeenCalledWith(404);
+            expect(send).toHaveBeenCalledWith({
+                message: 'OverdraftDebt Not Found'
+            });
+        });
+        it('returns totalAmount for non divided overdraftDebt', async () => {
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+
+            let req = {
+                params: {
+                    userId: 1
+                }
+            };
+            const res = {
+                status
+            };
+            jest
+                .spyOn(OverdraftDebt, 'findOne')
+                .mockImplementation(() => Promise.resolve(
+                    {
+                        id: 1,
+                        isDivided: false,
+                        userId: 1,
+                    }
+                ));
+            jest
+                .spyOn(OverdraftDebtUtils, 'returnInstalmentValue')
+                .mockImplementation(() => Promise.resolve(
+                    100
+                ));
+
+
+
+            await overdraftDebtController.checkAmount(req, res);
+
+            expect(status).toHaveBeenCalledWith(200);
+            expect(send).toHaveBeenCalledWith({
+                'totalAmount': 100
+            });
+
+        });
+        it('returns totalAmount for non divided overdraftDebt', async () => {
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+
+            let req = {
+                params: {
+                    userId: 1
+                }
+            };
+            const res = {
+                status
+            };
+            jest
+                .spyOn(OverdraftDebt, 'findOne')
+                .mockImplementation(() => Promise.resolve(
+                    {
+                        id: 1,
+                        isDivided: true,
+                        userId: 1,
+                        quantityInstalment:2
+                    }
+                ));
+
+            jest
+                .spyOn(Instalment, 'findOne')
+                .mockImplementation(() => Promise.resolve(
+                    {
+                        value:50
+                    }
+                ));
+
+            await overdraftDebtController.checkAmount(req, res);
+
+            expect(status).toHaveBeenCalledWith(200);
+            expect(send).toHaveBeenCalledWith({
+                'totalAmount': 100
+            });
+
+        });
+
+
+
+    });
 });
