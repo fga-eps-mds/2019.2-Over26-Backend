@@ -73,7 +73,7 @@ module.exports = {
                             const firstUseDate = overdraft.firstUseDate;
 
                             const entryDate = firstUseDate;
-                            entryDate.setDate(entryDate.getDate() + 26);
+                            entryDate.setDate(entryDate.getDate() + 25);
                             //sets entryDate of overdraftDebt to firtUsedDate of overdraft+26days
 
 
@@ -91,7 +91,8 @@ module.exports = {
                             }).then(async overdraftDebt => {
                                 await overdraft.update({
                                     isBlocked: true,
-                                    limitUsed:0
+                                    limitUsed:0,
+                                    firstUseDate: null
                                 });
                                 return overdraftDebt;
                             });
