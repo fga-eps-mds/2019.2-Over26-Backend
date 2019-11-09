@@ -161,4 +161,18 @@ module.exports = {
             })
             .catch(() => res.status(400).send({ 'message': 'couldn\'t create instalments' }));
     },
+
+    debtsList(req, res) {
+        return OverdraftDebt.findAll({
+            where: {
+                userId: req.params.id
+            }
+        })
+            .then(overdraftDebts=>{
+                if(overdraftDebts==''){
+                    return res.status(404).send({'message':'Debts not found'});
+                }
+                return res.status(200).send(overdraftDebts);
+            });
+    },
 };

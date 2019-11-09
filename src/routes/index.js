@@ -40,7 +40,7 @@ router.get('/api/overdraftDebts/:id', overdraftDebtController.getByPk);
 router.get('/api/overdraftDebts/:id/options', overdraftDebtController.getInstalmentsOptions);
 router.get('/api/overdraftDebts/:id/check', overdraftDebtController.checkAmount);
 router.post('/api/overdraftDebts/:id/instalments', overdraftDebtController.createInstalments);
-
+router.get('/api/overdraftDebts/:id/listDebt', overdraftDebtController.debtsList);
 
 /* Transaction Router */
 router.get('/api/transactions', transactionController.list);
