@@ -3,7 +3,6 @@ const OverdraftDebt = require('../../models').OverdraftDebt;
 const Overdraft = require('../../models').Overdraft;
 const User = require('../../models').User;
 const overdraftUtils = require('../../utils/overdraftUtils');
-const overdraftDebtController = require('../../controllers').overdraftDebt;
 
 
 describe('OverdraftDebtsUtils', function () {
@@ -87,16 +86,7 @@ describe('OverdraftDebtsUtils', function () {
             jest.resetAllMocks();
         });
         it('returns the OverdraftDebt object created', async () => {
-            let req = {
-                params: {
-                    id: 1
-                }
-            };
-            let send = jest.fn(data => ({ data }));
-            let status = jest.fn(() => ({ send }));
-            const res = {
-                status
-            };
+
             jest.spyOn(User, 'findByPk').mockImplementation(() =>
                 Promise.resolve({
                     id: 1,
@@ -132,15 +122,7 @@ describe('OverdraftDebtsUtils', function () {
                 .mockImplementation(() => Promise.resolve(false));
 
             const id = 1;
-            
-            expect(await overdraftDebtUtils.create(id)).toBe({
-                "amount": 10, 
-                "entryDate": a, 
-                "isDivided": false, 
-                "rate": 0.15, 
-                "userId": 1
-            });
-            //let entry = new Date();
+            let entry = new Date();
             let overdraft = {
                 userId: 1,
                 entryDate: Math.floor(entry.setDate(entry.getDate() + 26) / 1000),
@@ -148,20 +130,11 @@ describe('OverdraftDebtsUtils', function () {
                 rate: 0.15,
                 isDivided: false,
             };
-            expect(send).toHaveBeenCalledWith(overdraft);
-            expect(status).toHaveBeenCalledWith(201);
+            
+            expect(await overdraftDebtUtils.create(id)).toStrictEqual(overdraft);
         });
         it('Returns overdraft still haven\'t reached it\'s deadline or wasn\'t used', async () => {
-            let req = {
-                params: {
-                    id: 1
-                }
-            };
-            let send = jest.fn(data => ({ data }));
-            let status = jest.fn(() => ({ send }));
-            const res = {
-                status
-            };
+           
             jest.spyOn(User, 'findByPk').mockImplementation(() =>
                 Promise.resolve({
                     id: 1,
