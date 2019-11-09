@@ -1,6 +1,10 @@
 const overdraftController = require('../../controllers').overdraft;
 const Overdraft = require('../../models').Overdraft;
 const User = require('../../models').User;
+const userController = require('../../controllers').user;
+const overdraftDebtUtils = require('../../utils/overdraftDebtUtils');
+const overdraftUtils = require('../../utils/overdraftUtils');
+const overdraftDebtController = require('../../controllers').overdraftDebt;
 
 describe('Overdrafts Controller', function () {
     describe('Overdraft list', () => {
@@ -324,3 +328,260 @@ describe('Overdrafts Controller', function () {
         });
     });
 });
+
+describe('First use date update', () => {
+    afterEach(() => {
+        jest.restoreAllMocks();
+        jest.resetAllMocks();
+    });
+    it('returns first use day update on sucess', async () => {
+        let req = {
+            body: {
+                id: '1'
+            },
+            params: {
+                id: 1
+            }
+        };
+        let send = jest.fn(data => ({ data }));
+        let status = jest.fn(() => ({ send }));
+        const res = {
+            status
+        };
+
+        jest.spyOn(User, 'findByPk').mockImplementation(() =>
+            Promise.resolve({
+                id: 1,
+                createDebt: data => {
+                    data['id'] = 1;
+                    data['firstUseDate'] = Math.floor((new Date().getTime() / 1000) -27);
+                    data['updatedAt'] = Math.floor(new Date().getTime() / 1000);
+                    data['createdAt'] = Math.floor(new Date().getTime() / 1000);
+                    return Promise.resolve(data);
+                }
+            })
+        );
+        jest.spyOn(Overdraft, 'findOne').mockImplementation(() =>
+            Promise.resolve({
+                status: true,
+                limit: 200,
+                limitMax: 200,
+                limitUsed: 100,
+                firstUseDate: null
+            })
+        );
+
+        expect(await overdraftDebtUtils.create(1)).toBe(null);
+
+        
+
+
+        () =>
+            Promise.resolve({
+                userId: 1,
+                isBlocked: false,
+                isActive: true,
+                limit: 200,
+                limitMax: 200,
+                limitUsed: 100,
+                firstUseDate: Math.floor((new Date().getTime() / 1000) -27),
+                createdAt: Math.floor(new Date().getTime() / 1000),
+                updatedAt: Math.floor(new Date().getTime() / 1000),
+                id: 1
+            });
+        await overdraftController.createDebt(req, res);
+
+        expect(status).toHaveBeenCalledWith(400);
+        // expect(send).toHaveBeenCalledWith(User);
+    });
+
+    it('returns false when the overdraftDebt is not found', async () => {
+        let id = 1;
+
+        expect(await overdraftDebtUtils.create(id)).toBe(null);
+
+    });
+
+    it('returns the OverdraftDebt object created', async () => {
+        let req = {
+            params: {
+                id: 1
+            }
+        };
+        let send = jest.fn(data => ({ data }));
+        let status = jest.fn(() => ({ send }));
+        const res = {
+            status
+        };
+
+        jest.spyOn(User, 'findByPk').mockImplementation(() =>
+            Promise.resolve({
+                id: 1,
+                createOverdraftDebt: () => {
+                    let entry = new Date();
+                    return Promise.resolve({
+                        userId: 1,
+                        entryDate: Math.floor(entry.setDate(entry.getDate() + 26) / 1000),
+                        amount: 10,
+                        rate: 0.15,
+                        isDivided: false
+                    });
+                }
+            })
+        );
+
+        
+        jest.spyOn(Overdraft, 'findOne').mockImplementation(() =>
+            Promise.resolve({
+                id: 1,
+                isActive: true,
+                isBlocked: false,
+                limit: 200,
+                limitMax: 200,
+                limitUsed: 10,
+                firstUseDate: new Date(),
+                update: () => {
+                    return Promise.resolve({
+                        
+                    });
+                }
+                
+            })
+        );
+        jest
+            .spyOn(overdraftUtils, 'usabilityCheck')
+            .mockImplementation(() => Promise.resolve(false));
+
+        jest
+            .spyOn(overdraftDebtUtils, 'create')
+            .mockImplementation(() => Promise.resolve(false));
+
+
+        
+
+        await overdraftDebtController.create(req, res);
+        let entry = new Date();
+        let overdraft = {
+            userId: 1,
+            entryDate: Math.floor(entry.setDate(entry.getDate() + 26) / 1000),
+            amount: 10,
+            rate: 0.15,
+            isDivided: false,
+        };
+        expect(send).toHaveBeenCalledWith(overdraft);
+        expect(status).toHaveBeenCalledWith(201);
+    });
+
+    it('returns error 404 when user not found', async () => {
+        let req = {
+            body: {
+                id: '1',
+            },
+            params: {
+                id: 1
+            }
+        };
+        let send = jest.fn(data => ({ data }));
+        let status = jest.fn(() => ({ send }));
+        const res = {
+            status
+        };
+
+        jest
+            .spyOn(User, 'findByPk')
+            .mockImplementation(() => Promise.resolve(null));
+
+        await overdraftController.createDebt(req, res);
+
+        expect(status).toHaveBeenCalledWith(404);
+
+        expect(send).toHaveBeenCalledWith({
+            message: 'Overdraft Not Found'
+        });
+    });
+    it('returns error 400 when error on find user by pk', async () => {
+        let req = {
+            body: {
+                cpf: '123456789',
+                name: 'Ana',
+                email: 'ana@email.com',
+                phone: '6112341234',
+                monthlyIncome: '1000'
+            },
+            params: {
+                id: 1
+            }
+        };
+        let send = jest.fn(data => ({ data }));
+        let status = jest.fn(() => ({ send }));
+        const res = {
+            status
+        };
+
+        jest
+            .spyOn(User, 'findByPk')
+            .mockImplementation(() => Promise.reject('error'));
+
+        await userController.update(req, res);
+
+        expect(status).toHaveBeenCalledWith(400);
+
+        expect(send).toHaveBeenCalledWith('error');
+    });
+    it('returns error 400 when error on update first use date', async () => {
+        let req = {
+            body: {
+                id: '1'
+            },
+            params: {
+                id: 1
+            }
+        };
+        let send = jest.fn(data => ({ data }));
+        let status = jest.fn(() => ({ send }));
+        const res = {
+            status
+        };
+
+        jest.spyOn(User, 'findByPk').mockImplementation(() =>
+            Promise.resolve({
+                update: () => Promise.reject('error')
+            })
+        );
+
+        await overdraftController.createDebt(req, res);
+
+        expect(status).toHaveBeenCalledWith(404);
+
+        expect(send).toHaveBeenCalledWith({
+            message: 'Overdraft Not Found'
+        });
+    });
+
+    it('Returns overdraft still haven\'t reached it\'s deadline or wasn\'t used', async () => {
+
+        let req = {
+            params: {
+                id: 1
+            }
+        };
+        let send = jest.fn(data => ({ data }));
+        let status = jest.fn(() => ({ send }));
+        const res = {
+            status
+        };
+
+        jest
+            .spyOn(overdraftDebtUtils, 'create')
+            .mockImplementation(() => Promise.resolve(true));
+
+        await overdraftController.createDebt(req, res);
+
+        expect(status).toHaveBeenCalledWith(404);
+        expect(send).toHaveBeenCalledWith({'message': 'Overdraft Not Found'});
+
+
+    });
+
+});
+

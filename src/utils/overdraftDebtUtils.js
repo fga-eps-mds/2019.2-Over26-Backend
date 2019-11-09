@@ -1,4 +1,7 @@
 const OverdraftDebt = require('../models').OverdraftDebt;
+const Overdraft = require('../models').Overdraft;
+const OverdraftUtils = require('../utils/overdraftUtils');
+const User = require('../models').User;
 
 module.exports = {
     returnInstalmentValue(quantityInstalment, id) {
@@ -25,8 +28,6 @@ module.exports = {
                 return instalmentValue;
 
             });
-
-
     },
 
     returnInstalmentDates(day, quantityInstalment, id) {
@@ -50,15 +51,59 @@ module.exports = {
 
                     dateOptionsForInstalments.push(new Date(currentDate.getFullYear(), (currentDate.getMonth() + counter), dueDay, 23, 59, 59, 999));
                     counter++;
-
                 }
-
-
                 return dateOptionsForInstalments;
-
-
             }
-
             );
+    },
+
+    create(id) {
+        return User.findByPk(id)
+            .then(user => {
+                return Overdraft.findOne({
+                    where: {
+                        userId: user.id,
+                        isBlocked:false
+                    }
+                })
+                    .then(async overdraft => {
+                        if (!(await OverdraftUtils.usabilityCheck(overdraft.userId))) {
+                            const rate = 0.003182;
+
+                            const firstUseDate = overdraft.firstUseDate;
+
+                            const entryDate = firstUseDate;
+                            entryDate.setDate(entryDate.getDate() + 25);
+                            //sets entryDate of overdraftDebt to firtUsedDate of overdraft+26days
+
+
+                            const amount = overdraft.limitUsed;
+                            //is the amount of money due in the moment of the debt start
+
+                            const isDivided = false;
+                            const userId = user.id;
+                            return user.createOverdraftDebt({
+                                userId: userId,
+                                entryDate: entryDate,
+                                amount: amount,
+                                rate: rate,
+                                isDivided: isDivided
+                            }).then(async overdraftDebt => {
+                                await overdraft.update({
+                                    isBlocked: true,
+                                    limitUsed:0,
+                                    firstUseDate: null
+                                });
+                                return overdraftDebt;
+                            });
+                        } else {
+                            return null;
+                        }
+                    })
+
+                    .catch(() => {return null;});
+            })
+            .catch(() => {return null;});
+
     },
 };

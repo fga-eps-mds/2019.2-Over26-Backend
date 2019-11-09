@@ -1,5 +1,8 @@
 const overdraftDebtUtils = require('../../utils/overdraftDebtUtils');
 const OverdraftDebt = require('../../models').OverdraftDebt;
+const Overdraft = require('../../models').Overdraft;
+const User = require('../../models').User;
+const overdraftUtils = require('../../utils/overdraftUtils');
 
 
 describe('OverdraftDebtsUtils', function () {
@@ -24,7 +27,7 @@ describe('OverdraftDebtsUtils', function () {
                 })
             );
 
-            expect(await overdraftDebtUtils.returnInstalmentValue(2, id)).toBe(108.95639824355167);
+            expect(await overdraftDebtUtils.returnInstalmentValue(id)).toBe(217.91279648710335);
 
         });
 
@@ -74,6 +77,94 @@ describe('OverdraftDebtsUtils', function () {
             expect(await overdraftDebtUtils.returnInstalmentDates(dueDay, quantityInstalment, id)).toBe(0);
 
 
+        });
+    });
+
+    describe('OverdraftDebtUtils create', () => {
+        afterEach(() => {
+            jest.restoreAllMocks();
+            jest.resetAllMocks();
+        });
+        it('returns the OverdraftDebt object created', async () => {
+
+            jest.spyOn(User, 'findByPk').mockImplementation(() =>
+                Promise.resolve({
+                    id: 1,
+                    createOverdraftDebt: () => {
+                        let entry = new Date();
+                        return Promise.resolve({
+                            userId: 1,
+                            entryDate: Math.floor(entry.setDate(entry.getDate() + 26) / 1000),
+                            amount: 10,
+                            rate: 0.15,
+                            isDivided: false
+                        });
+                    }
+                })
+            );
+            jest.spyOn(Overdraft, 'findOne').mockImplementation(() =>
+                Promise.resolve({
+                    id: 1,
+                    isActive: true,
+                    isBlocked: false,
+                    limit: 200,
+                    limitMax: 200,
+                    limitUsed: 10,
+                    firstUseDate: new Date(),
+                    update: () => {
+                        return Promise.resolve({       
+                        });
+                    }
+                })
+            );
+            jest
+                .spyOn(overdraftUtils, 'usabilityCheck')
+                .mockImplementation(() => Promise.resolve(false));
+
+            const id = 1;
+            let entry = new Date();
+            let overdraft = {
+                userId: 1,
+                entryDate: Math.floor(entry.setDate(entry.getDate() + 26) / 1000),
+                amount: 10,
+                rate: 0.15,
+                isDivided: false,
+            };
+            
+            expect(await overdraftDebtUtils.create(id)).toStrictEqual(overdraft);
+        });
+        it('Returns overdraft still haven\'t reached it\'s deadline or wasn\'t used', async () => {
+           
+            jest.spyOn(User, 'findByPk').mockImplementation(() =>
+                Promise.resolve({
+                    id: 1,
+                    createOverdraftDebt: () => {
+                        let entry = new Date();
+                        return Promise.resolve({
+                            userId: 1,
+                            entryDate: Math.floor(entry.setDate(entry.getDate()) / 1000),
+                            amount: 10,
+                            rate: 0.15,
+                            isDivided: false
+                        });
+                    }
+                })
+            );
+            jest.spyOn(Overdraft, 'findOne').mockImplementation(() =>
+                Promise.resolve({
+                    status: true,
+                    limit: 200,
+                    limitMax: 200,
+                    limitUsed: 10,
+                    firstUseDate: new Date()
+                })
+            );
+            jest
+                .spyOn(overdraftUtils, 'usabilityCheck')
+                .mockImplementation(() => Promise.resolve(true));
+
+            const id = 1;
+            expect(await overdraftDebtUtils.create(id)).toBe(null);
         });
     });
 

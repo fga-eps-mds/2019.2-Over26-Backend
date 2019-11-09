@@ -14,7 +14,7 @@ module.exports = {
             },
             number: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
+              //  allowNull: false,
                 //unique: true
             },
             balance: {
