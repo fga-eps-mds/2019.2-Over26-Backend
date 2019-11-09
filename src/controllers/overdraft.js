@@ -167,16 +167,15 @@ module.exports = {
                     message: 'Overdraft Not Found'
                 });
             }
-                
+            console.log(overdraft.userId) ;   
             const currentDate = new Date();             
             const firstUseDate = new Date(currentDate.getTime() - (27 * 24 * 60 * 60 * 1000) );
-            const id = req.body.id;
 
             await overdraft.update({
                 firstUseDate: firstUseDate
             });
 
-            const  debt = await OverdrafDebttUtils.create(id);
+            const  debt = await OverdrafDebttUtils.create(overdraft.userId);
 
             if(debt)
             {

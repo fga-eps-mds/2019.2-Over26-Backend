@@ -83,7 +83,7 @@ describe('OverdraftDebtsUtils', function () {
         });
     });
 
-    describe('OverdraftDebt create', () => {
+    describe('OverdraftDebtUtils create', () => {
         afterEach(() => {
             jest.restoreAllMocks();
             jest.resetAllMocks();
@@ -133,8 +133,16 @@ describe('OverdraftDebtsUtils', function () {
                 .spyOn(overdraftUtils, 'usabilityCheck')
                 .mockImplementation(() => Promise.resolve(false));
 
-            await overdraftDebtController.create(req, res);
-            let entry = new Date();
+            const id = 1;
+            
+            expect(await overdraftDebtUtils.create(id)).toBe({
+                "amount": 10, 
+                "entryDate": a, 
+                "isDivided": false, 
+                "rate": 0.15, 
+                "userId": 1
+            });
+            //let entry = new Date();
             let overdraft = {
                 userId: 1,
                 entryDate: Math.floor(entry.setDate(entry.getDate() + 26) / 1000),
@@ -184,7 +192,8 @@ describe('OverdraftDebtsUtils', function () {
                 .spyOn(overdraftUtils, 'usabilityCheck')
                 .mockImplementation(() => Promise.resolve(true));
 
-            await overdraftDebtUtils.create(req, res);
+            const id = 1;
+            expect(await overdraftDebtUtils.create(id)).toBe(null);
         });
     });
 
