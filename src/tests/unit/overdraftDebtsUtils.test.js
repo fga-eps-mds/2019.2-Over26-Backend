@@ -1,9 +1,7 @@
 const overdraftDebtUtils = require('../../utils/overdraftDebtUtils');
 const OverdraftDebt = require('../../models').OverdraftDebt;
-const overdraftController = require('../../controllers').overdraft;
 const Overdraft = require('../../models').Overdraft;
 const User = require('../../models').User;
-const userController = require('../../controllers').user;
 const overdraftUtils = require('../../utils/overdraftUtils');
 const overdraftDebtController = require('../../controllers').overdraftDebt;
 
