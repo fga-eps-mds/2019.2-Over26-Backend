@@ -14,7 +14,7 @@ module.exports = {
                 return Overdraft.findOne({
                     where: {
                         userId: user.id,
-                        isBlocked:false
+                        isBlocked: false
                     }
                 })
                     .then(async overdraft => {
@@ -42,7 +42,7 @@ module.exports = {
                             }).then(async overdraftDebt => {
                                 await overdraft.update({
                                     isBlocked: true,
-                                    limitUsed:0
+                                    limitUsed: 0
                                 });
                                 return res.status(201).send(overdraftDebt);
                             });
@@ -58,8 +58,14 @@ module.exports = {
             .catch(() => res.status(400).send('error'));
 
     },
-    getByPk(req, res) {
-        return OverdraftDebt.findByPk(req.params.id)
+    getLatest(req, res) {
+        return OverdraftDebt.findOne(
+            {
+                where: {
+                    userId: req.params.id
+                },
+                order: [['createdAt', 'DESC']],
+            })
             .then(overdraftDebt => {
                 if (!overdraftDebt) {
                     return res.status(404).send({
