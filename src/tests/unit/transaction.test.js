@@ -1,5 +1,7 @@
 const transactionController = require('../../controllers').transaction;
 const Transaction = require('../../models').Transaction;
+const Account = require('../../models').Account;
+const Overdraft = require('../../models').Overdraft;
 
 describe('Transactions Controller', function () {
     describe('Transaction list', () => {
@@ -40,6 +42,254 @@ describe('Transactions Controller', function () {
 
             expect(status).toHaveBeenCalledWith(400);
             expect(send).toHaveBeenCalledWith('error');
+        });
+    });
+
+    describe('Make transaction with success', () => {
+
+        let transaction = {
+            id: 1,
+            name: 'test',
+            description: 'test',
+            value: 10,
+            accountId: 1,
+            date: Math.floor(new Date().getTime() / 1000),
+            createdAt: Math.floor(new Date().getTime() / 1000),
+            updatedAt: Math.floor(new Date().getTime() / 1000)
+        };
+
+        beforeEach(() => {
+            let account = {
+                id: 1,
+                agency: 123456,
+                number: 123456,
+                balance: 90.00,
+                createdAt: Math.floor(new Date().getTime() / 1000),
+                updatedAt: Math.floor(new Date().getTime() / 1000),
+                userId: 1,
+                createTransaction: () => {
+                    return Promise.resolve(transaction);
+                },
+                update: () => {
+                    return Promise.resolve({
+                        id: 1,
+                        agency: 123456,
+                        number: 123456,
+                        balance: 90.00,
+                        createdAt: Math.floor(new Date().getTime() / 1000),
+                        updatedAt: Math.floor(new Date().getTime() / 1000),
+                        userId: 1,
+                    });
+                }
+            };
+            jest
+                .spyOn(Account, 'findByPk')
+                .mockImplementation(() => Promise.resolve(account));
+
+            let overdraft = {
+                id: 1,
+                isActive: true,
+                isBlocked: false,
+                limit: 200.00,
+                limitMax: 200.00,
+                limitUsed: 0.00,
+                firstUseDate: null,
+                createdAt: Math.floor(new Date().getTime() / 1000),
+                updatedAt: Math.floor(new Date().getTime() / 1000),
+                userId: 1,
+                update: () => {
+                    return Promise.resolve({
+                        id: 1,
+                        isActive: true,
+                        isBlocked: false,
+                        limit: 200.00,
+                        limitMax: 200.00,
+                        limitUsed: 0.00,
+                        firstUseDate: null,
+                        createdAt: Math.floor(new Date().getTime() / 1000),
+                        updatedAt: Math.floor(new Date().getTime() / 1000),
+                        userId: 1, 
+                    });
+                }
+            };
+            jest
+                .spyOn(Overdraft, 'findOne')
+                .mockImplementation(() => Promise.resolve(overdraft));
+        });
+        afterEach(() => {
+            jest.restoreAllMocks();
+            jest.resetAllMocks();
+        });
+        it('returns Transaction object on cash in success', async () => {
+            let req = { 
+                body: { 
+                    type: 'in',
+                    description: 'test',
+                    value: 10,
+                    name: 'test',
+                    accountId: 1, 
+                } 
+            };
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+            const res = {
+                status
+            };
+
+            await transactionController.makeTransaction(req, res);
+
+            expect(status).toHaveBeenCalledWith(201);
+            expect(send).toHaveBeenCalledWith(transaction);
+        });
+
+        it ('returns Transaction object on cash out sucess', async () => {
+            let req = { 
+                body: { 
+                    type: 'out',
+                    description: 'test',
+                    value: 10,
+                    name: 'test',
+                    accountId: 1, 
+                } 
+            };
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+            const res = {
+                status
+            };
+
+            await transactionController.makeTransaction(req, res);
+
+            expect(status).toHaveBeenCalledWith(201);
+            expect(send).toHaveBeenCalledWith(transaction);
+        });
+
+        it ('returns Transaction object on cash out sucess, using overdraft limit', async () => {
+            let req = { 
+                body: { 
+                    type: 'out',
+                    description: 'test',
+                    value: 110,
+                    name: 'test',
+                    accountId: 1, 
+                } 
+            };
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+            const res = {
+                status
+            };
+
+            await transactionController.makeTransaction(req, res);
+
+            expect(status).toHaveBeenCalledWith(201);
+            expect(send).toHaveBeenCalledWith(transaction);
+        });
+    });
+
+    describe('Make Transaction with error', () => {
+
+        beforeEach(() => {
+            let account = {
+                id: 1,
+                agency: 123456,
+                number: 123456,
+                balance: 90.00,
+                createdAt: Math.floor(new Date().getTime() / 1000),
+                updatedAt: Math.floor(new Date().getTime() / 1000),
+                userId: 1,
+                createTransaction: () => {
+                    return Promise.resolve(null);
+                }
+            };
+
+            jest
+                .spyOn(Account, 'findByPk')
+                .mockImplementation(() => Promise.resolve(account));
+        });
+        afterEach(() => {
+            jest.restoreAllMocks();
+            jest.resetAllMocks();
+        });
+        it('returns status 400 when cash in with error', async () => {
+            let req = { 
+                body: { 
+                    type: 'in',
+                    description: 'test',
+                    value: 10,
+                    name: 'test',
+                    accountId: 1, 
+                } 
+            };
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+            const res = {
+                status
+            };
+
+            await transactionController.makeTransaction(req, res);
+
+            expect(status).toHaveBeenCalledWith(400);
+        });
+        it('returns status 400 when cash out when overdraft insuficient limit', async () => {
+            let req = { 
+                body: { 
+                    type: 'out',
+                    description: 'test',
+                    value: 1000.00,
+                    name: 'test',
+                    accountId: 1, 
+                } 
+            };
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+            const res = {
+                status
+            };
+            let overdraft = {
+                id: 1,
+                isActive: true,
+                isBlocked: false,
+                limit: 200.00,
+                limitMax: 200.00,
+                limitUsed: 0.00,
+                firstUseDate: null,
+                createdAt: Math.floor(new Date().getTime() / 1000),
+                updatedAt: Math.floor(new Date().getTime() / 1000),
+                userId: 1
+            };
+            jest
+                .spyOn(Overdraft, 'findOne')
+                .mockImplementation(() => Promise.resolve(overdraft));
+                
+            await transactionController.makeTransaction(req, res);
+
+            expect(status).toHaveBeenCalledWith(400);
+        
+        });
+        it('returns status 400 when overdraft is null', async () => {
+            let req = { 
+                body: { 
+                    type: 'out',
+                    description: 'test',
+                    value: 1000.00,
+                    name: 'test',
+                    accountId: 1, 
+                } 
+            };
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+            const res = {
+                status
+            };
+            jest
+                .spyOn(Overdraft, 'findOne')
+                .mockImplementation(() => Promise.resolve(null));
+                
+            await transactionController.makeTransaction(req, res);
+
+            expect(status).toHaveBeenCalledWith(400);
+        
         });
     });
 

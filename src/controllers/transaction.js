@@ -50,8 +50,12 @@ module.exports = {
                                                         account.balance - value
                                                 })
                                                 .then(() => {
+                                                    var newLimitUsed = 0.0;
+                                                    if(account.balance < 0){
+                                                        newLimitUsed = Math.abs(account.balance);
+                                                    }
                                                     return overdraft.update({
-                                                        limitUsed: Math.abs(account.balance) + parseFloat(overdraft.limitUsed),
+                                                        limitUsed: newLimitUsed,
                                                         firstUseDate: overdraft.firstUseDate ? overdraft.firstUseDate : new Date()
                                                     })
                                                         .then(() => res.status(201).send(transaction));
@@ -101,9 +105,7 @@ module.exports = {
 
                             if (overdraft != null && !overdraft.isBlocked && overdraft.limitUsed > 0) {        //Checa se o usuário tem overdraft e se o limite usado é superior a zero
                                 await account.update({
-                                    balance:
-                                        parseFloat(account.balance) +
-                                        (overdraft.limitUsed - value < 0 ? parseFloat(transaction.value) - parseFloat(overdraft.limitUsed) : 0)
+                                    balance: parseFloat(account.balance) + parseFloat(transaction.value)
                                 });
                                 await overdraft.update({
                                     limitUsed: overdraft.limitUsed - value < 0 ? 0 : overdraft.limitUsed - value,      //Subtrai o valor inserido do limite usado, iguala a zero se o resultado for negativo.
