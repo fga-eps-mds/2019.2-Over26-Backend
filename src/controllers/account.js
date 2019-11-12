@@ -12,9 +12,9 @@ module.exports = {
                     return res.status(404).send({'message':'User not found'});
                 }
                 return user.createAccount({
-                    agency: req.body.agency,
-                    number: req.body.number,
-                    balance: req.body.balance,
+                    agency: 1,
+                    number: 1,
+                    balance: 100.00,
                 })
                     .then(account => res.status(201).send(account));
             })

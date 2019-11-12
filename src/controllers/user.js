@@ -4,11 +4,11 @@ module.exports = {
     // Create a new user
     create(req, res) {
         return User.create({
-            cpf: req.body.cpf,
+            cpf: 98765432110,
             name: req.body.name,
-            email: req.body.email,
-            phone: req.body.phone,
-            monthlyIncome: req.body.monthlyIncome
+            email: "email@email.email.com",
+            phone: "912345678",
+            monthlyIncome: 900
         })
             .then(user => res.status(201).send(user))
             .catch(error => res.status(400).send(error));
