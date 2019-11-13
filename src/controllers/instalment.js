@@ -22,21 +22,42 @@ module.exports = {
 
     payInstalment(req, res){
         return Instalment.findByPk(req.params.id)
-            .then(instalment=>{
-                if(!instalment){
-                    return res.status(404).send({
-                        message:'Instalment Not Found'
-                    });
+        .then(async instalment=>{
+            if(!instalment){
+                return res.status(404).send({
+                    message:'Instalment Not Found'
+                });
+            }
+            let overdraftDebt = await OverdraftDebt.findByPk(instalment.overdraftDebtId)
+            if(!overdraftDebt){
+                return res.status(404).send({
+                    message:'overdraftDebt Not Found'
+                });
+            }
+            let account = await Account.findOne({
+                where: {
+                    userId: overdraftDebt.userId
                 }
-                return instalment.update({
-                    isPaid:true
-                })
-                    .then(instalment=>{
-                        return res.status(200).send(instalment);
-                    });
             })
-            .catch(error=>{
-                return res.status(400).send(error);
+            if(!account){
+                return res.status(404).send({
+                    message:'account Not Found'
+                });
+            }
+            if(account.balance < instalment.value){
+                return res.status(400).send({
+                    message:'insuficient account balance'
+                });
+            }
+            await account.update({
+                balance: balance - instalment.value
             });
+            return instalment.update({
+                isPaid:true
+            })
+        })
+        .catch(error=>{
+            return res.status(400).send(error);
+        });
     }
 };
