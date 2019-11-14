@@ -76,6 +76,11 @@ module.exports = {
                             entryDate.setDate(entryDate.getDate() + 25);
                             //sets entryDate of overdraftDebt to firtUsedDate of overdraft+26days
 
+                            let account = await Account.findOne({
+                                where: {
+                                    userId: user.id
+                                }
+                            })
 
                             const amount = overdraft.limitUsed;
                             //is the amount of money due in the moment of the debt start
@@ -94,6 +99,10 @@ module.exports = {
                                     limitUsed:0,
                                     firstUseDate: null
                                 });
+                                await account.update({
+                                    balance: 0
+                                });
+
                                 return overdraftDebt;
                             });
                         } else {
