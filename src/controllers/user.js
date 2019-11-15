@@ -4,7 +4,7 @@ module.exports = {
     // Create a new user
     create(req, res) {
         return User.create({
-            cpf: 98765432110,
+            cpf: "123.456.789-10",
             name: req.body.name,
             email: "email@email.email.com",
             phone: "912345678",

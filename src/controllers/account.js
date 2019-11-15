@@ -13,7 +13,6 @@ module.exports = {
                 }
                 return user.createAccount({
                     agency: 1,
-                    number: 1,
                     balance: 100.00,
                 })
                     .then(account => res.status(201).send(account));

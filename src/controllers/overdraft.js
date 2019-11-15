@@ -110,6 +110,7 @@ module.exports = {
                             message: 'Overdraft Not Found'
                         });
                     }
+                    console.log(overdraft.isActive)
                     overdraft
                         .update({
                             isActive: true
