@@ -10,11 +10,11 @@ describe('User Controller', function () {
         it('returns user create on sucess', async () => {
             let req = {
                 body: {
-                    cpf: '123456789',
+                    cpf:  '123.456.789-10',
                     name: 'Ana',
-                    email: 'ana@email.com',
-                    phone: '6112341234',
-                    monthlyIncome: '1000'
+                    email: 'email@email.email.com',
+                    phone: '912345678',
+                    monthlyIncome: 900
                 }
             };
             let send = jest.fn(data => ({ data }));
@@ -34,11 +34,11 @@ describe('User Controller', function () {
 
             expect(status).toHaveBeenCalledWith(201);
             let user = {
-                cpf: '123456789',
+                cpf:  '123.456.789-10',
                 name: 'Ana',
-                email: 'ana@email.com',
-                phone: '6112341234',
-                monthlyIncome: '1000',
+                email: 'email@email.email.com',
+                phone: '912345678',
+                monthlyIncome: 900,
                 id: 1,
                 updatedAt: Math.floor(new Date().getTime() / 1000),
                 createdAt: Math.floor(new Date().getTime() / 1000)
@@ -48,11 +48,11 @@ describe('User Controller', function () {
         it('returns an error when fails', async () => {
             let req = {
                 body: {
-                    cpf: '123456789',
+                    cpf:  '123.456.789-10',
                     name: 'Ana',
-                    email: 'ana@email.com',
-                    phone: '6112341234',
-                    monthlyIncome: '1000'
+                    email: 'email@email.email.com',
+                    phone: '912345678',
+                    monthlyIncome: '900'
                 }
             };
             let send = jest.fn(data => ({ data }));
@@ -75,11 +75,11 @@ describe('User Controller', function () {
     it('returns user create on sucess', async () => {
         let req = {
             body: {
-                cpf: '123456789',
+                cpf:  '123.456.789-10',
                 name: 'Ana',
-                email: 'ana@email.com',
-                phone: '6112341234',
-                monthlyIncome: '1000'
+                email: 'email@email.email.com',
+                phone: '912345678',
+                monthlyIncome: '900'
             }
         };
         let send = jest.fn(data => ({ data }));
@@ -99,11 +99,11 @@ describe('User Controller', function () {
 
         expect(status).toHaveBeenCalledWith(201);
         let user = {
-            cpf: '123456789',
+            cpf: '123.456.789-10',
             name: 'Ana',
-            email: 'ana@email.com',
-            phone: '6112341234',
-            monthlyIncome: '1000',
+            email: 'email@email.email.com',
+            phone: '912345678',
+            monthlyIncome: 900,
             id: 1,
             updatedAt: Math.floor(new Date().getTime() / 1000),
             createdAt: Math.floor(new Date().getTime() / 1000)
@@ -113,11 +113,11 @@ describe('User Controller', function () {
     it('returns an error when fails', async () => {
         let req = {
             body: {
-                cpf: '123456789',
+                cpf: '123.456.789-10',
                 name: 'Ana',
-                email: 'ana@email.com',
-                phone: '6112341234',
-                monthlyIncome: '1000'
+                email: 'email@email.email.com',
+                phone: '912345678',
+                monthlyIncome: '900'
             }
         };
         let send = jest.fn(data => ({ data }));

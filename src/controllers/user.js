@@ -4,10 +4,10 @@ module.exports = {
     // Create a new user
     create(req, res) {
         return User.create({
-            cpf: "123.456.789-10",
+            cpf: '123.456.789-10',
             name: req.body.name,
-            email: "email@email.email.com",
-            phone: "912345678",
+            email: 'email@email.email.com',
+            phone: '912345678',
             monthlyIncome: 900
         })
             .then(user => res.status(201).send(user))
