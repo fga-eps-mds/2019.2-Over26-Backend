@@ -529,19 +529,7 @@ describe('First use date update', () => {
         expect(send).toHaveBeenCalledWith('error');
     });
     it('returns error 400 when error on update first use date', async () => {
-        let req = {
-            body: {
-                id: '1'
-            },
-            params: {
-                id: 1
-            }
-        };
-        let send = jest.fn(data => ({ data }));
-        let status = jest.fn(() => ({ send }));
-        const res = {
-            status
-        };
+ 
 
         jest.spyOn(User, 'findByPk').mockImplementation(() =>
             Promise.resolve({
@@ -551,27 +539,27 @@ describe('First use date update', () => {
     });
 
     it('returns OverdraftDebt object on success', async () => {
-            let req = { params: { id: 1 } };
-            let send = jest.fn(data => ({ data }));
-            let status = jest.fn(() => ({ send }));
-            const res = {
-                status
-            };
-            let overdraftDebt = {
-                userId: 1,
-                entryDate: Math.floor(new Date().getTime() / 1000),
-                amount: 0,
-                rate: 0.1,
-                isDivided: false,
-                createdAt: Math.floor(new Date().getTime() / 1000),
-                updatedAt: Math.floor(new Date().getTime() / 1000),
-                id: 1
-            };
-            jest
-                .spyOn(overdraftDebtController, 'getByPk')
-                .mockImplementation(() => Promise.resolve(overdraftDebt));
+        let req = { params: { id: 1 } };
+        let send = jest.fn(data => ({ data }));
+        let status = jest.fn(() => ({ send }));
+        const res = {
+            status
+        };
+        let overdraftDebt = {
+            userId: 1,
+            entryDate: Math.floor(new Date().getTime() / 1000),
+            amount: 0,
+            rate: 0.1,
+            isDivided: false,
+            createdAt: Math.floor(new Date().getTime() / 1000),
+            updatedAt: Math.floor(new Date().getTime() / 1000),
+            id: 1
+        };
+        jest
+            .spyOn(overdraftDebtController, 'getByPk')
+            .mockImplementation(() => Promise.resolve(overdraftDebt));
 
-            await overdraftDebtController.getByPk(req, res);
+        await overdraftDebtController.getByPk(req, res);
 
     });
 
@@ -600,5 +588,5 @@ describe('First use date update', () => {
 
     }); 
 
-    });
+});
 

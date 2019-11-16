@@ -2,6 +2,7 @@ const OverdraftDebt = require('../models').OverdraftDebt;
 const Overdraft = require('../models').Overdraft;
 const OverdraftUtils = require('../utils/overdraftUtils');
 const User = require('../models').User;
+const Account = require('../models').Account;
 
 module.exports = {
     returnInstalmentValue(quantityInstalment, id) {
@@ -80,7 +81,7 @@ module.exports = {
                                 where: {
                                     userId: user.id
                                 }
-                            })
+                            });
 
                             const amount = overdraft.limitUsed;
                             //is the amount of money due in the moment of the debt start

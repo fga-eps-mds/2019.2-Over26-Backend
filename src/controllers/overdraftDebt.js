@@ -61,10 +61,10 @@ module.exports = {
     },
     getByPk(req, res) {
         return OverdraftDebt.findOne({
-                order: [
-                    ['createdAt', 'DESC']
-                ],
-            })
+            order: [
+                ['createdAt', 'DESC']
+            ],
+        })
             .then(overdraftDebt => {
                 if (!overdraftDebt) {
                     return res.status(404).send({
