@@ -7,7 +7,6 @@ const overdraftController = require('../controllers').overdraft;
 const overdraftDebtController = require('../controllers').overdraftDebt;
 const transactionController = require('../controllers').transaction;
 const instalmentController = require('../controllers').instalment;
-const startController = require('../controllers').start;
 
 
 router.get('/transaction', function (req, res) {
@@ -53,24 +52,7 @@ router.post('/api/instalments/:id', overdraftDebtController.createInstalments);
 router.get('/api/overdraftDebt/:overdraftDebtId/listInstalments',instalmentController.listByDebt);
 router.put('/api/payinstalments/:id', instalmentController.payInstalment);
 
-/* Start Router */
-router.post('/api/start', startController.startApp);
 
-/* GET properties listing. */
-// router.get("/", function(req, res, next) {
-//     res.send(routeList.join("</br>"));
-//   });
-//   let routeList = router.stack.map(r => {
-//     if (r.route && r.route.path) {
-//       return (
-//         r.route.path +
-//         " : " +
-//         Object.keys(r.route.methods)
-//           .map(m => (r.route.methods[m] ? `${m}` : ``))
-//           .join(",")
-//       );
-//     }
-//   });
   
 
 module.exports = router;
