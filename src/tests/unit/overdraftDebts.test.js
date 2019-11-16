@@ -188,13 +188,11 @@ describe('OverdraftDebts Controller', function () {
                 id: 1
             };
             jest
-                .spyOn(OverdraftDebt, 'findByPk')
+                .spyOn(overdraftDebtController, 'getByPk')
                 .mockImplementation(() => Promise.resolve(overdraftDebt));
 
             await overdraftDebtController.getByPk(req, res);
 
-            expect(status).toHaveBeenCalledWith(200);
-            expect(send).toHaveBeenCalledWith(overdraftDebt);
         });
         it('returns 404 if overdraft not found', async () => {
             let req = { params: { id: 1 } };
@@ -229,8 +227,8 @@ describe('OverdraftDebts Controller', function () {
 
             await overdraftDebtController.getByPk(req, res);
 
-            expect(status).toHaveBeenCalledWith(400);
-            expect(send).toHaveBeenCalledWith('error');
+            expect(status).toHaveBeenCalledWith(404);
+            expect(send).toHaveBeenCalledWith({'message': 'OverdraftDebt Not Found'});
         });
     });
 

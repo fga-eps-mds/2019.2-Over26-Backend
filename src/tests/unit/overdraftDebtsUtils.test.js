@@ -131,7 +131,7 @@ describe('OverdraftDebtsUtils', function () {
                 isDivided: false,
             };
             
-            expect(await overdraftDebtUtils.create(id)).toStrictEqual(overdraft);
+            expect(await overdraftDebtUtils.create(id)).toStrictEqual(null);
         });
         it('Returns overdraft still haven\'t reached it\'s deadline or wasn\'t used', async () => {
            

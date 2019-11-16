@@ -59,7 +59,7 @@ module.exports = {
             .catch(() => res.status(400).send('error'));
 
     },
-    getLast(req, res) {
+    getByPk(req, res) {
         return OverdraftDebt.findOne({
                 order: [
                     ['createdAt', 'DESC']
