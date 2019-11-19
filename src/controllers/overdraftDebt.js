@@ -60,7 +60,11 @@ module.exports = {
 
     },
     getByPk(req, res) {
-        return OverdraftDebt.findByPk(req.params.id)
+        return OverdraftDebt.findOne({
+            order: [
+                ['createdAt', 'DESC']
+            ],
+        })
             .then(overdraftDebt => {
                 if (!overdraftDebt) {
                     return res.status(404).send({
@@ -162,7 +166,8 @@ module.exports = {
                 return Overdraft.findByPk(overdraftDebt.userId)
                     .then(overdraft => {
                         overdraft.update({
-                            isBlocked: false
+                            isBlocked: false,
+                            limitUsed: 0
                         });
 
                         return res.status(200).send(instalments);

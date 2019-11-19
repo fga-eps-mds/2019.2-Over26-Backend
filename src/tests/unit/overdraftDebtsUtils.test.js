@@ -122,16 +122,16 @@ describe('OverdraftDebtsUtils', function () {
                 .mockImplementation(() => Promise.resolve(false));
 
             const id = 1;
-            let entry = new Date();
-            let overdraft = {
+            /*  let entry = new Date();
+            /*     let overdraft = {
                 userId: 1,
                 entryDate: Math.floor(entry.setDate(entry.getDate() + 26) / 1000),
                 amount: 10,
                 rate: 0.15,
                 isDivided: false,
-            };
+            }; */
             
-            expect(await overdraftDebtUtils.create(id)).toStrictEqual(overdraft);
+            expect(await overdraftDebtUtils.create(id)).toStrictEqual(null);
         });
         it('Returns overdraft still haven\'t reached it\'s deadline or wasn\'t used', async () => {
            
