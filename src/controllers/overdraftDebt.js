@@ -1,135 +1,193 @@
-const OverdraftDebt = require("../models").OverdraftDebt;
-const User = require("../models").User;
+
+const OverdraftDebt = require('../models').OverdraftDebt;
+const Instalment = require('../models').Instalment;
+const User = require('../models').User;
+const Overdraft = require('../models').Overdraft;
+const OverdraftUtils = require('../utils/overdraftUtils');
+const OverdraftDebtUtils = require('../utils/overdraftDebtUtils');
+const InstalmentUtils = require('../utils/instalmentUtils');
+
 
 module.exports = {
-  create(req, res) {
-    return User.findByPk(req.params.id).then(user => {
-      console.log(user.cpf);
-      const entryDate = new Date();
-      const amount = 0;
-      const rate = 0.1;
-      const wasDivided = false;
-      const userCPF = user.cpf;
+    create(req, res) {
+        return User.findByPk(req.params.id)
+            .then(user => {
+                return Overdraft.findOne({
+                    where: {
+                        userId: user.id,
+                        isBlocked: false
+                    }
+                })
+                    .then(async overdraft => {
+                        if (!(await OverdraftUtils.usabilityCheck(overdraft.userId))) {
+                            const rate = 0.003182;
 
-      return user
-        .createOverdraftDebt({
-          userCPF: userCPF,
-          entryDate: entryDate,
-          amount: amount,
-          rate: rate,
-          wasDivided: wasDivided
+                            const firstUseDate = overdraft.firstUseDate;
+
+                            const entryDate = firstUseDate;
+                            entryDate.setDate(entryDate.getDate() + 26);
+                            //sets entryDate of overdraftDebt to firtUsedDate of overdraft+26days
+
+
+                            const amount = overdraft.limitUsed;
+                            //is the amount of money due in the moment of the debt start
+
+                            const isDivided = false;
+                            const userId = user.id;
+                            return user.createOverdraftDebt({
+                                userId: userId,
+                                entryDate: entryDate,
+                                amount: amount,
+                                rate: rate,
+                                isDivided: isDivided
+                            }).then(async overdraftDebt => {
+                                await overdraft.update({
+                                    isBlocked: true,
+                                    limitUsed: 0
+                                });
+                                return res.status(201).send(overdraftDebt);
+                            });
+                        } else {
+                            return res.status(400).send({
+                                message: 'overdraft still haven\'t reached it\'s deadline or wasn\'t used'
+                            });
+                        }
+                    })
+
+                    .catch(() => res.status(400).send('error'));
+            })
+            .catch(() => res.status(400).send('error'));
+
+    },
+    getByPk(req, res) {
+        return OverdraftDebt.findOne({
+            order: [
+                ['createdAt', 'DESC']
+            ],
         })
-        .then(overdraftDebt => res.status(201).send(overdraftDebt))
-        .catch(error => res.status(400).send(error));
-    });
-  },
-  getByPk(req, res) {
-    return overdraftDebt
-      .findByPk(req.params.id)
-      .then(overdraftDebt => {
-        if (!overdraftDebt) {
-          return res.status(404).send({
-            message: "overdraftDebt Not Found"
-          });
-        }
-        return res.status(200).send(overdraftDebt);
-      })
-      .catch(error => res.status(400).send("error"));
-  },
+            .then(overdraftDebt => {
+                if (!overdraftDebt) {
+                    return res.status(404).send({
+                        message: 'OverdraftDebt Not Found'
+                    });
+                }
+                return res.status(200).send(overdraftDebt);
+            })
+            .catch(() => res.status(400).send('error'));
+    },
+    getInstalmentsOptions(req, res) {
 
-  getInstalmentsOptions(req, res) {
-    return overdraftDebt.findByPk(req.params.id).then(overdraftDebt => {
-      if (req.body.quantInstalments == 1) {
-        Instalment = overdraftDebt.amount;
-      } else if (req.body.quantInstalments == 2) {
-        Instalment = overdraftDebt.amount / 2;
-      } else if (req.body.quantInstalments == 3) {
-        Instalment = overdraftDebt.amount / 3;
-      } else if (req.body.quantInstalments == 4) {
-        Instalment = overdraftDebt.amount / 4;
-      } else if (req.body.quantInstalments == 5) {
-        Instalment = overdraftDebt.amount / 5;
-      } else if (req.body.quantInstalments == 6) {
-        Instalment = overdraftDebt.amount / 6;
-      } else if (req.body.quantInstalments == 7) {
-        Instalment = overdraftDebt.amount / 7;
-      } else if (req.body.quantInstalments == 8) {
-        Instalment = overdraftDebt.amount / 8;
-      } else if (req.body.quantInstalments == 9) {
-        Instalment = overdraftDebt.amount / 9;
-      } else if (req.body.quantInstalments == 10) {
-        Instalment = overdraftDebt.amount / 10;
-      } else if (req.body.quantInstalments == 11) {
-        Instalment = overdraftDebt.amount / 11;
-      } else if (req.body.quantInstalments == 12) {
-        Instalment = overdraftDebt.amount / 12;
-      } else {
-        res.status(400).send("Escolha um número de parcelas");
-      }
+        return OverdraftDebt.findOne({
+            where: { userId: req.params.id },
+            order: [['createdAt', 'DESC']],
+        })
+            .then(async overdraftDebt => {
 
-      if (req.body.dueDate == 5) {
-        var CurrentDate = new Date();
-        var firstMonth = CurrentDate.getMonth() + 1;
-        new instalmentDate[req.body.quantInstalments]();
-        instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 5);
-        for (i = 1; i <= req.body.quantInstalments; i++) {
-          instalmentDate[i] = new Date(
-            instalmentDate[0].getFullYear,
-            instalmentDate[0].getMonth + 1,
-            5
-          );
-        }
-      } else if (req.body.dueDate == 10) {
-        var CurrentDate = new Date();
-        var firstMonth = CurrentDate.getMonth() + 1;
-        new instalmentDate[req.body.quantInstalments]();
-        instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 10);
-        for (i = 1; i <= req.body.quantInstalments; i++) {
-          instalmentDate[i] = new Date(
-            instalmentDate[0].getFullYear,
-            instalmentDate[0].getMonth + 1,
-            10
-          );
-        }
-      } else if (req.body.dueDate == 15) {
-        var CurrentDate = new Date();
-        var firstMonth = CurrentDate.getMonth() + 1;
-        new instalmentDate[req.body.quantInstalments]();
-        instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 15);
-        for (i = 1; i <= req.body.quantInstalments; i++) {
-          instalmentDate[i] = new Date(
-            instalmentDate[0].getFullYear,
-            instalmentDate[0].getMonth + 1,
-            15
-          );
-        }
-      } else if (req.body.dueDate == 20) {
-        var CurrentDate = new Date();
-        var firstMonth = CurrentDate.getMonth() + 1;
-        new instalmentDate[req.body.quantInstalments]();
-        instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 20);
-        for (i = 1; i <= req.body.quantInstalments; i++) {
-          instalmentDate[i] = new Date(
-            instalmentDate[0].getFullYear,
-            instalmentDate[0].getMonth + 1,
-            20
-          );
-        }
-      } else if (req.body.dueDate == 25) {
-        var CurrentDate = new Date();
-        var firstMonth = CurrentDate.getMonth() + 1;
-        new instalmentDate[req.body.quantInstalments]();
-        instalmentDate[0] = new Date(CurrentDate.getFullYear, firstMonth, 25);
-        for (i = 1; i <= req.body.quantInstalments; i++) {
-          instalmentDate[i] = new Date(
-            instalmentDate[0].getFullYear,
-            instalmentDate[0].getMonth + 1,
-            25
-          );
-        }
-      } else {
-        res.status(400).send("Escolha um número de parcelas");
-      }
-    });
-  }
+                if (!overdraftDebt) {
+                    return res.status(404).send({
+                        message: 'OverdraftDebt Not Found'
+                    });
+                }
+                const instalmentValue = await OverdraftDebtUtils.returnInstalmentValue(req.body.quantityInstalment, overdraftDebt.userId);
+
+                const dateOptionsForInstalments = await OverdraftDebtUtils.returnInstalmentDates(req.body.day, req.body.quantityInstalment, overdraftDebt.userId);
+
+                return res.status(200).send({
+                    'valueOfIndividualInstalment': instalmentValue,
+                    'dateOptionsForInstalments': dateOptionsForInstalments,
+
+                });
+            })
+            .catch(() => res.status(400).send('error'));
+    },
+    checkAmount(req, res) {
+        return OverdraftDebt.findOne({
+            where: { id: req.params.id },
+        })
+            .then(async overdraftDebt => {
+                if (!overdraftDebt) {
+                    return res.status(404).send({
+                        message: 'OverdraftDebt Not Found'
+                    });
+                }
+                if (!overdraftDebt.isDivided) {
+                    const totalAmount = await OverdraftDebtUtils.returnInstalmentValue(1, overdraftDebt.userId);
+                    return res.status(200).send({
+                        'totalAmount': totalAmount,
+                    });
+                } else {
+                    return Instalment.findOne({
+                        where: {
+                            overdraftDebtId: overdraftDebt.id
+                        }
+                    })
+                        .then(instalment => {
+                            const totalAmount = instalment.value * overdraftDebt.quantityInstalment;
+                            return res.status(200).send({
+                                'totalAmount': totalAmount,
+                            });
+                        });
+                }
+            });
+    },
+    createInstalments(req, res) {
+        return OverdraftDebt.findOne({
+            where: {
+                userId: req.params.id,
+                isDivided: false,
+            },
+            order: [['createdAt', 'DESC']],
+
+
+        })
+            .then(async overdraftDebt => {
+                if (!overdraftDebt) {
+                    return res.status(404).send({
+                        message: 'Non divided OverdraftDebt Not Found'
+                    });
+                }
+                const instalmentValue = await OverdraftDebtUtils.returnInstalmentValue(req.body.quantityInstalment, overdraftDebt.userId);
+                const dateOptionsForInstalments = await OverdraftDebtUtils.returnInstalmentDates(req.body.day, req.body.quantityInstalment, overdraftDebt.userId);
+                var instalments = new Array();
+                const dueDay = req.body.day;//due day on each month for the instalments
+                const quantityInstalment = req.body.quantityInstalment;
+                var counter = 0;
+                const counterMax = parseInt(quantityInstalment, 10);
+                while (counter < counterMax) {
+                    instalments.push(await InstalmentUtils.creatInstalment(instalmentValue, dateOptionsForInstalments[counter], overdraftDebt.id));
+                    counter++;
+
+                }
+                await overdraftDebt.update({
+                    isDivided: true,
+                    dueDay: parseInt(dueDay, 10),
+                    quantityInstalment: parseInt(quantityInstalment, 10),
+                });
+                return Overdraft.findByPk(overdraftDebt.userId)
+                    .then(overdraft => {
+                        overdraft.update({
+                            isBlocked: false,
+                            limitUsed: 0
+                        });
+
+                        return res.status(200).send(instalments);
+                    });
+
+            })
+            .catch(() => res.status(400).send({ 'message': 'couldn\'t create instalments' }));
+    },
+
+    debtsList(req, res) {
+        return OverdraftDebt.findAll({
+            where: {
+                userId: req.params.id
+            }
+        })
+            .then(overdraftDebts => {
+                if (overdraftDebts == '') {
+                    return res.status(404).send({ 'message': 'Debts not found' });
+                }
+                return res.status(200).send(overdraftDebts);
+            });
+    },
 };

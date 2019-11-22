@@ -1,11 +1,9 @@
 FROM node:8
 
-ARG NODE_ENV=production
-ENV NODE_ENV ${NODE_ENV}
+USER node
+RUN mkdir /home/node/app
+WORKDIR /home/node/app
 
-ARG APP_DIR=app
-RUN mkdir -p ${APP_DIR}
-WORKDIR ${APP_DIR}
 
 # Install dependencies
 COPY package*.json ./
@@ -16,14 +14,7 @@ RUN npm install && npm cache clean --force
 
 
 # Copy project files
-COPY . .
+COPY --chown=node:node . .
 
 # Expose running port
 EXPOSE 3000
-
-RUN chown -R node:node ${APP_DIR}
-
-USER node
-
-# Run the project
-CMD ["npm", "run dev"]
