@@ -857,5 +857,129 @@ describe('Overdrafts Controller', function () {
             expect(status).toHaveBeenCalledWith(400);
         });
     });
+
+    describe('Create Debt', () => {
+        afterEach(() => {
+            jest.restoreAllMocks();
+            jest.resetAllMocks();
+        });
+        
+        it('returns create debt on success', async () => {
+            let req = {
+                params: {
+                    id: 1
+                }
+            };
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+            const res = {
+                status
+            };
+
+            let overdraft = {
+                userId: 1,
+                isBlocked: false,
+                isActive: false,
+                limit: 200,
+                limitMax: 200,
+                limitUsed: 0,
+                firstUseDate: null,
+                createdAt: Math.floor(new Date().getTime() / 1000),
+                updatedAt: Math.floor(new Date().getTime() / 1000),
+                id: 1,
+                update: function() {
+                    this.firstUseDate = Math.floor(new Date().getTime() - (27 * 24 * 60 * 60 * 1000));
+                    return Promise.resolve(this);
+                }
+            };
+
+            jest
+                .spyOn(Overdraft, 'findOne')
+                .mockImplementation(() => Promise.resolve(overdraft));
+
+            let overdraftDebt = {
+                userId: 1,
+                entryDate: Math.floor(new Date().getTime() / 1000),
+                amount: 0,
+                rate: 0.1,
+                isDivided: false,
+                createdAt: Math.floor(new Date().getTime() / 1000),
+                updatedAt: Math.floor(new Date().getTime() / 1000),
+                id: 1
+            };
+
+            jest
+                .spyOn(overdraftDebtUtils, 'create')
+                .mockImplementation(() => Promise.resolve(overdraftDebt));
+
+            await overdraftController.createDebt(req, res);
+
+            expect(status).toHaveBeenCalledWith(201);
+            expect(send).toHaveBeenCalledWith(overdraftDebt);
+        });
+        
+        it('returns error when trying to find overdraft', async () => {
+            let req = {
+                params: {
+                    id: 1
+                }
+            };
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+            const res = {
+                status
+            };
+
+            jest
+                .spyOn(Overdraft, 'findOne')
+                .mockImplementation(() => Promise.resolve(null));
+
+            await overdraftController.createDebt(req, res);
+
+            expect(status).toHaveBeenCalledWith(404);
+        });
+
+        it('returns error when trying to create debt', async () => {
+            let req = {
+                params: {
+                    id: 1
+                }
+            };
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+            const res = {
+                status
+            };
+
+            let overdraft = {
+                userId: 1,
+                isBlocked: false,
+                isActive: false,
+                limit: 200,
+                limitMax: 200,
+                limitUsed: 0,
+                firstUseDate: null,
+                createdAt: Math.floor(new Date().getTime() / 1000),
+                updatedAt: Math.floor(new Date().getTime() / 1000),
+                id: 1,
+                update: function() {
+                    this.firstUseDate = Math.floor(new Date().getTime() - (27 * 24 * 60 * 60 * 1000));
+                    return Promise.resolve(this);
+                }
+            };
+
+            jest
+                .spyOn(Overdraft, 'findOne')
+                .mockImplementation(() => Promise.resolve(overdraft));
+
+                jest
+                .spyOn(overdraftDebtUtils, 'create')
+                .mockImplementation(() => Promise.resolve(null));
+
+            await overdraftController.createDebt(req, res);
+
+            expect(status).toHaveBeenCalledWith(400);
+        });
+    });
 });
 
