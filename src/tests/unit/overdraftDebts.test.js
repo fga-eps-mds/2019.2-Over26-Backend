@@ -5,6 +5,7 @@ const OverdraftDebt = require('../../models').OverdraftDebt;
 const Overdraft = require('../../models').Overdraft;
 const User = require('../../models').User;
 const Instalment = require('../../models').Instalment;
+const InstalmentUtils = require('../../utils/instalmentUtils');
 
 
 
@@ -407,8 +408,185 @@ describe('OverdraftDebts Controller', function () {
             });
 
         });
+    });
 
+    describe('overdraftDebt getInstalmentsOptions', () => {
+        afterEach(() => {
+            jest.restoreAllMocks();
+            jest.resetAllMocks();
+        });
 
+        it('returns instalments options on success', async () => {
+            let req = {
+                params: {
+                    id: 1
+                },
+                body: {
+                    quantityInstalment: 2,
+                    day: 5
+                }
+            };
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+            const res = {
+                status
+            };
 
+            let overdraftDebt = {
+                entryDate: new Date(),
+                amount: 100,
+                rate: 5,
+                isDivided: false,
+                dueDay: null,
+                quantityInstalment: null,
+            };
+
+            jest
+                .spyOn(OverdraftDebt, 'findOne')
+                .mockImplementation(() => Promise.resolve(overdraftDebt));
+
+            const result = {
+                valueOfIndividualInstalment: 100.0,
+                dateOptionsForInstalments: []
+            }
+
+            jest
+                .spyOn(OverdraftDebtUtils, 'returnInstalmentValue')
+                .mockImplementation(() => Promise.resolve(result.valueOfIndividualInstalment))
+
+            jest
+                .spyOn(OverdraftDebtUtils, 'returnInstalmentDates')
+                .mockImplementation(() => Promise.resolve(result.dateOptionsForInstalments))
+
+            await overdraftDebtController.getInstalmentsOptions(req, res);
+
+            expect(status).toHaveBeenCalledWith(200);
+            expect(send).toHaveBeenCalledWith(result);
+
+        });
+
+        it('returns error when trying to find overdraft debt', async () => {
+            let req = {
+                params: {
+                    id: 1
+                },
+            };
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+            const res = {
+                status
+            };
+
+            jest
+                .spyOn(OverdraftDebt, 'findOne')
+                .mockImplementation(() => Promise.resolve(null));
+
+            await overdraftDebtController.getInstalmentsOptions(req, res);
+
+            expect(status).toHaveBeenCalledWith(404);
+
+        });
+    });
+
+    describe('overdraftDebt createInstalments', () => {
+        afterEach(() => {
+            jest.restoreAllMocks();
+            jest.resetAllMocks();
+        });
+
+        it('returns create instalments on success', async () => {
+            let req = {
+                params: {
+                    id: 1
+                },
+                body: {
+                    quantityInstalment: 1,
+                    day: 5
+                }
+            };
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+            const res = {
+                status
+            };
+
+            let overdraftDebt = {
+                id: 1,
+                entryDate: new Date(),
+                amount: 100,
+                rate: 5,
+                isDivided: false,
+                dueDay: null,
+                quantityInstalment: null,
+                update: function() {
+                    return Promise.resolve(this);
+                }
+            };
+
+            jest
+                .spyOn(OverdraftDebt, 'findOne')
+                .mockImplementation(() => Promise.resolve(overdraftDebt));
+
+            const result = {
+                valueOfIndividualInstalment: 100.0,
+                dateOptionsForInstalments: [new Date()]
+            }
+
+            jest
+                .spyOn(OverdraftDebtUtils, 'returnInstalmentValue')
+                .mockImplementation(() => Promise.resolve(result.valueOfIndividualInstalment))
+
+            jest
+                .spyOn(OverdraftDebtUtils, 'returnInstalmentDates')
+                .mockImplementation(() => Promise.resolve(result.dateOptionsForInstalments))
+
+            let instalment = {
+                isPaid: false,
+                value: 100.0,
+                dueDate: new Date()
+            }
+
+            jest
+                .spyOn(InstalmentUtils, 'creatInstalment')
+                .mockImplementation(() => Promise.resolve(instalment));
+
+            let overdraft = {
+                update: function() {
+                    return Promise.resolve(this);
+                }
+            }
+
+            jest
+                .spyOn(Overdraft, 'findByPk')
+                .mockImplementation(() => Promise.resolve(overdraft));
+
+            await overdraftDebtController.createInstalments(req, res);
+
+            expect(status).toHaveBeenCalledWith(200);
+            expect(send).toHaveBeenCalledWith([instalment]);
+
+        });
+
+        it('returns error when trying to find overdraft debt', async () => {
+            let req = {
+                params: {
+                    id: 1
+                },
+            };
+            let send = jest.fn(data => ({ data }));
+            let status = jest.fn(() => ({ send }));
+            const res = {
+                status
+            };
+
+            jest
+                .spyOn(OverdraftDebt, 'findOne')
+                .mockImplementation(() => Promise.resolve(null));
+
+            await overdraftDebtController.createInstalments(req, res);
+
+            expect(status).toHaveBeenCalledWith(404);
+
+        });
     });
 });

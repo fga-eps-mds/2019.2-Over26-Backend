@@ -972,7 +972,7 @@ describe('Overdrafts Controller', function () {
                 .spyOn(Overdraft, 'findOne')
                 .mockImplementation(() => Promise.resolve(overdraft));
 
-                jest
+            jest
                 .spyOn(overdraftDebtUtils, 'create')
                 .mockImplementation(() => Promise.resolve(null));
 
