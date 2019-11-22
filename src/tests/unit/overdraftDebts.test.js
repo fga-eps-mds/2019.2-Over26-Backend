@@ -448,15 +448,15 @@ describe('OverdraftDebts Controller', function () {
             const result = {
                 valueOfIndividualInstalment: 100.0,
                 dateOptionsForInstalments: []
-            }
+            };
 
             jest
                 .spyOn(OverdraftDebtUtils, 'returnInstalmentValue')
-                .mockImplementation(() => Promise.resolve(result.valueOfIndividualInstalment))
+                .mockImplementation(() => Promise.resolve(result.valueOfIndividualInstalment));
 
             jest
                 .spyOn(OverdraftDebtUtils, 'returnInstalmentDates')
-                .mockImplementation(() => Promise.resolve(result.dateOptionsForInstalments))
+                .mockImplementation(() => Promise.resolve(result.dateOptionsForInstalments));
 
             await overdraftDebtController.getInstalmentsOptions(req, res);
 
@@ -530,21 +530,21 @@ describe('OverdraftDebts Controller', function () {
             const result = {
                 valueOfIndividualInstalment: 100.0,
                 dateOptionsForInstalments: [new Date()]
-            }
+            };
 
             jest
                 .spyOn(OverdraftDebtUtils, 'returnInstalmentValue')
-                .mockImplementation(() => Promise.resolve(result.valueOfIndividualInstalment))
+                .mockImplementation(() => Promise.resolve(result.valueOfIndividualInstalment));
 
             jest
                 .spyOn(OverdraftDebtUtils, 'returnInstalmentDates')
-                .mockImplementation(() => Promise.resolve(result.dateOptionsForInstalments))
+                .mockImplementation(() => Promise.resolve(result.dateOptionsForInstalments));
 
             let instalment = {
                 isPaid: false,
                 value: 100.0,
                 dueDate: new Date()
-            }
+            };
 
             jest
                 .spyOn(InstalmentUtils, 'creatInstalment')
@@ -554,7 +554,7 @@ describe('OverdraftDebts Controller', function () {
                 update: function() {
                     return Promise.resolve(this);
                 }
-            }
+            };
 
             jest
                 .spyOn(Overdraft, 'findByPk')

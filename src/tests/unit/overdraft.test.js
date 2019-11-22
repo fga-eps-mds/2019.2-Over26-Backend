@@ -626,17 +626,17 @@ describe('Overdrafts Controller', function () {
 
             let user = {
                 id: 1,
-                cpf: "999.999.999-99",
-                name: "teste",
-                email: "teste@teste.com",
-                phone: "999999999",
+                cpf: '999.999.999-99',
+                name: 'teste',
+                email: 'teste@teste.com',
+                phone: '999999999',
                 monthlyIncome: 900.0,
                 createdAt: Math.floor(new Date().getTime() / 1000),
                 updatedAt: Math.floor(new Date().getTime() / 1000),
                 getOverdraft: () => {
                     return Promise.resolve(overdraft);
                 }
-            }
+            };
 
             jest
                 .spyOn(User, 'findByPk')
@@ -683,17 +683,17 @@ describe('Overdrafts Controller', function () {
 
             let user = {
                 id: 1,
-                cpf: "999.999.999-99",
-                name: "teste",
-                email: "teste@teste.com",
-                phone: "999999999",
+                cpf: '999.999.999-99',
+                name: 'teste',
+                email: 'teste@teste.com',
+                phone: '999999999',
                 monthlyIncome: 900.0,
                 createdAt: Math.floor(new Date().getTime() / 1000),
                 updatedAt: Math.floor(new Date().getTime() / 1000),
                 getOverdraft: () => {
                     return Promise.resolve(null);
                 }
-            }
+            };
 
             jest
                 .spyOn(User, 'findByPk')
@@ -846,7 +846,7 @@ describe('Overdrafts Controller', function () {
                 status
             };
 
-            let overdraft = {}
+            let overdraft = {};
 
             jest
                 .spyOn(Overdraft, 'findByPk')
