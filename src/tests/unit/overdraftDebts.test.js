@@ -504,6 +504,7 @@ describe('OverdraftDebts Controller', function () {
                     day: 5
                 }
             };
+            let date = new Date()
             let send = jest.fn(data => ({ data }));
             let status = jest.fn(() => ({ send }));
             const res = {
@@ -512,7 +513,7 @@ describe('OverdraftDebts Controller', function () {
 
             let overdraftDebt = {
                 id: 1,
-                entryDate: new Date(),
+                entryDate: date,
                 amount: 100,
                 rate: 5,
                 isDivided: false,
@@ -529,7 +530,7 @@ describe('OverdraftDebts Controller', function () {
 
             const result = {
                 valueOfIndividualInstalment: 100.0,
-                dateOptionsForInstalments: [new Date()]
+                dateOptionsForInstalments: [date]
             };
 
             jest
@@ -543,7 +544,7 @@ describe('OverdraftDebts Controller', function () {
             let instalment = {
                 isPaid: false,
                 value: 100.0,
-                dueDate: new Date()
+                dueDate: date
             };
 
             jest
@@ -557,7 +558,7 @@ describe('OverdraftDebts Controller', function () {
             };
 
             jest
-                .spyOn(Overdraft, 'findByPk')
+                .spyOn(Overdraft, 'findOne')
                 .mockImplementation(() => Promise.resolve(overdraft));
 
             await overdraftDebtController.createInstalments(req, res);
