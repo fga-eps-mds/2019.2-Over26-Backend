@@ -504,7 +504,7 @@ describe('OverdraftDebts Controller', function () {
                     day: 5
                 }
             };
-            let date = new Date()
+            let date = new Date();
             let send = jest.fn(data => ({ data }));
             let status = jest.fn(() => ({ send }));
             const res = {
