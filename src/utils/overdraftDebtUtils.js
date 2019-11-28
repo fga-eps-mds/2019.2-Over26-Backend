@@ -1,14 +1,19 @@
 const OverdraftDebt = require('../models').OverdraftDebt;
 const Overdraft = require('../models').Overdraft;
+const Account = require('../models').Account;
+
 const OverdraftUtils = require('../utils/overdraftUtils');
 const User = require('../models').User;
-const Account = require('../models').Account;
 
 module.exports = {
     returnInstalmentValue(quantityInstalment, id) {
         return OverdraftDebt.findOne({
-            where: { userId: id },
-            order: [['createdAt', 'DESC']],
+            where: {
+                userId: id
+            },
+            order: [
+                ['createdAt', 'DESC']
+            ],
         })
             .then(overdraftDebt => {
                 if (!overdraftDebt) {
@@ -22,9 +27,9 @@ module.exports = {
                 const dateDiffDaysRound = ((dateDiffDays).toFixed(0));
 
                 const totalAmount = overdraftDebt.amount * Math.pow(1 + overdraftDebt.rate, dateDiffDaysRound);
-                
-                const instalmentValue = totalAmount / quantityInstalment;//is the value of each instalment
-              
+
+                const instalmentValue = totalAmount / quantityInstalment; //is the value of each instalment
+
 
                 return instalmentValue;
 
@@ -34,8 +39,12 @@ module.exports = {
     returnInstalmentDates(day, quantityInstalment, id) {
 
         return OverdraftDebt.findOne({
-            where: { userId: id },
-            order: [['createdAt', 'DESC']],
+            where: {
+                userId: id
+            },
+            order: [
+                ['createdAt', 'DESC']
+            ],
         })
             .then(overdraftDebt => {
 
@@ -44,7 +53,7 @@ module.exports = {
                 }
 
                 const currentDate = new Date();
-                const dueDay = day;//due day on each month for the instalments
+                const dueDay = day; //due day on each month for the instalments
                 var dateOptionsForInstalments = new Array();
                 var counter = 1;
                 const counterMax = parseInt(quantityInstalment, 10) + 1;
@@ -54,8 +63,7 @@ module.exports = {
                     counter++;
                 }
                 return dateOptionsForInstalments;
-            }
-            );
+            });
     },
 
     create(id) {
@@ -64,7 +72,7 @@ module.exports = {
                 return Overdraft.findOne({
                     where: {
                         userId: user.id,
-                        isBlocked:false
+                        isBlocked: false
                     }
                 })
                     .then(async overdraft => {
@@ -76,12 +84,14 @@ module.exports = {
                             const entryDate = firstUseDate;
                             entryDate.setDate(entryDate.getDate() + 25);
                             //sets entryDate of overdraftDebt to firtUsedDate of overdraft+26days
-
+                            // ===================================
                             let account = await Account.findOne({
                                 where: {
                                     userId: user.id
                                 }
                             });
+                            // ===================================
+
 
                             const amount = overdraft.limitUsed;
                             //is the amount of money due in the moment of the debt start
@@ -95,15 +105,18 @@ module.exports = {
                                 rate: rate,
                                 isDivided: isDivided
                             }).then(async overdraftDebt => {
+                                // ===================================
                                 await overdraft.update({
                                     isBlocked: true,
-                                    limitUsed:0,
+                                    limitUsed: 0,
                                     firstUseDate: null
                                 });
                                 await account.update({
                                     balance: 0
                                 });
-
+                                console.log('LimitUsed ========================', overdraft.limitUsed);
+                                console.log('Balance ========================', account.balance);
+                                // ===================================
                                 return overdraftDebt;
                             });
                         } else {
@@ -111,9 +124,13 @@ module.exports = {
                         }
                     })
 
-                    .catch(() => {return null;});
+                    .catch(() => {
+                        return null;
+                    });
             })
-            .catch(() => {return null;});
+            .catch(() => {
+                return null;
+            });
 
     },
 };

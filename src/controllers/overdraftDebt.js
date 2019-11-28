@@ -163,7 +163,7 @@ module.exports = {
                     dueDay: parseInt(dueDay, 10),
                     quantityInstalment: parseInt(quantityInstalment, 10),
                 });
-                return Overdraft.findByPk(overdraftDebt.userId)
+                return Overdraft.findOne({where: {userId: overdraftDebt.userId}})
                     .then(overdraft => {
                         overdraft.update({
                             isBlocked: false,
